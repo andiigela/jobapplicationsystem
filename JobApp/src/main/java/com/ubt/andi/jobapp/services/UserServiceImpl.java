@@ -12,7 +12,12 @@ public class UserServiceImpl implements UserService{
     }
     @Override
     public void createUser(UserDto userDto) {
+        if(userDto == null) return;
+        AppUser user = mapToUser(userDto);
+        if(user.getRoleAccount()){
 
+        }
+        userRepository.save(user);
     }
     public AppUser mapToUser(UserDto userDto){
         AppUser appUser = new AppUser();
@@ -20,6 +25,12 @@ public class UserServiceImpl implements UserService{
         appUser.setPassword(userDto.getPassword());
         appUser.setEmail(userDto.getEmail());
         appUser.setRoleAccount(userDto.getRoleAccount());
+        return appUser;
+    }
 
+    @Override
+    public AppUser findUserByUsername(String username) {
+        if(username.trim().equals("") || username == null) return null;
+        return userRepository.findAppUserByUsername(username);
     }
 }
