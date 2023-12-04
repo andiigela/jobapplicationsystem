@@ -2,6 +2,7 @@ package com.ubt.andi.jobapp.security;
 
 import com.ubt.andi.jobapp.models.AppUser;
 import com.ubt.andi.jobapp.services.UserService;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,4 +29,5 @@ public class CustomUserDetailsService implements UserDetailsService {
         );
         return authUser;
     }
+
 }
