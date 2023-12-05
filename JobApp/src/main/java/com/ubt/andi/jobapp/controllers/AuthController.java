@@ -22,6 +22,10 @@ public class AuthController {
     }
     @GetMapping("/register")
     public String getRegisterView(Model model){
+        Authentication authUser = SecurityContextHolder.getContext().getAuthentication();
+        if(!(authUser instanceof AnonymousAuthenticationToken)){
+            return "redirect:/dashboard";
+        }
         model.addAttribute("user", new UserDto());
         return "register-form";
     }
@@ -47,4 +51,11 @@ public class AuthController {
         model.addAttribute("user",authUser);
         return "dashboard";
     }
+//    public String withoutAccess(String returnParam){
+//        Authentication authUser = SecurityContextHolder.getContext().getAuthentication();
+//        if(!(authUser instanceof AnonymousAuthenticationToken)){
+//            return "redirect:/dashboard";
+//        }
+//        return returnParam;
+//    }
 }

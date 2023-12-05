@@ -50,4 +50,14 @@ public class UserServiceImpl implements UserService{
         if(username.trim().equals("") || username == null) return null;
         return userRepository.findAppUserByUsername(username);
     }
+
+    @Override
+    public void updateUser(UserDto userDto) {
+        if(userDto == null) return;
+        AppUser userDb = userRepository.findAppUserByUsername(userDto.getUsername());
+        userDb.setUsername(userDto.getUsername());
+        userDb.setEmail(userDto.getEmail());
+        userDb.setPassword(userDto.getPassword());
+        userRepository.save(userDb);
+    }
 }
