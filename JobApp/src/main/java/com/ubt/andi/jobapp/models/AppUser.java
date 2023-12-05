@@ -29,7 +29,7 @@ public class AppUser {
     @CreationTimestamp
     @Column(name = "date_created")
     private Date dateCreated;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",
             joinColumns= @JoinColumn(name = "appuser_id"),

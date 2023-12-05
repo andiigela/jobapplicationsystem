@@ -8,9 +8,11 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.stream.Collectors;
-
+@Service
 public class CustomUserDetailsService implements UserDetailsService {
     private final UserService userService;
     public CustomUserDetailsService(UserService userService){
@@ -20,12 +22,15 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AppUser user = userService.findUserByUsername(username);
         if(user == null) throw new UsernameNotFoundException("User does not exist!");
+
+        List<SimpleGrantedAuthority> authorities = user.getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
+                .collect(Collectors.toList());
+
         User authUser = new User(
                 user.getUsername(),
                 user.getPassword(),
-                user.getRoles().stream().map(
-                        role -> new SimpleGrantedAuthority("ROLE_" + role.getName())
-                ).collect(Collectors.toList())
+                authorities
         );
         return authUser;
     }

@@ -4,28 +4,37 @@ import com.ubt.andi.jobapp.models.AppUser;
 import com.ubt.andi.jobapp.models.Role;
 import com.ubt.andi.jobapp.repositories.RoleRepository;
 import com.ubt.andi.jobapp.repositories.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    public UserServiceImpl(UserRepository userRepository,RoleRepository roleRepository){
+    private final PasswordEncoder passwordEncoder;
+    public UserServiceImpl(UserRepository userRepository,RoleRepository roleRepository,PasswordEncoder passwordEncoder){
         this.userRepository=userRepository;
         this.roleRepository=roleRepository;
+        this.passwordEncoder=passwordEncoder;
     }
     @Override
     public void createUser(UserDto userDto) {
         if(userDto == null) return;
-        AppUser user = mapToUser(userDto);
-        if(user.getRoleAccount()){
-            Role jobSeeker = roleRepository.findRoleByName("Jobseeker");
-            user.getRoles().add(jobSeeker);
-        } else {
-            Role employer = roleRepository.findRoleByName("Employer");
-            user.getRoles().add(employer);
+
+        AppUser appUser = mapToUser(userDto);
+        if(appUser == null) return;
+
+        Role jobSeeker = roleRepository.findRoleByName("Jobseeker");
+        Role employer = roleRepository.findRoleByName("Employer");
+
+        if(!appUser.getRoles().contains(jobSeeker) || !appUser.getRoles().contains(employer)){
+            if(appUser.getRoleAccount()){
+                appUser.getRoles().add(jobSeeker);
+            } else {
+                appUser.getRoles().add(employer);
+            }
         }
-        userRepository.save(user);
+        userRepository.save(appUser);
     }
     public AppUser mapToUser(UserDto userDto){
         AppUser appUser = new AppUser();

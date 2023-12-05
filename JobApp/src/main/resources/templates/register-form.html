@@ -6,6 +6,8 @@
     <link th:replace="index::linkrel"/>
 </head>
 <body>
+    <div th:replace="index::content">
+    </div>
     <div class="container">
         <form method="post" th:action="@{/register}" style="margin-top: 10%" th:object="${user}">
             <h2>Register</h2>
