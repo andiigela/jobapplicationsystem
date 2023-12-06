@@ -4,6 +4,8 @@ import com.ubt.andi.jobapp.models.AppUser;
 import com.ubt.andi.jobapp.models.Role;
 import com.ubt.andi.jobapp.repositories.RoleRepository;
 import com.ubt.andi.jobapp.repositories.UserRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -54,10 +56,17 @@ public class UserServiceImpl implements UserService{
     @Override
     public void updateUser(UserDto userDto) {
         if(userDto == null) return;
-        AppUser userDb = userRepository.findAppUserByUsername(userDto.getUsername());
-        userDb.setUsername(userDto.getUsername());
-        userDb.setEmail(userDto.getEmail());
-        userDb.setPassword(userDto.getPassword());
+        Authentication authUser = SecurityContextHolder.getContext().getAuthentication();
+        AppUser userDb = userRepository.findAppUserByUsername(authUser.getName());
+        if(!userDto.getUsername().trim().equals("")){
+            userDb.setUsername(userDto.getUsername());
+        }
+        if(!userDto.getEmail().trim().equals("")){
+            userDb.setEmail(userDto.getEmail());
+        }
+        if(!userDto.getPassword().trim().equals("")){
+            userDb.setPassword(userDto.getPassword());
+        }
         userRepository.save(userDb);
     }
 }

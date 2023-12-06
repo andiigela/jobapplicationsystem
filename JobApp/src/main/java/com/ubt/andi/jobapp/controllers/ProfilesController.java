@@ -33,6 +33,6 @@ public class ProfilesController {
     public String editProfile(@ModelAttribute("editUser") UserDto userDto){
         if(userDto == null) return "redirect:/";
         appUserService.updateUser(userDto);
-        return "redirect:/dashboard";
+        return "redirect:/logout";
     }
 }
