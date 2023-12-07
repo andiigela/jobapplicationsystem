@@ -35,4 +35,6 @@ public class AppUser {
             joinColumns= @JoinColumn(name = "appuser_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles = new ArrayList<>();
+    @OneToOne(mappedBy = "appuser")
+    private Profile profile;
 }

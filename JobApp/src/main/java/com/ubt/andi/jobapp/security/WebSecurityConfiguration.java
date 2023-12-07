@@ -23,7 +23,7 @@ public class WebSecurityConfiguration {
         http.authorizeRequests()
                 .requestMatchers(new AntPathRequestMatcher("/register")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/login")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/dashboard")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/profilee/view")).hasAnyRole("Jobseeker","Employee")
                 .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
                 .and().formLogin().loginPage("/login").loginProcessingUrl("/login").defaultSuccessUrl("/dashboard")
                 .and()
