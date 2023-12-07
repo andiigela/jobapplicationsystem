@@ -7,15 +7,14 @@
     <title> Free Dental Medical Hospital Website Template | Smarteyeapps.com</title>
 
     <link th:replace="index::linkrel"/>
-<!--    <link rel="shortcut icon" href="assets/images/fav.jpg">-->
-<!--    <link rel="stylesheet" href="assets/css/bootstrap.min.css">-->
     <link rel="stylesheet" type="text/css" href="/static/css/profile.css" />
-<!--    <link rel="stylesheet" href="../../../../../../../../../AppData/Local/Temp/style.css">-->
 </head>
 
 <body>
 <div th:replace="index::content"></div>
 <div class="container emp-profile">
+    <form method="post" th:object="${editProfile}" th:action="@{/profilee/edit}">
+        <input type="hidden" th:field="${editProfile.id}"/>
         <div class="row">
             <div class="col-md-4">
                 <div class="profile-img">
@@ -28,10 +27,15 @@
             </div>
             <div class="col-md-6">
                 <div class="profile-head">
-                    <h5 th:text="${profile.firstName + ' ' + profile.lastName}">
-                    </h5>
-                    <h6 th:text="${profile.description}">
-                    </h6>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="">First and Last name</span>
+                        </div>
+                        <input type="text" class="form-control" th:field="${editProfile.firstName}">
+                        <input type="text" class="form-control" th:field="${editProfile.lastName}">
+                    </div>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" style="margin-top: 10px" th:field="${editProfile.description}"></textarea>
+
                     <p class="proile-rating"><span></span></p>
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
@@ -43,17 +47,14 @@
                     </ul>
                 </div>
             </div>
-            <div class="col-md-2">
-                <a th:href="@{/profilee/edit/{username}(username=${#authentication.name})}"><button type="submit" class="profile-edit-btn" name="btnAddMore">Edit Profile</button></a>
-            </div>
         </div>
         <div class="row">
             <div class="col-md-4">
                 <div class="profile-work">
                     <p>GITHUB LINK</p>
-                    <a href="" th:text="${profile.githubLink}"></a><br/>
+                    <input type="text" class="form-control" id="exampleFormControlInput1" th:field="${editProfile.githubLink}">
                     <p>SKILLS</p>
-                    <a href="" th:href="${profile.skills}"></a><br/>
+                    <input type="text" class="form-control" id="exampleFormControlInput2" th:field="${editProfile.skills}">
                 </div>
             </div>
             <div class="col-md-8">
@@ -61,10 +62,10 @@
                     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                         <div class="row">
                             <div class="col-md-6">
-                                    <label>Education</label>
+                                <label>Education</label>
                             </div>
                             <div class="col-md-6">
-                                <p th:text="${profile.education}"></p>
+                                <input type="text" class="form-control" id="exampleFormControlInput3" th:field="${editProfile.education}">
                             </div>
                         </div>
                         <div class="row">
@@ -72,7 +73,7 @@
                                 <label>Experience</label>
                             </div>
                             <div class="col-md-6">
-                                <p th:text="${profile.experience}"></p>
+                                <input type="text" class="form-control" id="exampleFormControlInput4" th:field="${editProfile.experience}" style="margin-top: 5px">
                             </div>
                         </div>
                         <div class="row">
@@ -80,7 +81,7 @@
                                 <label>Profession</label>
                             </div>
                             <div class="col-md-6">
-                                <p th:text="${profile.profession}"></p>
+                                <input type="text" class="form-control" id="exampleFormControlInput5" th:field="${editProfile.profession}" style="margin-top: 5px">
                             </div>
                         </div>
                         <div class="row">
@@ -88,7 +89,7 @@
                                 <label>Phone</label>
                             </div>
                             <div class="col-md-6">
-                                <p th:text="${profile.phone}"></p>
+                                <input type="text" class="form-control" id="exampleFormControlInput6" th:field="${editProfile.phone}" style="margin-top: 5px">
                             </div>
                         </div>
                     </div>
@@ -98,7 +99,7 @@
                                 <label>Experience Level</label>
                             </div>
                             <div class="col-md-6">
-                                <p th:text="${profile.experienceLevel}"></p>
+                                <input type="text" class="form-control" id="exampleFormControlInput7" th:field="${editProfile.experienceLevel}">
                             </div>
                         </div>
                         <div class="row">
@@ -106,7 +107,7 @@
                                 <label>Hourly Rate</label>
                             </div>
                             <div class="col-md-6">
-                                <p th:text="${profile.hourlyRate + '$/hr'}"></p>
+                                <input type="number" class="form-control" id="exampleFormControlInput8" th:field="${editProfile.hourlyRate}" style="margin-top: 5px">
                             </div>
                         </div>
                         <div class="row">
@@ -114,7 +115,7 @@
                                 <label>Total Projects</label>
                             </div>
                             <div class="col-md-6">
-                                <p th:text="${profile.totalProjects}"></p>
+                                <input type="number" class="form-control" id="exampleFormControlInput9" th:field="${editProfile.totalProjects}" style="margin-top: 5px">
                             </div>
                         </div>
                         <div class="row">
@@ -122,13 +123,19 @@
                                 <label>English Level</label>
                             </div>
                             <div class="col-md-6">
-                                <p th:text="${profile.englishLevel}"></p>
+                                <input type="text" class="form-control" id="exampleFormControlInput10" th:field="${editProfile.englishLevel}" style="margin-top: 5px">
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">
+                Edit Profile
+            </button>
+        </div>
+    </form>
 </div>
 <th:block th:replace="index::scripts"></th:block>
 </body>

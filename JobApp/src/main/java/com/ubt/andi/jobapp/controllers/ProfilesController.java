@@ -28,27 +28,25 @@ public class ProfilesController {
         Profile profile = null;
         if(user.getProfile() == null){
             profile = new Profile();
-            user.setProfile(profile);
-            profile.setFirstName("Anonymous");
-            profile.setLastName("Anonymous");
-            profile.setDescription("No Description");
-            profile.setEducation("No Education");
-            profile.setExperience("No Experience");
-            profile.setProfession("No Profession");
-            profile.setPhone("+383 45 000 000");
-            profile.setExperienceLevel("No Experience Level");
-            profile.setHourlyRate(0);
-            profile.setTotalProjects(0);
-            profile.setEnglishLevel("No English Level");
-            profile.setGithubLink("No github link");
-            profile.setSkills("No skills");
-            profile.setAppuser(user);
-            profileService.createProfile(profile);
+            profileService.createProfile(profile,user);
         } else {
             profile = user.getProfile();
         }
         model.addAttribute("profile",profile);
         return "profile";
+    }
+    @GetMapping("/profilee/edit/{username}")
+    public String editProfileeView(@PathVariable("username") String username,Model model) {
+        AppUser user = appUserService.findUserByUsername(username);
+        Profile userProfile = user.getProfile();
+        model.addAttribute("editProfile",userProfile);
+        return "editprofilee";
+    }
+    @PostMapping("/profilee/edit")
+    public String editProfilee(@ModelAttribute("editProfile") Profile profile){
+        Authentication authUser = SecurityContextHolder.getContext().getAuthentication();
+        profileService.updateProfile(profile);
+        return "redirect:/profilee/view/" + authUser.getName();
     }
 
     @GetMapping("/profile/{username}")
