@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link th:replace="index::linkrel"/>
+</head>
+<body>
+    <div th:replace="index::content">
+    </div>
+    <div class="container">
+        <p th:text="${user}"></p>
+    </div>
+    <th:block th:replace="index::scripts">
+    </th:block>
+</body>
+</html>

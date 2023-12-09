@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link th:replace="index::linkrel"/>
+</head>
+<body>
+    <div th:replace="index::content">
+    </div>
+    <div class="container">
+        <form method="post" th:action="@{/register}" style="margin-top: 10%" th:object="${user}">
+            <h2>Register</h2>
+            <div class="form-group">
+                <input type="text" class="form-control" th:field="*{username}" name="username" id="exampleInputUsername" aria-describedby="emailHelp" placeholder="Enter username">
+            </div>
+            <div class="form-group">
+                <input type="email" class="form-control" th:field="*{email}" name="email" id="exampleInputEmail" placeholder="Enter email">
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" th:field="*{password}" name="password" id="exampleInputPassword" placeholder="Enter password">
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" value="true" name="radioRoles" id="flexRadioDefault1">
+                <label class="form-check-label" for="flexRadioDefault1">
+                    Jobseeker
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" value="false" name="radioRoles" id="flexRadioDefault2" checked>
+                <label class="form-check-label" for="flexRadioDefault2">
+                    Employee
+                </label>
+            </div>
+            <button style="margin-top: 10px" type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+    <th:block th:replace="index::scripts">
+    </th:block>
+</body>
+</html>
