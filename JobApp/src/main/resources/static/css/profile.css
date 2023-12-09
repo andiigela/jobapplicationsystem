@@ -93,3 +93,11 @@ body{
     font-weight: 600;
     color: #0062cc;
 }
+.button-container {
+    display: flex;
+    flex-direction: row;
+}
+/* Optional: Add styles for spacing or alignment */
+.button-container a {
+    margin-right: 10px; /* Adjust the margin as needed */
+}

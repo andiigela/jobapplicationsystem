@@ -27,7 +27,7 @@
                 <li th:if="${#authorization.expression('isAnonymous()')}" style="margin-right: 10px"><a th:href="@{/login}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
                 <li th:unless="${#authorization.expression('isAnonymous()')}" style="margin-right: 10px"><a th:href="@{/orders}">Orders</a></li>
                 <li th:unless="${#authorization.expression('isAnonymous()')}" style="margin-right: 10px"><a th:href="@{/bookmarks}">Bookmarks</a></li>
-                <li th:unless="${#authorization.expression('isAnonymous()')}" style="margin-right: 10px"><a th:href="@{/profile/{username}(username=${#authentication.name})}">My Profile</a></li>
+                <li th:unless="${#authorization.expression('isAnonymous()')}" style="margin-right: 10px"><a th:href="@{/profile/view/{username}(username=${#authentication.name})}">My Profile</a></li>
                 <li th:unless="${#authorization.expression('isAnonymous()')}" style="margin-right: 10px" ><a th:href="@{/logout}"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
             </ul>
 

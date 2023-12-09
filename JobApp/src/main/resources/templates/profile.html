@@ -44,7 +44,8 @@
                 </div>
             </div>
             <div class="col-md-2">
-                <a th:href="@{/profilee/edit/{username}(username=${#authentication.name})}"><button type="submit" class="profile-edit-btn" name="btnAddMore">Edit Profile</button></a>
+                <a th:href="@{/profile/edit/{username}(username=${#authentication.name})}"><button type="button" class="profile-edit-btn" name="btnAddMore">Edit Profile</button></a>
+                <a th:href="@{/profile/settings/{username}(username=${#authentication.name})}"><button type="button" class="profile-edit-btn" style="margin-top: 10px;" name="btnAddMore">Settings</button></a>
             </div>
         </div>
         <div class="row">
