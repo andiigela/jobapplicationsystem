@@ -22,7 +22,7 @@ public class ProfilesController {
         this.appUserService=appUserService;
         this.profileService=profileService;
     }
-    @GetMapping("/profilee/view/{username}")
+    @GetMapping("/profile/view/{username}")
     public String getProfileeView(Model model,@PathVariable("username") String username){
         AppUser user = appUserService.findUserByUsername(username);
         Profile profile = null;
@@ -35,32 +35,36 @@ public class ProfilesController {
         model.addAttribute("profile",profile);
         return "profile";
     }
-    @GetMapping("/profilee/edit/{username}")
+    @GetMapping("/profile/edit/{username}")
     public String editProfileeView(@PathVariable("username") String username,Model model) {
         AppUser user = appUserService.findUserByUsername(username);
+        AppUser loggedInUser = appUserService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(user != loggedInUser){
+            return "redirect:/profile/edit/"+loggedInUser.getUsername();
+        }
         Profile userProfile = user.getProfile();
         model.addAttribute("editProfile",userProfile);
-        return "editprofilee";
+        return "edit-profile";
     }
-    @PostMapping("/profilee/edit")
+    @PostMapping("/profile/edit")
     public String editProfilee(@ModelAttribute("editProfile") Profile profile){
         Authentication authUser = SecurityContextHolder.getContext().getAuthentication();
         profileService.updateProfile(profile);
-        return "redirect:/profilee/view/" + authUser.getName();
+        return "redirect:/profile/view/" + authUser.getName();
     }
 
-    @GetMapping("/profile/{username}")
+    @GetMapping("/profile/settings/{username}")
     public String getProfileView(@PathVariable("username") String username, Model model){
         Authentication authUser = SecurityContextHolder.getContext().getAuthentication();
         if(!username.equals(authUser.getName())){
-            return "redirect:/dashboard"; // nese /profile/{username} qit username e ka jep te ni acc qe sosht logged in, e kthen mrapa.
+            return "redirect:/profile/settings/" + authUser.getName(); // nese /profile/{username} qit username e ka jep te ni acc qe sosht logged in, e kthen mrapa.
         }
         AppUser userDb = appUserService.findUserByUsername(username);
         if(userDb == null) return "redirect:/";
         model.addAttribute("editUser",userDb);
-        return "edit-profile";
+        return "edit-settings";
     }
-    @PostMapping("/profile")
+    @PostMapping("/profile/settings")
     public String editProfile(@ModelAttribute("editUser") UserDto userDto){
         if(userDto == null) return "redirect:/";
         appUserService.updateUser(userDto);

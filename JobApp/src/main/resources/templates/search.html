@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User List</title>
+    <link th:replace="index::linkrel"/>
+    <style>
+        /* Custom CSS for table */
+        .user-table img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .user-table .btn-profile {
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+        .user-table th {
+            font-weight: bold;
+            font-size: 16px;
+            background-color: #f8f9fa;
+            border: none;
+        }
+        .user-table tbody tr:hover {
+            background-color: #f4f4f4;
+        }
+        .user-table tbody tr td {
+            border: none;
+        }
+        .user-table thead th,
+        .user-table tbody tr td {
+            vertical-align: middle;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="index::content"></div>
+    <div class="container mt-4">
+        <h2 class="mb-4">User List</h2>
+        <table class="table table-bordered user-table">
+            <thead>
+            <tr>
+                <th>Image</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="profile : ${searchedProfiles}">
+                <td><img src="https://via.placeholder.com/150" alt="User Image"></td>
+                <td th:text="${profile.firstName}"></td>
+                <td th:text="${profile.lastName}"></td>
+                <td><a th:href="@{/profile/view/{username}(username=${profile.getAppuser().getUsername()})}"><button class="btn btn-primary btn-profile">View Profile</button></a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <th:block th:replace="index::scripts"></th:block>
+
+</body>
+</html>
