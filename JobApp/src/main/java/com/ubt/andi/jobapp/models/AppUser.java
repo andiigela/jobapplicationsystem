@@ -37,4 +37,6 @@ public class AppUser {
     private List<Role> roles = new ArrayList<>();
     @OneToOne(mappedBy = "appuser")
     private Profile profile;
+    @OneToMany(mappedBy = "appUser")
+    private List<Job> jobs = new ArrayList<>();
 }
