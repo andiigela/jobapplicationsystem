@@ -44,15 +44,15 @@
                 </div>
             </div>
             <div class="col-md-2">
-                <a th:href="@{/profile/edit/{username}(username=${#authentication.name})}"><button type="button" class="profile-edit-btn" name="btnAddMore">Edit Profile</button></a>
-                <a th:href="@{/profile/settings/{username}(username=${#authentication.name})}"><button type="button" class="profile-edit-btn" style="margin-top: 10px;" name="btnAddMore">Settings</button></a>
+                <a th:if="${profile.getAppuser().getUsername() == #authentication.name}" th:href="@{/profile/edit/{username}(username=${#authentication.name})}"><button type="button" class="profile-edit-btn" name="btnAddMore">Edit Profile</button></a>
+                <a th:if="${profile.getAppuser().getUsername() == #authentication.name}" th:href="@{/profile/settings/{username}(username=${#authentication.name})}"><button type="button" class="profile-edit-btn" style="margin-top: 10px;" name="btnAddMore">Settings</button></a>
             </div>
         </div>
         <div class="row">
             <div class="col-md-4">
                 <div class="profile-work">
-                    <p>GITHUB LINK</p>
-                    <a href="" th:text="${profile.githubLink}"></a><br/>
+                    <p>Media</p>
+                    <a th:href="@{${profile.githubLink}}"><img src="/static/images/github.png" alt="Github" width="60" height="40"/></a><br>
                     <p>SKILLS</p>
                     <a href="" th:href="${profile.skills}"></a><br/>
                 </div>

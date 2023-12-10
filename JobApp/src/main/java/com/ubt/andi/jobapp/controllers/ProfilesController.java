@@ -38,6 +38,10 @@ public class ProfilesController {
     @GetMapping("/profile/edit/{username}")
     public String editProfileeView(@PathVariable("username") String username,Model model) {
         AppUser user = appUserService.findUserByUsername(username);
+        AppUser loggedInUser = appUserService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(user != loggedInUser){
+            return "redirect:/profile/edit/"+loggedInUser.getUsername();
+        }
         Profile userProfile = user.getProfile();
         model.addAttribute("editProfile",userProfile);
         return "edit-profile";
@@ -53,7 +57,7 @@ public class ProfilesController {
     public String getProfileView(@PathVariable("username") String username, Model model){
         Authentication authUser = SecurityContextHolder.getContext().getAuthentication();
         if(!username.equals(authUser.getName())){
-            return "redirect:/dashboard"; // nese /profile/{username} qit username e ka jep te ni acc qe sosht logged in, e kthen mrapa.
+            return "redirect:/profile/settings/" + authUser.getName(); // nese /profile/{username} qit username e ka jep te ni acc qe sosht logged in, e kthen mrapa.
         }
         AppUser userDb = appUserService.findUserByUsername(username);
         if(userDb == null) return "redirect:/";
