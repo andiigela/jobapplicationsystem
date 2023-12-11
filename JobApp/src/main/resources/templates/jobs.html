@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Jobs</title>
+    <link th:replace="index::linkrel"/>
+</head>
+<body>
+    <div th:replace="index::content"></div>
+    <div class="container">
+        <a th:href="@{/jobs/create}"><button type="button" class="btn btn-primary" style="margin-top: 20px;margin-bottom: 5px;">Create</button></a>
+        <table class="table table-dark">
+            <thead>
+                <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">Location</th>
+                    <th scope="col">Created Date</th>
+                    <th scope="col">Expiration Date</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="job: ${jobs}">
+                    <td th:text="${job.title}"></td>
+                    <td th:text="${job.location}"></td>
+                    <td th:text="${job.dateCreated}"></td>
+                    <td th:text="${job.expirationDate}"></td>
+                    <td>
+                        <a th:href="@{/jobs/edit/{id}(id=${job.id})}"><button type="button" class="btn btn-warning">Edit</button></a>
+                        <form method="post" th:action="@{/jobs/delete/{id}(id=${job.id})}">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <th:block th:replace="index::scripts"></th:block>
+</body>
+</html>
