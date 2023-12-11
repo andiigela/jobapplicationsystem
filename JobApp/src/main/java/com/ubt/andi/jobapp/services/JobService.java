@@ -10,4 +10,5 @@ public interface JobService {
     Job getJob(Long id);
     void deleteJobById(Long id);
     void editJob(Job job);
+    List<Job> getAllJobsByTitle(String title);
 }

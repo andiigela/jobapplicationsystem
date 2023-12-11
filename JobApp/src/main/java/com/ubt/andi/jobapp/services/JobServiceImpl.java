@@ -18,7 +18,8 @@ public class JobServiceImpl implements JobService {
     }
     @Override
     public List<Job> getJobs() {
-        return jobRepository.findAll();
+        AppUser appUser = userRepository.findAppUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        return jobRepository.findAllByAppUser_Id(appUser.getId());
     }
 
     @Override
@@ -48,8 +49,15 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+    public List<Job> getAllJobsByTitle(String title) {
+        if(title.trim().equals("") || title == null) return null;
+        return jobRepository.findJobsByTitleContainingIgnoreCase(title);
+    }
+
+    @Override
     public void deleteJobById(Long id) {
         if(id == 0 || id == null) return;
         jobRepository.deleteById(id);
     }
+
 }

@@ -38,8 +38,8 @@
 <body>
     <div th:replace="index::content"></div>
     <div class="container mt-4">
-        <h2 class="mb-4">User List</h2>
-        <table class="table table-bordered user-table">
+        <table class="table table-bordered user-table" th:if="${searchKeyword != null && searchKeyword == 'Profile'}">
+            <h2 class="mb-4">User List</h2>
             <thead>
             <tr>
                 <th>Image</th>
@@ -56,6 +56,24 @@
                 <td><a th:href="@{/profile/view/{username}(username=${profile.getAppuser().getUsername()})}"><button class="btn btn-primary btn-profile">View Profile</button></a></td>
             </tr>
             </tbody>
+        </table>
+        <table class="table table-bordered user-table" th:if="${searchKeyword != null && searchKeyword == 'Job'}">
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Location</th>
+                    <th>Created Date</th>
+                    <th>Expiration Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="job : ${searchedJobs}">
+                    <td th:text="${job.title}"></td>
+                    <td th:text="${job.location}"></td>
+                    <td th:text="${job.dateCreated}"></td>
+                    <td th:text="${job.expirationDate}"></td>
+                </tr>
+                </tbody>
         </table>
     </div>
     <th:block th:replace="index::scripts"></th:block>
