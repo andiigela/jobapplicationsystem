@@ -3,6 +3,8 @@ import com.ubt.andi.jobapp.models.AppUser;
 import com.ubt.andi.jobapp.models.Job;
 import com.ubt.andi.jobapp.repositories.JobRepository;
 import com.ubt.andi.jobapp.repositories.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -49,9 +51,9 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<Job> getAllJobsByTitle(String title) {
+    public Page<Job> getAllJobsByTitle(String title, Pageable pageable) {
         if(title.trim().equals("") || title == null) return null;
-        return jobRepository.findJobsByTitleContainingIgnoreCase(title);
+        return jobRepository.findJobsByTitleContainingIgnoreCase(title,pageable);
     }
 
     @Override

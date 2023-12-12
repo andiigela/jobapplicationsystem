@@ -1,6 +1,8 @@
 package com.ubt.andi.jobapp.services;
 
 import com.ubt.andi.jobapp.models.Job;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -10,5 +12,5 @@ public interface JobService {
     Job getJob(Long id);
     void deleteJobById(Long id);
     void editJob(Job job);
-    List<Job> getAllJobsByTitle(String title);
+    Page<Job> getAllJobsByTitle(String title, Pageable pageable);
 }
