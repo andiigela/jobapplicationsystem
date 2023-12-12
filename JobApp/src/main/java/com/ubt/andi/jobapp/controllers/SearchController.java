@@ -26,33 +26,31 @@ public class SearchController {
     }
     @GetMapping("/search")
     public String getSearchView(@RequestParam(value = "page",defaultValue = "0") String page,
-                                @RequestParam(value = "searchButton") String searchValue,Model model){//@RequestParam("searchButton") String searchValue,@RequestParam("searchKeyword") String searchKeyword,Model model
-//        if(searchKeyword != null && !searchKeyword.trim().equals("")){
-//            if(searchKeyword.equals("Profile")){
-//                List<Profile> profilesBySearch = profileService.findProfileBySearch(searchValue);
-//                model.addAttribute("searchedProfiles",profilesBySearch);
-//                model.addAttribute("searchKeyword",searchKeyword);
-//                return "search";
-//            }
-//            if(searchKeyword.equals("Job")){
-//                List<Job> jobsBySearch = jobService.getAllJobsByTitle(searchValue);
-//                model.addAttribute("searchedJobs",jobsBySearch);
-//                model.addAttribute("searchKeyword",searchKeyword);
-//                return "search";
-//            }
-//        }
-//        model.addAttribute("searchedProfiles",new ArrayList<Profile>());
-//        return "redirect:/search?searchButton="+searchValue+"&searchKeyword="+"Profile";
-        int pageNumber = Integer.parseInt(page);
-        if(pageNumber > 0){
-            pageNumber-=1;
+                                @RequestParam(value = "searchButton") String searchValue,
+                                @RequestParam(value = "searchKeyword") String searchKeyword,
+                                Model model){
+        if(searchKeyword != null && !searchKeyword.trim().equals("")){
+            int pageNumber = Integer.parseInt(page);
+            if(pageNumber > 0){
+                pageNumber-=1;
+            }
+            Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE);
+            if(searchKeyword.equals("Profile")){
+                Page<Profile> profilePage = profileService.findProfileBySearch(searchValue,pageable);
+                model.addAttribute("searchedProfiles",profilePage);
+                model.addAttribute("searchKeyword",searchKeyword);
+                model.addAttribute("searchButton",searchValue);
+                return "search";
+            }
+            if(searchKeyword.equals("Job")){
+                Page<Job> jobPage = jobService.getAllJobsByTitle(searchValue,pageable);
+                model.addAttribute("searchedJobs",jobPage);
+                model.addAttribute("searchKeyword",searchKeyword);
+                model.addAttribute("searchButton",searchValue);
+                return "search";
+            }
         }
-        Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE);
-        Page<Job> jobPage = jobService.getAllJobsByTitle(searchValue,pageable);
-
-        model.addAttribute("profilePage", jobPage);
-        model.addAttribute("currentPage", Integer.parseInt(page));
-        model.addAttribute("keyword",searchValue);
-        return "search";
+        model.addAttribute("searchedProfiles",new ArrayList<Profile>());
+        return "redirect:/search?searchButton="+searchValue+"&searchKeyword="+"Profile";
     }
 }

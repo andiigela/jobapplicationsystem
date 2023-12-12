@@ -2,6 +2,8 @@ package com.ubt.andi.jobapp.services;
 import com.ubt.andi.jobapp.models.AppUser;
 import com.ubt.andi.jobapp.models.Profile;
 import com.ubt.andi.jobapp.repositories.ProfileRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -57,14 +59,14 @@ public class ProfileServiceImpl implements ProfileService{
     }
 
     @Override
-    public List<Profile> findProfileBySearch(String searchKeyword) {
+    public Page<Profile> findProfileBySearch(String searchKeyword, Pageable pageable) {
         if(searchKeyword == null || searchKeyword.trim().equals("")) return null;
         String[] keywords = searchKeyword.split(" ");
         if(keywords.length == 1){
-            return profileRepository.findProfilesByFirstNameContainingAndLastNameContaining(keywords[0], "");
+            return profileRepository.findProfilesByFirstNameContainingAndLastNameContaining(keywords[0], "",pageable);
         }
         if(keywords.length > 1){
-            return profileRepository.findProfilesByFirstNameContainingAndLastNameContaining(keywords[0],keywords[keywords.length-1]);
+            return profileRepository.findProfilesByFirstNameContainingAndLastNameContaining(keywords[0],keywords[keywords.length-1],pageable);
         }
         return null;
     }
