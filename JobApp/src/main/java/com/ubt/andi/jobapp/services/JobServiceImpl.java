@@ -19,9 +19,10 @@ public class JobServiceImpl implements JobService {
         this.userRepository=userRepository;
     }
     @Override
-    public List<Job> getJobs() {
+    public Page<Job> getJobsByUser(Pageable pageable) {
+        if(pageable == null) return null;
         AppUser appUser = userRepository.findAppUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-        return jobRepository.findAllByAppUser_Id(appUser.getId());
+        return jobRepository.findAllByAppUser_Id(appUser.getId(),pageable);
     }
 
     @Override
@@ -54,6 +55,12 @@ public class JobServiceImpl implements JobService {
     public Page<Job> getAllJobsByTitle(String title, Pageable pageable) {
         if(title.trim().equals("") || title == null) return null;
         return jobRepository.findJobsByTitleContainingIgnoreCase(title,pageable);
+    }
+
+    @Override
+    public Page<Job> getJobsByPage(Pageable pageable) {
+        if(pageable == null) return null;
+        return jobRepository.findAll(pageable);
     }
 
     @Override

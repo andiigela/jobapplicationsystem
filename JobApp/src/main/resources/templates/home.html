@@ -3,9 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <link th:replace="index::linkrel"/>
+    <link rel="stylesheet" href="/static/css/home.css" />
 </head>
 <body>
     <div th:replace="index::content"></div>
+    <div class="container mt-4">
+        <div class="row" th:each="job: ${jobs}">
+            <div class="col-md-8 offset-md-2">
+                <div class="post">
+                    <div class="user-info">
+                        <img src="https://via.placeholder.com/40" alt="User Profile Picture">
+                        <h5 th:text="${job.title}"></h5>
+                    </div>
+                    <p th:text="${job.description}">
+                    </p>
+                    <!-- Add more post content here (images, videos, etc.) -->
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-light btn-action"><i class="far fa-thumbs-up"></i> Like</button>
+                            <button type="button" class="btn btn-light btn-action"><i class="far fa-comment"></i> Comment</button>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <button type="button" class="btn btn-light btn-action"><i class="fas fa-share"></i> Share</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 d-flex justify-content-center">
+                <ul class="pagination">
+                    <li th:each="pageNumber: ${#numbers.sequence(0, jobs.totalPages - 1)}">
+                        <input type="submit" class="page-link" name="page" th:value="${pageNumber + 1}" style="height: 40px; width: 40px">
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
     <th:block th:replace="index::scripts"></th:block>
 </body>
 </html>

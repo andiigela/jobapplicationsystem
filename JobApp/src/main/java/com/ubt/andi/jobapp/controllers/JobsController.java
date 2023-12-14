@@ -2,12 +2,12 @@ package com.ubt.andi.jobapp.controllers;
 
 import com.ubt.andi.jobapp.models.Job;
 import com.ubt.andi.jobapp.services.JobService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -15,12 +15,18 @@ import java.util.List;
 @Controller
 public class JobsController {
     private final JobService jobService;
+    private final static int PAGE_SIZE = 5;
     public JobsController(JobService jobService){
         this.jobService=jobService;
     }
     @GetMapping("/jobs")
-    public String getJobsView(Model model){
-        List<Job> retrieveJobs = jobService.getJobs();
+    public String getJobsView(@RequestParam(value = "page",defaultValue = "0") String page, Model model){
+        int pageNumber = Integer.parseInt(page);
+        if(pageNumber > 0){
+            pageNumber-=1;
+        }
+        Pageable pageable = PageRequest.of(pageNumber,PAGE_SIZE);
+        Page<Job> retrieveJobs = jobService.getJobsByUser(pageable);
         model.addAttribute("jobs",retrieveJobs);
         return "jobs";
     }
