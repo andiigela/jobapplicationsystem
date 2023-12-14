@@ -51,10 +51,6 @@ public class AuthController {
         model.addAttribute("user",authUser);
         return "dashboard";
     }
-    @GetMapping("/")
-    public String getHomeView(){
-        return "home";
-    }
 //    public String withoutAccess(String returnParam){
 //        Authentication authUser = SecurityContextHolder.getContext().getAuthentication();
 //        if(!(authUser instanceof AnonymousAuthenticationToken)){

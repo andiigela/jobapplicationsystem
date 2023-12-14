@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Job</title>
+  <link th:replace="index::linkrel"/>
+</head>
+<body>
+<div th:replace="index::content"></div>
+<div class="container">
+  <form method="post" th:action="@{/jobs/edit}" style="margin-top: 10%" th:object="${jobEdit}">
+    <h2>Edit Job</h2>
+    <input type="hidden" th:field="${jobEdit.id}">
+    <div class="form-group">
+      <input type="text" class="form-control" th:field="${jobEdit.title}" aria-describedby="emailHelp" placeholder="Enter title">
+    </div>
+    <div class="form-group">
+      <label for="exampleFormControlTextarea1" class="form-label">Description</label>
+      <textarea class="form-control" th:field="${jobEdit.description}" id="exampleFormControlTextarea1" rows="3"></textarea>
+    </div>
+    <div class="form-group">
+      <input type="text" class="form-control" th:field="${jobEdit.location}" aria-describedby="emailHelp" placeholder="Enter location">
+    </div>
+    <div class="form-group">
+      <p>Expiration Date</p>
+      <input type="date" th:field="${jobEdit.expirationDate}" th:value="${formattedDate}" class="form-control" name="dateInput">
+    </div>
+    <button style="margin-top: 10px" type="submit" class="btn btn-primary">Edit</button>
+  </form>
+</div>
+<th:block th:replace="index::scripts"></th:block>
+</body>
+</html>

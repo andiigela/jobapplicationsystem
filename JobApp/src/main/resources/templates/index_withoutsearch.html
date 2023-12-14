@@ -16,18 +16,6 @@
         </button>
         <a class="navbar-brand" th:href="@{/dashboard}">Job App Platform</a>
 
-        <form method="get" class="form-inline my-2 my-lg-0" th:action="@{/search}">
-            <input class="form-control mr-sm-2" name="searchButton" type="search" placeholder="Search" aria-label="Search">
-            <div class="input-group">
-                <select class="form-select" name="searchKeyword" id="selectOptions" aria-label="Default select example" style="padding: 5px;margin: 0px 10px 0px 5px">
-                    <option selected value="Profile">Select an option</option>
-                    <option value="Profile">Profile</option>
-                    <option value="Job">Job</option>
-                </select>
-            </div>
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-
         <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
             <ul class="navbar-nav ml-auto mr-2">
                 <li th:if="${#authorization.expression('isAnonymous()')}" style="margin-right: 10px"><a th:href="@{/register}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
