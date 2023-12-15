@@ -17,7 +17,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String description;
-    private Long numberOfLikes;
+    private Long numberOfLikes=0L;
     @ManyToOne
     private AppUser appUser;
 }
