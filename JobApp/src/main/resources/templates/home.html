@@ -17,6 +17,7 @@
                     <div class="user-info">
                         <img src="https://via.placeholder.com/40" alt="User Profile Picture">
                         <h5 th:text="${post.getAppUser().getProfile().firstName + ' ' + post.getAppUser().getProfile().lastName}"></h5>
+                        <a th:if="${post.getAppUser().getUsername().equals(#authorization.getAuthentication().getName())}" style="margin-left: 65%" th:href="@{/profile/posts/edit/{id}(id=${post.id})}"><button class="btn btn-warning">Edit</button></a>
                     </div>
                     <p th:text="${post.description}">
                     </p>
@@ -34,15 +35,17 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12 d-flex justify-content-center">
-                <ul class="pagination">
-                    <li th:each="pageNumber: ${#numbers.sequence(0, posts.totalPages - 1)}">
-                        <input type="submit" class="page-link" name="page" th:value="${pageNumber + 1}" style="height: 40px; width: 40px">
-                    </li>
-                </ul>
+        <form method="get" th:action="@{/}">
+            <div class="row">
+                <div class="col-md-12 d-flex justify-content-center">
+                    <ul class="pagination">
+                        <li th:each="pageNumber: ${#numbers.sequence(0, posts.totalPages - 1)}">
+                            <input type="submit" class="page-link" name="page" th:value="${pageNumber + 1}" style="height: 40px; width: 40px">
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
     <th:block th:replace="index::scripts"></th:block>
 </body>

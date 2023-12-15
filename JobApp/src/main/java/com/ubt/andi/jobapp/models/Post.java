@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -18,6 +21,8 @@ public class Post {
     private Long id;
     private String description;
     private Long numberOfLikes=0L;
+    @UpdateTimestamp
+    private LocalDate updatedAt;
     @ManyToOne
     private AppUser appUser;
 }

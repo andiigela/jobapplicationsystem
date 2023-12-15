@@ -19,7 +19,14 @@ public class PostServiceImpl implements PostService {
     @Override
     public Page<Post> getPostsByPage(Pageable pageable) {
         if(pageable == null) return null;
-        return postRepository.findAll(pageable);
+        return postRepository.findAllByOrderByUpdatedAtDesc(pageable);
+    }
+
+    @Override
+    public Page<Post> getPostsByUserId(Pageable pageable) {
+        if(pageable == null) return null;
+        AppUser appUser = userRepository.findAppUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        return postRepository.findPostsByAppUser_Id(appUser.getId(),pageable);
     }
 
     @Override
@@ -31,4 +38,17 @@ public class PostServiceImpl implements PostService {
         postRepository.save(post);
     }
 
+    @Override
+    public Post getPostById(Long id) {
+        if(id == 0 || id == null) return null;
+        return postRepository.findById(id).get();
+    }
+
+    @Override
+    public void editPost(Post post) {
+        if(post == null) return;
+        Post postDb = postRepository.findById(post.getId()).get();
+        postDb.setDescription(post.getDescription());
+        postRepository.save(postDb);
+    }
 }

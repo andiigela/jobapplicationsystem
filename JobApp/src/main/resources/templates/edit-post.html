@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Post</title>
+    <link th:replace="index::linkrel"/>
+</head>
+<body>
+<div th:replace="index::content"></div>
+<div class="container">
+    <form method="post" th:action="@{/profile/posts/edit}" style="margin-top: 10%" th:object="${postEdit}">
+        <h2>Edit Post</h2>
+        <input type="hidden" th:field="${postEdit.id}"/>
+        <div class="form-group">
+            <label for="exampleFormControlTextarea1" class="form-label">Description</label>
+            <textarea class="form-control" th:field="${postEdit.description}" id="exampleFormControlTextarea1" rows="10"></textarea>
+        </div>
+        <button style="margin-top: 10px" type="submit" class="btn btn-primary">Edit</button>
+    </form>
+</div>
+<th:block th:replace="index::scripts"></th:block>
+</body>
+</html>

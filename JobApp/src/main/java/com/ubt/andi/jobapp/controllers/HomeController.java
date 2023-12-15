@@ -8,10 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class HomeController {
@@ -40,5 +37,27 @@ public class HomeController {
     public String createPost(@ModelAttribute("post") Post post){
         postService.createPost(post);
         return "redirect:/";
+    }
+    @GetMapping("/profile/posts")
+    public String getUserPosts(@RequestParam(value = "page",defaultValue = "0") String page,Model model){
+        int pageNumber = Integer.parseInt(page);
+        if(pageNumber > 0){
+            pageNumber -= 1;
+        }
+        Pageable pageable = PageRequest.of(pageNumber,PAGE_SIZE);
+        Page<Post> userPosts= postService.getPostsByUserId(pageable);
+        model.addAttribute("userPosts",userPosts);
+        return "user-posts";
+    }
+    @GetMapping("/profile/posts/edit/{id}")
+    public String getEditPostView(@PathVariable("id") Long id, Model model){
+        Post post = postService.getPostById(id);
+        model.addAttribute("postEdit",post);
+        return "edit-post";
+    }
+    @PostMapping("/profile/posts/edit")
+    public String editPost(@ModelAttribute("postEdit") Post post){
+        postService.editPost(post);
+        return "redirect:/profile/posts";
     }
 }
