@@ -26,7 +26,7 @@ public class PostServiceImpl implements PostService {
     public Page<Post> getPostsByUserId(Pageable pageable) {
         if(pageable == null) return null;
         AppUser appUser = userRepository.findAppUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-        return postRepository.findPostsByAppUser_Id(appUser.getId(),pageable);
+        return postRepository.findPostsByAppUser_IdOrderByUpdatedAtDesc(appUser.getId(),pageable);
     }
 
     @Override

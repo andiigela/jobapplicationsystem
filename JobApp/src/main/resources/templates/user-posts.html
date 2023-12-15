@@ -12,6 +12,9 @@
     <div class="col-md-12 d-flex justify-content-center">
         <h2>My Posts</h2>
     </div>
+    <div class="col-md-12 d-flex justify-content-start">
+        <a th:href="@{/posts/create}"><button class="btn btn-info" style="margin-left: 165%">Create Post</button></a>
+    </div>
     <div class="row" th:each="post: ${userPosts}">
         <div class="col-md-8 offset-md-2">
             <div class="post">
@@ -36,15 +39,18 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-12 d-flex justify-content-center">
-            <ul class="pagination">
-                <li th:each="pageNumber: ${#numbers.sequence(0, userPosts.totalPages - 1)}">
-                    <input type="submit" class="page-link" name="page" th:value="${pageNumber + 1}" style="height: 40px; width: 40px">
-                </li>
-            </ul>
+    <form method="get" th:action="@{/profile/posts}">
+        <div class="row">
+            <div class="col-md-12 d-flex justify-content-center">
+                <ul class="pagination">
+                    <li th:each="pageNumber: ${#numbers.sequence(0, userPosts.totalPages - 1)}">
+                        <input type="submit" class="page-link" name="page" th:value="${pageNumber + 1}" style="height: 40px; width: 40px">
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
+    </form>
+
 </div>
 <th:block th:replace="index::scripts"></th:block>
 </body>

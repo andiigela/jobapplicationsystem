@@ -8,6 +8,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findAllByOrderByUpdatedAtDesc(Pageable pageable);
-    Page<Post> findPostsByAppUser_Id(@Param("id") Long id, Pageable pageable);
+    Page<Post> findPostsByAppUser_IdOrderByUpdatedAtDesc(@Param("id") Long id, Pageable pageable);
 
 }
