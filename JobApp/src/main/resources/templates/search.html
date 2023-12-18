@@ -63,7 +63,9 @@
                 <td><img src="https://via.placeholder.com/150" alt="User Image"></td>
                 <td th:text="${profile.firstName}"></td>
                 <td th:text="${profile.lastName}"></td>
-                <td><a th:href="@{/profile/view/{username}(username=${profile.getAppuser().getUsername()})}"><button class="btn btn-primary btn-profile">View Profile</button></a></td>
+                <td>
+                    <a th:href="@{/profile/view/{username}(username=${profile.getAppuser().getUsername()})}" class="btn btn-primary">View Profile</a>
+                </td>
             </tr>
             </tbody>
         </table>

@@ -8,6 +8,8 @@ import lombok.Setter;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -25,4 +27,6 @@ public class Post {
     private LocalDate updatedAt;
     @ManyToOne
     private AppUser appUser;
+    @OneToMany(mappedBy = "post")
+    private List<LikedPosts> likedPosts = new ArrayList<>();
 }
