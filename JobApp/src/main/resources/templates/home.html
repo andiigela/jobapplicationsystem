@@ -51,6 +51,9 @@
                         <img src="https://via.placeholder.com/40" alt="User Profile Picture">
                         <h5 th:text="${post.getAppUser().getProfile().firstName + ' ' + post.getAppUser().getProfile().lastName}"></h5>
                         <a th:if="${post.getAppUser().getUsername().equals(#authorization.getAuthentication().getName())}" style="margin-left: 65%" th:href="@{/profile/posts/edit/{id}(id=${post.id})}"><button class="btn btn-warning">Edit</button></a>
+                        <form th:if="${post.getAppUser().getUsername().equals(#authorization.getAuthentication().getName())}" method="post" th:action="@{/profile/posts/delete/{id}(id=${post.id})}">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
                     </div>
                     <p th:text="${post.description}">
                     </p>
@@ -85,7 +88,7 @@
                 </div>
             </div>
         </div>
-        <form method="get" th:action="@{/}">
+        <form method="get" th:action="@{/}" th:if="${posts.totalElements != 0}">
             <div class="row">
                 <div class="col-md-12 d-flex justify-content-center">
                     <ul class="pagination">

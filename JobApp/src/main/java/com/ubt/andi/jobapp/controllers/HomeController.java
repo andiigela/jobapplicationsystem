@@ -91,6 +91,11 @@ public class HomeController {
         postService.editPost(post);
         return "redirect:/profile/posts";
     }
+    @PostMapping("/profile/posts/delete/{id}")
+    public String deletePost(@PathVariable("id") Long id){
+        postService.deletePost(id);
+        return "redirect:/";
+    }
     @PostMapping("/like/{postId}")
     public String doLike(@PathVariable("postId") Long postId){
         Post post = postService.getPostById(postId);

@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,10 +25,12 @@ public class Post {
     private Long id;
     private String description;
     private Long numberOfLikes=0L;
+    @CreationTimestamp
+    private LocalDate createdAt;
     @UpdateTimestamp
     private LocalDate updatedAt;
     @ManyToOne
     private AppUser appUser;
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post",cascade = CascadeType.REMOVE)
     private List<LikedPosts> likedPosts = new ArrayList<>();
 }

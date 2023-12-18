@@ -19,14 +19,14 @@ public class PostServiceImpl implements PostService {
     @Override
     public Page<Post> getPostsByPage(Pageable pageable) {
         if(pageable == null) return null;
-        return postRepository.findAllByOrderByUpdatedAtDesc(pageable);
+        return postRepository.findAllByOrderByCreatedAtDesc(pageable);
     }
 
     @Override
     public Page<Post> getPostsByUserId(Pageable pageable) {
         if(pageable == null) return null;
         AppUser appUser = userRepository.findAppUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-        return postRepository.findPostsByAppUser_IdOrderByUpdatedAtDesc(appUser.getId(),pageable);
+        return postRepository.findPostsByAppUser_IdOrderByCreatedAtDesc(appUser.getId(),pageable);
     }
 
     @Override
@@ -50,5 +50,11 @@ public class PostServiceImpl implements PostService {
         Post postDb = postRepository.findById(post.getId()).get();
         postDb.setDescription(post.getDescription());
         postRepository.save(postDb);
+    }
+
+    @Override
+    public void deletePost(Long id) {
+        if(id == 0 || id == null) return;
+        postRepository.deleteById(id);
     }
 }
