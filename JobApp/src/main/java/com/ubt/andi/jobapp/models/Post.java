@@ -33,4 +33,6 @@ public class Post {
     private AppUser appUser;
     @OneToMany(mappedBy = "post",cascade = CascadeType.REMOVE)
     private List<LikedPosts> likedPosts = new ArrayList<>();
+    @OneToMany(mappedBy = "post")
+    private List<Comment> comments = new ArrayList<>();
 }
