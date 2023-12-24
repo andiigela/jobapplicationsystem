@@ -73,7 +73,7 @@
                                     </div>
                                     <!-- Comment button in the middle -->
                                     <div class="col-auto text-center">
-                                        <button type="button" class="btn btn-light btn-action mr-2"><i class="far fa-comment"></i> Comment</button>
+                                        <a th:href="@{/posts/{id}/comment(id=${post.id})}"><button type="button" class="btn btn-light btn-action mr-2"><i class="far fa-comment"></i> Comment</button></a>
                                     </div>
                                     <!-- Share button on the right -->
                                     <div class="col-auto text-right">
@@ -83,8 +83,6 @@
                             </form>
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </div>

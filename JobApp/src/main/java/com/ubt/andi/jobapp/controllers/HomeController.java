@@ -1,12 +1,7 @@
 package com.ubt.andi.jobapp.controllers;
-import com.ubt.andi.jobapp.models.AppUser;
-import com.ubt.andi.jobapp.models.Job;
-import com.ubt.andi.jobapp.models.LikedPosts;
-import com.ubt.andi.jobapp.models.Post;
-import com.ubt.andi.jobapp.services.JobService;
-import com.ubt.andi.jobapp.services.LikedPostsService;
-import com.ubt.andi.jobapp.services.PostService;
-import com.ubt.andi.jobapp.services.UserService;
+import com.ubt.andi.jobapp.models.*;
+import com.ubt.andi.jobapp.services.*;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.catalina.security.SecurityConfig;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,12 +20,14 @@ import java.util.Map;
 public class HomeController {
     private final PostService postService;
     private final UserService userService;
+    private final CommentService commentService;
     private final LikedPostsService likedPostsService;
     private static final int PAGE_SIZE = 5;
-    public HomeController(PostService postService,UserService userService,LikedPostsService likedPostsService){
+    public HomeController(PostService postService,UserService userService,LikedPostsService likedPostsService,CommentService commentService){
         this.postService=postService;
         this.userService=userService;
         this.likedPostsService=likedPostsService;
+        this.commentService=commentService;
     }
     @GetMapping("/")
     public String getHomeView(@RequestParam(value = "page",defaultValue = "0") String page, Model model){
@@ -97,7 +95,7 @@ public class HomeController {
         return "redirect:/";
     }
     @PostMapping("/like/{postId}")
-    public String doLike(@PathVariable("postId") Long postId){
+    public String doLike(@PathVariable("postId") Long postId, HttpServletRequest request){
         Post post = postService.getPostById(postId);
         AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         LikedPosts existingLikedPosts = likedPostsService.isPostLikedByUser(user,post);
@@ -115,6 +113,26 @@ public class HomeController {
             }
         }
         postService.editPost(post);
+        String referrer = request.getHeader("referer");
+
+        if(referrer != null && referrer.contains("/posts/" + postId + "/comment")){
+            return "redirect:/posts/" + postId + "/comment";
+        }
         return "redirect:/";
+    }
+    @GetMapping("/posts/{id}/comment")
+    public String getCommentPostView(@PathVariable("id") Long postId,Model model){
+        Post post = postService.getPostById(postId);
+        Map<Long, Boolean> userLikes = new HashMap<>();
+        boolean likedByUser = false;
+        AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        LikedPosts likedPosts = likedPostsService.isPostLikedByUser(user, post);
+        if(likedPosts != null){
+            likedByUser = true;
+        }
+        userLikes.put(post.getId(), likedByUser);
+        model.addAttribute("userLikes",userLikes);
+        model.addAttribute("post",post);
+        return "comment-section";
     }
 }
