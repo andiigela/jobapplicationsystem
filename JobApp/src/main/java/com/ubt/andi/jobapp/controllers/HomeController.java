@@ -135,4 +135,12 @@ public class HomeController {
         model.addAttribute("post",post);
         return "comment-section";
     }
+    @PostMapping("/posts/{id}/comment")
+    public String commentPost(@PathVariable("id") Long postId,@RequestParam("description") String description){
+        Post post = postService.getPostById(postId);
+        Comment comment = new Comment();
+        comment.setDescription(description);
+        commentService.createComment(comment,post);
+        return "redirect:/posts/"+postId+"/comment";
+    }
 }
