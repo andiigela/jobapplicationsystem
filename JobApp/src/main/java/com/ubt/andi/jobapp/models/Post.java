@@ -25,6 +25,7 @@ public class Post {
     private Long id;
     private String description;
     private Long numberOfLikes=0L;
+    private Long numberOfComments=0L;
     @CreationTimestamp
     private LocalDate createdAt;
     @UpdateTimestamp
@@ -33,6 +34,6 @@ public class Post {
     private AppUser appUser;
     @OneToMany(mappedBy = "post",cascade = CascadeType.REMOVE)
     private List<LikedPosts> likedPosts = new ArrayList<>();
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post",cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
 }

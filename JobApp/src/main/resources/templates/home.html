@@ -63,7 +63,17 @@
                         <div class="col-md-12">
                             <form method="post" th:action="@{/like/{postId}(postId=${post.id})}">
                                 <div class="mb-2" style="margin-left: 15px">
-                                    <label th:text="${post.getNumberOfLikes() + ' Likes'}"></label>
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <label th:text="${post.getNumberOfLikes() + ' Likes'}"></label>
+                                        </div>
+                                        <div>
+                                            <label th:text="${post.getNumberOfComments() + ' Comments'}"></label>
+                                        </div>
+                                        <div style="margin-right: 10px">
+                                            <label>0 Shares</label>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <!-- Like/Unlike button on the left -->

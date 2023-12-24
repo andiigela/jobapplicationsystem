@@ -28,7 +28,17 @@
                             <div class="col-md-12">
                                 <form method="post" th:action="@{/like/{postId}(postId=${post.id})}">
                                     <div class="mb-2" style="margin-left: 15px">
-                                        <label th:text="${post.getNumberOfLikes() + ' Likes'}"></label>
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <label th:text="${post.getNumberOfLikes() + ' Likes'}"></label>
+                                            </div>
+                                            <div>
+                                                <label th:text="${post.getNumberOfComments() + ' Comments'}"></label>
+                                            </div>
+                                            <div style="margin-right: 10px">
+                                                <label>0 Shares</label>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="d-flex justify-content-between align-items-center">
                                         <!-- Like/Unlike button on the left -->
@@ -66,18 +76,28 @@
                     <h5 class="mb-4">Comments</h5>
                     <div class="comment card mb-4" style="background-color: white" th:each="comment: ${post.comments}">
                         <div class="card-body">
-                            <div class="d-flex align-items-center mb-3">
-                                <img src="https://via.placeholder.com/40" alt="User Profile Picture" class="rounded-circle mr-3">
-                                <div>
-                                    <h6 class="mb-0" th:text="${comment.getAppUser().getProfile().firstName + ' ' + comment.getAppUser().getProfile().lastName}"></h6>
-                                    <small class="text-muted">Posted on Jan 1, 2023</small>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="d-flex align-items-center">
+                                    <img src="https://via.placeholder.com/40" alt="User Profile Picture" class="rounded-circle mr-3">
+                                    <div>
+                                        <h6 class="mb-0" th:text="${comment.getAppUser().getProfile().firstName + ' ' + comment.getAppUser().getProfile().lastName}"></h6>
+                                        <small class="text-muted" th:text="${'Posted on ' + comment.createdAt}"></small>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <a th:if="${comment.getAppUser().getUsername().equals(#authorization.getAuthentication().getName())}" class="ml-3" th:href="@{/posts/{postId}/comment/{commentId}(postId=${post.id},commentId=${comment.id})}">
+                                        <button style="width: 50px; height: 30px;font-size: 12px;font-weight: bold;text-align: center" class="btn btn-warning">Edit</button>
+                                    </a>
+                                    <form th:if="${comment.getAppUser().getUsername().equals(#authorization.getAuthentication().getName())}" method="post" th:action="@{/profile/posts/delete/{id}(id=${post.id})}" class="ml-2">
+                                        <button style="width: 60px; height: 30px;font-size: 12px;font-weight: bold;text-align: center" type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
                                 </div>
                             </div>
                             <p class="card-text mb-0" th:text="${comment.description}"></p>
                         </div>
                     </div>
                 </div>
-                </div>
+            </div>
             </div>
         </div>
     </div>

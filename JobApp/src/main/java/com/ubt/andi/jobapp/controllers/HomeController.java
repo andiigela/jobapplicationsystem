@@ -141,6 +141,26 @@ public class HomeController {
         Comment comment = new Comment();
         comment.setDescription(description);
         commentService.createComment(comment,post);
+        post.setNumberOfComments(post.getNumberOfComments()+1); // increase number of comments
+        postService.editPost(post);
         return "redirect:/posts/"+postId+"/comment";
+    }
+    @GetMapping("/posts/{postId}/comment/{commentId}")
+    public String editComment(@PathVariable("postId") Long postId,@PathVariable("commentId") Long commentId,Model model){
+        Post post = postService.getPostById(postId);
+        Comment comment = commentService.findCommentById(commentId);
+        Map<Long, Boolean> userLikes = new HashMap<>();
+        boolean likedByUser = false;
+        AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        LikedPosts likedPosts = likedPostsService.isPostLikedByUser(user, post);
+        if(likedPosts != null){
+            likedByUser = true;
+        }
+        userLikes.put(post.getId(), likedByUser);
+        model.addAttribute("userLikes",userLikes);
+        model.addAttribute("post",post);
+        model.addAttribute("comment",comment);
+        model.addAttribute("commentId",commentId);
+        return "editcomment-section";
     }
 }
