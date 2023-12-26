@@ -84,16 +84,14 @@
                     <small class="text-muted" th:text="${'Posted on ' + comment.createdAt}"></small>
                   </div>
                 </div>
+                <form method="post" th:object="${comment}" th:if="${comment.getAppUser().getUsername().equals(#authorization.getAuthentication().getName()) && commentId == comment.id}" class="ml-3" th:action="@{/posts/{postId}/comment/{commentId}(postId=${post.id},commentId=${comment.id})}">
                 <div class="d-flex align-items-center">
-                  <form th:if="${comment.getAppUser().getUsername().equals(#authorization.getAuthentication().getName()) && commentId == comment.id}" class="ml-3" th:href="@{/profile/posts/edit/{id}(id=${post.id})}">
+                    <input type="hidden" th:field="${comment.id}"/>
                     <button type="submit" style="width: 50px; height: 30px;font-size: 12px;font-weight: bold;text-align: center" class="btn btn-warning">Save</button>
-                  </form>
-                  <form th:if="${comment.getAppUser().getUsername().equals(#authorization.getAuthentication().getName()) && commentId == comment.id}" method="post" th:action="@{/profile/posts/delete/{id}(id=${post.id})}" class="ml-2">
-                    <button style="width: 60px; height: 30px;font-size: 12px;font-weight: bold;text-align: center" type="submit" class="btn btn-danger">Delete</button>
-                  </form>
                 </div>
               </div>
               <input th:if="${comment.getAppUser().getUsername().equals(#authorization.getAuthentication().getName()) && commentId == comment.id}" th:field="${comment.description}" class="form-control comment-input" style="width: 100%" />
+              </form>
               <p th:unless="${comment.getAppUser().getUsername().equals(#authorization.getAuthentication().getName()) && commentId == comment.id}" class="card-text mb-0" th:text="${comment.description}"></p>
             </div>
           </div>

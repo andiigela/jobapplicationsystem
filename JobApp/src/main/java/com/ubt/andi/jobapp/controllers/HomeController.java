@@ -146,7 +146,7 @@ public class HomeController {
         return "redirect:/posts/"+postId+"/comment";
     }
     @GetMapping("/posts/{postId}/comment/{commentId}")
-    public String editComment(@PathVariable("postId") Long postId,@PathVariable("commentId") Long commentId,Model model){
+    public String editCommentView(@PathVariable("postId") Long postId,@PathVariable("commentId") Long commentId,Model model){
         Post post = postService.getPostById(postId);
         Comment comment = commentService.findCommentById(commentId);
         Map<Long, Boolean> userLikes = new HashMap<>();
@@ -162,5 +162,25 @@ public class HomeController {
         model.addAttribute("comment",comment);
         model.addAttribute("commentId",commentId);
         return "editcomment-section";
+    }
+    @PostMapping("/posts/{postId}/comment/{commentId}")
+    public String editComment(@PathVariable("postId") Long postId,@PathVariable("commentId") Long commentId,
+                              @ModelAttribute("comment") Comment comment){
+        commentService.editComment(comment);
+//        if(post.getNumberOfComments() != 0){
+//            post.setNumberOfLikes(post.getNumberOfComments()-1);
+//            postService.editPost(post);
+//        }
+        return "redirect:/posts/"+postId+"/comment";
+    }
+    @PostMapping("/posts/delete/{postId}/{commentId}")
+    public String deleteComment(@PathVariable("postId") Long postId,@PathVariable("commentId") Long commentId){
+        Post post = postService.getPostById(postId);
+        commentService.deleteComment(commentId);
+        if(post.getNumberOfComments() != 0){
+            post.setNumberOfComments(post.getNumberOfComments()-1);
+            postService.editPost(post);
+        }
+        return "redirect:/posts/"+postId+"/comment";
     }
 }
