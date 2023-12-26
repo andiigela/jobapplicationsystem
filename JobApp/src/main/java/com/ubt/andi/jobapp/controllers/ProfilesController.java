@@ -3,24 +3,25 @@ package com.ubt.andi.jobapp.controllers;
 import com.ubt.andi.jobapp.dto.UserDto;
 import com.ubt.andi.jobapp.models.AppUser;
 import com.ubt.andi.jobapp.models.Profile;
+import com.ubt.andi.jobapp.services.FileUploadService;
 import com.ubt.andi.jobapp.services.ProfileService;
 import com.ubt.andi.jobapp.services.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 public class ProfilesController {
     private final UserService appUserService;
     private final ProfileService profileService;
-    public ProfilesController(UserService appUserService,ProfileService profileService){
+    private final FileUploadService fileUploadService;
+    public ProfilesController(UserService appUserService,ProfileService profileService,FileUploadService fileUploadService){
         this.appUserService=appUserService;
         this.profileService=profileService;
+        this.fileUploadService=fileUploadService;
     }
     @GetMapping("/profile/view/{username}")
     public String getProfileeView(Model model,@PathVariable("username") String username){
@@ -47,8 +48,9 @@ public class ProfilesController {
         return "edit-profile";
     }
     @PostMapping("/profile/edit")
-    public String editProfilee(@ModelAttribute("editProfile") Profile profile){
+    public String editProfilee(@ModelAttribute("editProfile") Profile profile, @RequestParam("file") MultipartFile file){
         Authentication authUser = SecurityContextHolder.getContext().getAuthentication();
+        fileUploadService.saveImage(profile,file);
         profileService.updateProfile(profile);
         return "redirect:/profile/view/" + authUser.getName();
     }

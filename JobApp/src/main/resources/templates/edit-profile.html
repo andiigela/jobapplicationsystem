@@ -13,7 +13,7 @@
 <body>
 <div th:replace="index::content"></div>
 <div class="container emp-profile">
-    <form method="post" th:object="${editProfile}" th:action="@{/profile/edit}">
+    <form method="post" th:object="${editProfile}" th:action="@{/profile/edit}" enctype="multipart/form-data">
         <input type="hidden" th:field="${editProfile.id}"/>
         <div class="row">
             <div class="col-md-4">
@@ -21,7 +21,7 @@
                     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS52y5aInsxSm31CvHOFHWujqUx_wWTS9iM6s7BAm21oEN_RiGoog" alt=""/>
                     <div class="file btn btn-lg btn-primary">
                         Change Photo
-                        <input type="file" name="file"/>
+                        <input class="form-control" name="file" type="file" id="formFile">
                     </div>
                 </div>
             </div>

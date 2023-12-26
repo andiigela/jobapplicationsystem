@@ -55,6 +55,8 @@ public class ProfileServiceImpl implements ProfileService{
         profileDb.setEnglishLevel(profile.getEnglishLevel());
         profileDb.setGithubLink(profile.getGithubLink());
         profileDb.setSkills(profile.getSkills());
+        profileDb.setImageData(profile.getImageData());
+        profileDb.setImagePath(profile.getImagePath());
         profileRepository.save(profileDb);
     }
 

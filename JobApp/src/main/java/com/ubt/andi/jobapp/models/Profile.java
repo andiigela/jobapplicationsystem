@@ -22,12 +22,13 @@ public class Profile {
     private String education;
     private String experience;
     private String profession;
+    private byte[] imageData;
+    private String imagePath;
     private String phone;
     private String experienceLevel;
     private Integer hourlyRate;
     private Integer totalProjects;
     private String englishLevel;
-
     private String githubLink;
     private String skills;
 
