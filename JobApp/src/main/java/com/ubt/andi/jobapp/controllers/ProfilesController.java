@@ -72,4 +72,17 @@ public class ProfilesController {
         appUserService.updateUser(userDto);
         return "redirect:/logout";
     }
+    @GetMapping("/profile/edit/{username}/delete/picture")
+    public String deleteProfilePicture(@PathVariable("username") String username){
+        AppUser user = appUserService.findUserByUsername(username);
+        AppUser loggedInUser = appUserService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(user != loggedInUser){
+            return "redirect:/profile/edit/"+loggedInUser.getUsername();
+        }
+        Profile userProfile = user.getProfile();
+        this.fileUploadService.deleteImage(userProfile);
+        profileService.updateProfile(userProfile);
+        return "redirect:/profile/edit/"+loggedInUser.getUsername();
+
+    }
 }

@@ -12,7 +12,7 @@
             <!-- Profile Credentials Box -->
             <div class="profile-box rounded bg-gradient shadow-lg">
                 <div class="user-info d-flex align-items-center p-4">
-                    <img src="https://via.placeholder.com/100" alt="User Profile Picture" class="rounded-circle mr-3" style="width: 80px; height: 80px;">
+                    <img th:src="@{${user.getProfile().imagePath}}" alt="User Profile Picture" class="rounded-circle mr-3" style="width: 80px; height: 80px;">
                     <div>
                         <h6 class="mb-1 font-weight-bold text-light" th:text="${user.profile.firstName + ' ' + user.profile.lastName}"></h6>
                         <p class="text-light mb-1" th:if="${user.roleAccount == false}">Employer</p>
@@ -48,7 +48,7 @@
             <div class="col-md-8 offset-md-2">
                 <div class="post">
                     <div class="user-info">
-                        <img src="https://via.placeholder.com/40" alt="User Profile Picture">
+                        <img th:src="@{${post.getAppUser().getProfile().imagePath}}" alt="User Profile Picture">
                         <h5 th:text="${post.getAppUser().getProfile().firstName + ' ' + post.getAppUser().getProfile().lastName}"></h5>
                         <a th:if="${post.getAppUser().getUsername().equals(#authorization.getAuthentication().getName())}" style="margin-left: 65%" th:href="@{/profile/posts/edit/{id}(id=${post.id})}"><button class="btn btn-warning">Edit</button></a>
                         <form th:if="${post.getAppUser().getUsername().equals(#authorization.getAuthentication().getName())}" method="post" th:action="@{/profile/posts/delete/{id}(id=${post.id})}">

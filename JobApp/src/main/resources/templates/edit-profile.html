@@ -18,12 +18,16 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="profile-img">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS52y5aInsxSm31CvHOFHWujqUx_wWTS9iM6s7BAm21oEN_RiGoog" alt=""/>
+                    <img th:src="@{${editProfile.imagePath}}" width="60" height="60" alt=""/>
                     <div class="file btn btn-lg btn-primary">
                         Change Photo
                         <input class="form-control" name="file" type="file" id="formFile">
                     </div>
                 </div>
+                <div style="margin-left: 45%">
+                    <a th:href="@{/profile/edit/{username}/delete/picture(username=${#authentication.name})}" class="btn btn-danger">X</a>
+                </div>
+
             </div>
             <div class="col-md-6">
                 <div class="profile-head">

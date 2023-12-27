@@ -34,6 +34,7 @@ public class ProfileServiceImpl implements ProfileService{
         profile.setEnglishLevel("No English Level");
         profile.setGithubLink("No github link");
         profile.setSkills("No skills");
+        profile.setImagePath("/static/images/anonymous.png");
         this.profileRepository.save(profile);
     }
 
