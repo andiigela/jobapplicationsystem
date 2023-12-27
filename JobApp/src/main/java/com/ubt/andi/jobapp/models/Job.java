@@ -9,7 +9,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -31,4 +33,6 @@ public class Job {
     private LocalDate expirationDate;
     @ManyToOne
     private AppUser appUser;
+    @OneToMany(mappedBy = "job")
+    private List<Application> applications = new ArrayList<>();
 }

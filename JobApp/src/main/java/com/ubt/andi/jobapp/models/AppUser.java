@@ -45,6 +45,6 @@ public class AppUser {
     private List<LikedPosts> likedPosts = new ArrayList<>();
     @OneToMany(mappedBy = "appUser")
     private List<Comment> comments = new ArrayList<>();
-
-
+    @OneToMany(mappedBy = "appUser")
+    private List<Application> applications = new ArrayList<>();
 }
