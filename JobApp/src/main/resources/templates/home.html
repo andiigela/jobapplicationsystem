@@ -54,14 +54,30 @@
                         <form th:if="${post.getAppUser().getUsername().equals(#authorization.getAuthentication().getName())}" method="post" th:action="@{/profile/posts/delete/{id}(id=${post.id})}">
                             <button type="submit" class="btn btn-danger" style="width: 60px; height:30px;font-weight: bold;font-size: 12px">Delete</button>
                         </form>
-
-                        <button style="width: 60px;margin-left:50%; height:30px;font-weight: bold;font-size: 12px" th:if="${!post.appUser.username.equals(#authentication.name) && post.job != null}" class="btn btn-primary" >Apply</button>
-
                     </div>
                     <p th:text="${post.description}">
                     </p>
                     <!-- Add more post content here (images, videos, etc.) -->
                     <hr>
+                    <!-- Job Details Section -->
+                    <div th:if="${post.job != null}" style="margin-bottom: 8px" class="job-details mt-4 p-4 border rounded-lg">
+                        <h5 class="mb-4 text-uppercase text-primary">Job Details</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="mb-3"><strong>Title:</strong> <span th:text="${post.job.title}"></span></p>
+                                <p class="mb-3"><strong>Location:</strong> <span th:text="${post.job.location}"></span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="mb-3"><strong>Created:</strong> <span th:text="${post.job.dateCreated}"></span></p>
+                                <p class="mb-3"><strong>Expiration:</strong> <span th:text="${post.job.expirationDate}"></span></p>
+                            </div>
+                        </div>
+                        <!-- Add more job details if needed -->
+                        <div class="text-center mt-4">
+                            <a href="#" class="btn btn-primary rounded-pill px-4 py-2 explore-button">View Details</a>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="col-md-12">
                             <form method="post" th:action="@{/like/{postId}(postId=${post.id})}">

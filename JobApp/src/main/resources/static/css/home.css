@@ -112,4 +112,28 @@ body{
     border-bottom-left-radius: 0;
 }
 
+/* Custom CSS for the Job Details section and Explore Details button */
+/* Custom CSS for the Job Details section and Explore button */
+.job-details {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 20px;
+}
 
+.job-details h5 {
+    color: #333;
+}
+
+.explore-button {
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: #fff;
+}
+
+.explore-button:hover {
+    opacity: 0.9;
+}
+
+.explore-button:active {
+    transform: translateY(1px);
+}
