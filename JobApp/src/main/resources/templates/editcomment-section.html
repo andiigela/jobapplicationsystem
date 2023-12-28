@@ -13,7 +13,7 @@
       <div class="col-md-8 offset-md-2">
         <div class="post">
           <div class="user-info">
-            <img src="https://via.placeholder.com/40" alt="User Profile Picture">
+            <img th:src="@{${post.getAppUser().getProfile().imagePath}}"  alt="User Profile Picture">
             <h5 th:text="${post.getAppUser().getProfile().firstName + ' ' + post.getAppUser().getProfile().lastName}"></h5>
             <a th:if="${post.getAppUser().getUsername().equals(#authorization.getAuthentication().getName())}" style="margin-left: 65%" th:href="@{/profile/posts/edit/{id}(id=${post.id})}"><button class="btn btn-warning">Edit</button></a>
             <form th:if="${post.getAppUser().getUsername().equals(#authorization.getAuthentication().getName())}" method="post" th:action="@{/profile/posts/delete/{id}(id=${post.id})}">
@@ -24,6 +24,23 @@
           </p>
           <!-- Add more post content here (images, videos, etc.) -->
           <hr>
+          <div th:if="${post.job != null}" style="margin-bottom: 8px" class="job-details mt-4 p-4 border rounded-lg">
+            <h5 class="mb-4 text-uppercase text-primary">Job Details</h5>
+            <div class="row">
+              <div class="col-md-6">
+                <p class="mb-3"><strong>Title:</strong> <span th:text="${post.job.title}"></span></p>
+                <p class="mb-3"><strong>Location:</strong> <span th:text="${post.job.location}"></span></p>
+              </div>
+              <div class="col-md-6">
+                <p class="mb-3"><strong>Created:</strong> <span th:text="${post.job.dateCreated}"></span></p>
+                <p class="mb-3"><strong>Expiration:</strong> <span th:text="${post.job.expirationDate}"></span></p>
+              </div>
+            </div>
+            <!-- Add more job details if needed -->
+            <div class="text-center mt-4">
+              <a href="#" class="btn btn-primary rounded-pill px-4 py-2 explore-button">View Details</a>
+            </div>
+          </div>
           <div class="row">
             <div class="col-md-12">
               <form method="post" th:action="@{/like/{postId}(postId=${post.id})}">
@@ -78,7 +95,7 @@
             <div class="card-body">
               <div class="d-flex justify-content-between align-items-center mb-3">
                 <div class="d-flex align-items-center">
-                  <img src="https://via.placeholder.com/40" alt="User Profile Picture" class="rounded-circle mr-3">
+                  <img th:src="@{${comment.getAppUser().getProfile().imagePath}}" alt="User Profile Picture" class="rounded-circle mr-3">
                   <div>
                     <h6 class="mb-0" th:text="${comment.getAppUser().getProfile().firstName + ' ' + comment.getAppUser().getProfile().lastName}"></h6>
                     <small class="text-muted" th:text="${'Posted on ' + comment.createdAt}"></small>
@@ -92,6 +109,7 @@
               </div>
               <input th:if="${comment.getAppUser().getUsername().equals(#authorization.getAuthentication().getName()) && commentId == comment.id}" th:field="${comment.description}" class="form-control comment-input" style="width: 100%" />
               </form>
+
               <p th:unless="${comment.getAppUser().getUsername().equals(#authorization.getAuthentication().getName()) && commentId == comment.id}" class="card-text mb-0" th:text="${comment.description}"></p>
             </div>
           </div>
