@@ -35,4 +35,6 @@ public class Job {
     private AppUser appUser;
     @OneToMany(mappedBy = "job")
     private List<Application> applications = new ArrayList<>();
+    @OneToOne(mappedBy = "job")
+    private Post post;
 }

@@ -37,7 +37,7 @@
         <form method="get" th:action="@{/jobs}">
             <div class="row">
                     <div class="col-md-12 d-flex justify-content-center">
-                        <ul class="pagination">
+                        <ul class="pagination" th:if="${jobs != null && jobs.totalPages > 0}">
                             <li th:each="pageNumber: ${#numbers.sequence(0, jobs.totalPages - 1)}">
                                 <input type="submit" class="page-link" name="page" th:value="${pageNumber + 1}" style="height: 40px; width: 40px">
                             </li>

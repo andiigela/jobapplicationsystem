@@ -21,13 +21,16 @@ public class HomeController {
     private final PostService postService;
     private final UserService userService;
     private final CommentService commentService;
+    private final JobService jobService;
     private final LikedPostsService likedPostsService;
     private static final int PAGE_SIZE = 5;
-    public HomeController(PostService postService,UserService userService,LikedPostsService likedPostsService,CommentService commentService){
+    public HomeController(PostService postService,UserService userService,LikedPostsService likedPostsService,
+                          CommentService commentService,JobService jobService){
         this.postService=postService;
         this.userService=userService;
         this.likedPostsService=likedPostsService;
         this.commentService=commentService;
+        this.jobService=jobService;
     }
     @GetMapping("/")
     public String getHomeView(@RequestParam(value = "page",defaultValue = "0") String page, Model model){
@@ -59,11 +62,18 @@ public class HomeController {
     }
     @GetMapping("/posts/create")
     public String getCreatePostView(Model model){
+        AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         model.addAttribute("post", new Post());
+        model.addAttribute("user", user);
         return "create-post";
     }
     @PostMapping("/posts/create")
-    public String createPost(@ModelAttribute("post") Post post){
+    public String createPost(@ModelAttribute("post") Post post, @RequestParam("jobId") Long jobId){
+        if(jobId != null && jobId != 0){
+            Job job = jobService.getJob(jobId);
+            post.setJob(job);
+            job.setPost(post);
+        }
         postService.createPost(post);
         return "redirect:/";
     }

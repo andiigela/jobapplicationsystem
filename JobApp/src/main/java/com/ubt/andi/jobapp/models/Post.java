@@ -36,4 +36,6 @@ public class Post {
     private List<LikedPosts> likedPosts = new ArrayList<>();
     @OneToMany(mappedBy = "post",cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
+    @OneToOne(cascade = CascadeType.REFRESH)
+    private Job job;
 }
