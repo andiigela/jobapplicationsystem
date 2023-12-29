@@ -3,6 +3,8 @@ import com.ubt.andi.jobapp.models.AppUser;
 import com.ubt.andi.jobapp.models.Application;
 import com.ubt.andi.jobapp.models.Job;
 import com.ubt.andi.jobapp.repositories.ApplicationRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 @Service
 public class ApplicationServiceImpl implements ApplicationService{
@@ -26,5 +28,11 @@ public class ApplicationServiceImpl implements ApplicationService{
     public void deleteApplication(Application application) {
         if(application == null) return;
         applicationRepository.delete(application);
+    }
+
+    @Override
+    public Page<Application> findApplicationsByCreationDateDesc(Job job,Pageable pageable) {
+        if(pageable == null || job == null) return null;
+        return applicationRepository.findAllByJobOrderByCreationDateDesc(job,pageable);
     }
 }

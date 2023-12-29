@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Applicants</title>
+    <link th:replace="index::linkrel"/>
+    <link rel="stylesheet" href="/static/css/applicants.css"/>
+</head>
+<body>
+<div th:replace="index::content"></div>
+<div class="container">
+    <h2 class="text-center mb-4">Applicants List</h2>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Applicant Name</th>
+                <th scope="col">CV</th>
+                <!-- You can add more table headers here -->
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="app: ${apps}">
+                <td th:text="${app.appUser.profile.firstName + ' ' + app.appUser.profile.lastName}"></td>
+                <td>
+                    <a th:href="@{'/' + ${app.filePath}}" download>Download</a>
+                </td>
+                <!-- You can add more table data cells here -->
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<th:block th:replace="index::scripts"></th:block>
+</body>
+</html>

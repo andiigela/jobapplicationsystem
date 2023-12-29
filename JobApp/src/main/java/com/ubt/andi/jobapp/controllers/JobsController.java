@@ -1,6 +1,8 @@
 package com.ubt.andi.jobapp.controllers;
 
+import com.ubt.andi.jobapp.models.Application;
 import com.ubt.andi.jobapp.models.Job;
+import com.ubt.andi.jobapp.services.ApplicationService;
 import com.ubt.andi.jobapp.services.JobService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,9 +17,11 @@ import java.util.List;
 @Controller
 public class JobsController {
     private final JobService jobService;
+    private final ApplicationService applicationService;
     private final static int PAGE_SIZE = 5;
-    public JobsController(JobService jobService){
+    public JobsController(JobService jobService,ApplicationService applicationService){
         this.jobService=jobService;
+        this.applicationService=applicationService;
     }
     @GetMapping("/jobs")
     public String getJobsView(@RequestParam(value = "page",defaultValue = "0") String page, Model model){
@@ -56,5 +60,17 @@ public class JobsController {
     public String editJob(@PathVariable("id") Long id){
         jobService.deleteJobById(id);
         return "redirect:/jobs";
+    }
+    @GetMapping("/job/{jobId}/applicants")
+    public String getApplicantsView(@RequestParam(value = "page",defaultValue = "0") String page,@PathVariable("jobId") Long jobId,Model model){
+        int pageNumber = Integer.parseInt(page);
+        if(pageNumber > 0){
+            pageNumber-=1;
+        }
+        Pageable pageable = PageRequest.of(pageNumber,PAGE_SIZE);
+        Job job = jobService.getJob(jobId);
+        Page<Application> retrieveApplications = applicationService.findApplicationsByCreationDateDesc(job,pageable);
+        model.addAttribute("apps",retrieveApplications);
+        return "show-applicants";
     }
 }
