@@ -6,4 +6,5 @@ import org.springframework.web.multipart.MultipartFile;
 public interface FileUploadService {
     void saveImage(Profile profile, MultipartFile file);
     void deleteImage(Profile profile);
+    void saveDocument(MultipartFile file);
 }

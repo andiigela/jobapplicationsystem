@@ -3,24 +3,27 @@ import com.ubt.andi.jobapp.models.AppUser;
 import com.ubt.andi.jobapp.models.Application;
 import com.ubt.andi.jobapp.models.Job;
 import com.ubt.andi.jobapp.services.ApplicationService;
+import com.ubt.andi.jobapp.services.FileUploadService;
 import com.ubt.andi.jobapp.services.JobService;
 import com.ubt.andi.jobapp.services.UserService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 @Controller
 public class ApplicationsController {
     private final ApplicationService applicationService;
     private final UserService userService;
     private final JobService jobService;
-    public ApplicationsController(ApplicationService applicationService,UserService userService,JobService jobService){
+    private final FileUploadService fileUploadService;
+    public ApplicationsController(ApplicationService applicationService,UserService userService,
+                                  JobService jobService,FileUploadService fileUploadService){
         this.applicationService=applicationService;
         this.userService=userService;
         this.jobService=jobService;
+        this.fileUploadService=fileUploadService;
     }
     @GetMapping("/job/{jobId}/apply")
     public String getApplicationForm(@PathVariable("jobId") Long jobId,Model model){
@@ -37,7 +40,7 @@ public class ApplicationsController {
         return "application-form";
     }
     @PostMapping("/job/{jobId}/apply")
-    public String sendApplication(@PathVariable("jobId") Long jobId,@ModelAttribute("application") Application application){
+    public String sendApplication(@PathVariable("jobId") Long jobId, @RequestParam("cvUpload") MultipartFile cvUpload, @ModelAttribute("application") Application application){
         Job jobDb = jobService.getJob(jobId);
         AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         Application existingApplication = applicationService.findApplicationByUserAndJob(user, jobDb);
@@ -47,6 +50,7 @@ public class ApplicationsController {
         application.setJob(jobDb);
         application.setAppUser(user);
         applicationService.createApplication(application);
+        fileUploadService.saveDocument(cvUpload);
         return "redirect:/dashboard";
     }
 }

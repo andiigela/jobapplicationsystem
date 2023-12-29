@@ -62,4 +62,20 @@ public class FileUploadServiceImpl implements FileUploadService {
             }
         }
     }
+
+    @Override
+    public void saveDocument(MultipartFile file) {
+        if(!file.isEmpty()){
+            try{
+                byte[] fileData = file.getBytes();
+                String fileName = SecurityContextHolder.getContext().getAuthentication().getName() + "_" + file.getOriginalFilename();
+                String filePath = "src/main/resources/static/documents/" + fileName;
+                FileOutputStream fos = new FileOutputStream(filePath);
+                fos.write(fileData);
+                fos.close();
+            }catch (IOException ioe){
+                System.out.println(ioe.getMessage());
+            }
+        }
+    }
 }
