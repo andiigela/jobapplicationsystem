@@ -74,7 +74,7 @@
                         </div>
                         <!-- Add more job details if needed -->
                         <div class="text-center mt-4">
-                            <a href="#" class="btn btn-primary rounded-pill px-4 py-2 explore-button">View Details</a>
+                            <a th:href="@{/job/{jobId}/apply(jobId=${post.job.id})}" class="btn btn-primary rounded-pill px-4 py-2 explore-button">View Details</a>
                         </div>
                     </div>
 
