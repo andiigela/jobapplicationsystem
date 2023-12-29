@@ -21,4 +21,10 @@ public class ApplicationServiceImpl implements ApplicationService{
         if(user == null || job == null) return null;
         return applicationRepository.findByAppUserAndJob(user,job);
     }
+
+    @Override
+    public void deleteApplication(Application application) {
+        if(application == null) return;
+        applicationRepository.delete(application);
+    }
 }

@@ -7,4 +7,5 @@ import com.ubt.andi.jobapp.models.Job;
 public interface ApplicationService {
     void createApplication(Application application);
     Application findApplicationByUserAndJob(AppUser user, Job job);
+    void deleteApplication(Application application);
 }

@@ -43,13 +43,19 @@ body {
     padding: 8px 16px;
 }
 
-.btn-primary {
+.btn-primary{
     background-color: #007bff;
     border-color: #007bff;
     border-radius: 12px;
     padding: 12px;
     width: 100%;
     transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+}
+.btn-danger{
+    border-color: #007bff;
+    border-radius: 12px;
+    padding: 12px;
+    width: 100%;
 }
 
 .btn-primary:hover {

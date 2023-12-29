@@ -53,4 +53,12 @@ public class ApplicationsController {
         fileUploadService.saveDocument(cvUpload);
         return "redirect:/dashboard";
     }
+    @PostMapping("/job/{jobId}/application/delete")
+    public String deleteApplication(@PathVariable("jobId") Long jobId){
+        AppUser userDb = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        Job jobDb = jobService.getJob(jobId);
+        Application applicationDb = applicationService.findApplicationByUserAndJob(userDb,jobDb);
+        applicationService.deleteApplication(applicationDb);
+        return "redirect:/job/"+jobId+"/apply";
+    }
 }

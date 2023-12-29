@@ -36,6 +36,9 @@
                                 <button th:unless="${existingApplication == null}" type="button" disabled class="btn btn-primary btn-block">Submitted</button>
                             </div>
                         </form>
+                        <div class="d-grid" style="margin-top: 10px">
+                            <button th:unless="${existingApplication == null}" type="button" disabled class="btn btn-danger btn-block">Delete Application</button>
+                        </div>
                     </div>
                 </div>
             </div>
