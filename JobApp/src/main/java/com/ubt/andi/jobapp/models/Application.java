@@ -21,6 +21,8 @@ public class Application {
     private Long id;
     @CreationTimestamp
     private LocalDate creationDate;
+    private byte[] fileData;
+    private String filePath;
     @ManyToOne
     private AppUser appUser;
     @ManyToOne

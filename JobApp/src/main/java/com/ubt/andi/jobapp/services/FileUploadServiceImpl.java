@@ -1,4 +1,5 @@
 package com.ubt.andi.jobapp.services;
+import com.ubt.andi.jobapp.models.Application;
 import com.ubt.andi.jobapp.models.Profile;
 import com.ubt.andi.jobapp.repositories.ProfileRepository;
 import org.springframework.core.io.Resource;
@@ -64,7 +65,7 @@ public class FileUploadServiceImpl implements FileUploadService {
     }
 
     @Override
-    public void saveDocument(MultipartFile file) {
+    public void saveDocument(Application application, MultipartFile file) {
         if(!file.isEmpty()){
             try{
                 byte[] fileData = file.getBytes();
@@ -73,6 +74,24 @@ public class FileUploadServiceImpl implements FileUploadService {
                 FileOutputStream fos = new FileOutputStream(filePath);
                 fos.write(fileData);
                 fos.close();
+                application.setFileData(fileData);
+                application.setFilePath("static/documents/" + fileName);
+            }catch (IOException ioe){
+                System.out.println(ioe.getMessage());
+            }
+        }
+    }
+    @Override
+    public void deleteDocument(Application application) {
+        if(application != null){
+            String fileName = application.getFilePath();
+            String filePath = "src/main/resources/" + fileName; // full path
+            try {
+                Path path = Paths.get(filePath);
+                File imageFile = new File(filePath);
+                if(imageFile.exists()){
+                    Files.delete(path);
+                }
             }catch (IOException ioe){
                 System.out.println(ioe.getMessage());
             }

@@ -49,8 +49,8 @@ public class ApplicationsController {
         }
         application.setJob(jobDb);
         application.setAppUser(user);
+        fileUploadService.saveDocument(application,cvUpload);
         applicationService.createApplication(application);
-        fileUploadService.saveDocument(cvUpload);
         return "redirect:/dashboard";
     }
     @PostMapping("/job/{jobId}/application/delete")
@@ -58,6 +58,7 @@ public class ApplicationsController {
         AppUser userDb = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         Job jobDb = jobService.getJob(jobId);
         Application applicationDb = applicationService.findApplicationByUserAndJob(userDb,jobDb);
+        fileUploadService.deleteDocument(applicationDb);
         applicationService.deleteApplication(applicationDb);
         return "redirect:/job/"+jobId+"/apply";
     }
