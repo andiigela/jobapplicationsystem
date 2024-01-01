@@ -49,6 +49,7 @@ public class PostServiceImpl implements PostService {
         if(post == null) return;
         Post postDb = postRepository.findById(post.getId()).get();
         postDb.setDescription(post.getDescription());
+        postDb.setJob(post.getJob());
         postRepository.save(postDb);
     }
 

@@ -1,12 +1,15 @@
 package com.ubt.andi.jobapp.controllers;
 
+import com.ubt.andi.jobapp.models.AppUser;
 import com.ubt.andi.jobapp.models.Application;
 import com.ubt.andi.jobapp.models.Job;
 import com.ubt.andi.jobapp.services.ApplicationService;
 import com.ubt.andi.jobapp.services.JobService;
+import com.ubt.andi.jobapp.services.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,11 +20,13 @@ import java.util.List;
 @Controller
 public class JobsController {
     private final JobService jobService;
+    private final UserService userService;
     private final ApplicationService applicationService;
     private final static int PAGE_SIZE = 5;
-    public JobsController(JobService jobService,ApplicationService applicationService){
+    public JobsController(JobService jobService,ApplicationService applicationService,UserService userService){
         this.jobService=jobService;
         this.applicationService=applicationService;
+        this.userService=userService;
     }
     @GetMapping("/jobs")
     public String getJobsView(@RequestParam(value = "page",defaultValue = "0") String page, Model model){

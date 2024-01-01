@@ -102,11 +102,18 @@ public class HomeController {
     @GetMapping("/profile/posts/edit/{id}")
     public String getEditPostView(@PathVariable("id") Long id, Model model){
         Post post = postService.getPostById(id);
+        AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        model.addAttribute("user",user);
         model.addAttribute("postEdit",post);
         return "edit-post";
     }
     @PostMapping("/profile/posts/edit")
-    public String editPost(@ModelAttribute("postEdit") Post post){
+    public String editPost(@ModelAttribute("postEdit") Post post,@RequestParam("jobId") Long jobId){
+        if(jobId != null && jobId != 0){
+            Job job = jobService.getJob(jobId);
+            post.setJob(job);
+            job.setPost(post);
+        }
         postService.editPost(post);
         return "redirect:/profile/posts";
     }

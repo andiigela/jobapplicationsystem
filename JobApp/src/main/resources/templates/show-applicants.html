@@ -5,6 +5,8 @@
     <title>Applicants</title>
     <link th:replace="index::linkrel"/>
     <link rel="stylesheet" href="/static/css/applicants.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
 </head>
 <body>
 <div th:replace="index::content"></div>
@@ -17,7 +19,7 @@
                 <th scope="col">Applicant Name</th>
                 <th scope="col">Email</th>
                 <th scope="col">CV</th>
-                <!-- You can add more table headers here -->
+                <th scope="col">Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -31,7 +33,16 @@
                 <td>
                     <a th:href="@{'/' + ${app.filePath}}" download>Download</a>
                 </td>
-                <!-- You can add more table data cells here -->
+                <td>
+                    <!-- Approve button -->
+                    <button type="button" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="Approve Applicant">
+                        <i class="fas fa-check"></i>
+                    </button>
+                    <!-- Disapprove button -->
+                    <button type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Disapprove Applicant">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </td>
             </tr>
             </tbody>
         </table>
