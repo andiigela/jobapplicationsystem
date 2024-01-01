@@ -30,7 +30,6 @@ public class Profile {
     private Integer totalProjects;
     private String englishLevel;
     private String githubLink;
-    private String skills;
 
     @OneToOne
     private AppUser appuser;

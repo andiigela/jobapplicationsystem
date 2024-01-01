@@ -62,7 +62,8 @@ public class JobsController {
         return "redirect:/jobs";
     }
     @GetMapping("/job/{jobId}/applicants")
-    public String getApplicantsView(@RequestParam(value = "page",defaultValue = "0") String page,@PathVariable("jobId") Long jobId,Model model){
+    public String getApplicantsView(@RequestParam(value = "page",defaultValue = "0") String page,
+                                    @PathVariable("jobId") Long jobId,Model model){
         int pageNumber = Integer.parseInt(page);
         if(pageNumber > 0){
             pageNumber-=1;
@@ -71,6 +72,7 @@ public class JobsController {
         Job job = jobService.getJob(jobId);
         Page<Application> retrieveApplications = applicationService.findApplicationsByCreationDateDesc(job,pageable);
         model.addAttribute("apps",retrieveApplications);
+        model.addAttribute("job",job);
         return "show-applicants";
     }
 }

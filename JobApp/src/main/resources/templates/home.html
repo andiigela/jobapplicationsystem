@@ -10,9 +10,9 @@
     <div class="row">
         <div class="col-md-3" style="margin-top: 1.8%;margin-left: 1%;">
             <!-- Profile Credentials Box -->
-            <div class="profile-box rounded bg-gradient shadow-lg">
+            <div class="profile-box rounded bg-gradient shadow-lg" style="margin-left: 30px">
                 <div class="user-info d-flex align-items-center p-4">
-                    <img th:src="@{${user.getProfile().imagePath}}" alt="User Profile Picture" class="rounded-circle mr-3" style="width: 80px; height: 80px;">
+                    <img th:if="${user.getProfile().imagePath != null}" th:src="@{${user.getProfile().imagePath}}" alt="User Profile Picture" class="rounded-circle mr-3" style="width: 80px; height: 80px;">
                     <div>
                         <h6 class="mb-1 font-weight-bold text-light" th:text="${user.profile.firstName + ' ' + user.profile.lastName}"></h6>
                         <p class="text-light mb-1" th:if="${user.roleAccount == false}">Employer</p>

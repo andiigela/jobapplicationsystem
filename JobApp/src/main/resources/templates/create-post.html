@@ -21,9 +21,10 @@
                     <div class="form-group">
                         <label for="job">Jobs</label>
                         <select class="form-control" id="job" name="jobId">
-                            <option value="" selected disabled>Select a job</option>
+                            <option value="0" disabled>Select a job</option>
                             <option value="0">No</option>
-                            <option th:each="job: ${user.jobs}" th:value="${job.id}" th:text="${job.title}"></option>
+                            <option th:each="job: ${user.jobs}" th:if="${job.getPost() == null}" th:value="${job.id}" th:text="${job.title}"></option>
+                            <option th:each="job: ${user.jobs}" th:if="${job.getPost() != null}" disabled th:value="${job.id}" th:text="${job.title}"></option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block">Create</button>
