@@ -47,7 +47,9 @@ public class JobServiceImpl implements JobService {
         jobDb.setTitle(job.getTitle());
         jobDb.setDescription(job.getDescription());
         jobDb.setLocation(job.getLocation());
-        jobDb.setExpirationDate(job.getExpirationDate());
+        if(job.getExpirationDate() != null){
+            jobDb.setExpirationDate(job.getExpirationDate());
+        }
         jobRepository.save(jobDb);
     }
 

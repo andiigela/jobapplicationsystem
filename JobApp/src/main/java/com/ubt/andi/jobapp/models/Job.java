@@ -33,8 +33,8 @@ public class Job {
     private LocalDate expirationDate;
     @ManyToOne
     private AppUser appUser;
-    @OneToMany(mappedBy = "job")
+    @OneToMany(mappedBy = "job",cascade = CascadeType.ALL)
     private List<Application> applications = new ArrayList<>();
-    @OneToOne(mappedBy = "job")
+    @OneToOne(mappedBy = "job",cascade = CascadeType.ALL)
     private Post post;
 }

@@ -4,28 +4,63 @@
   <meta charset="UTF-8">
   <title>Edit Job</title>
   <link th:replace="index::linkrel"/>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- Replace with your own Bootstrap CSS link -->
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+    .container {
+      max-width: 500px;
+      margin-top: 5%;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      font-weight: 600;
+    }
+    .form-control {
+      border-radius: 5px;
+    }
+    #butoni {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      background-color: #2980b9;
+      border-color: #2980b9;
+    }
+    #butoni:hover {
+      background-color: #2c3e50;
+      border-color: #2c3e50;
+    }
+  </style>
 </head>
 <body>
 <div th:replace="index::content"></div>
 <div class="container">
-  <form method="post" th:action="@{/jobs/edit}" style="margin-top: 10%" th:object="${jobEdit}">
-    <h2>Edit Job</h2>
+  <form method="post" th:action="@{/jobs/edit}" th:object="${jobEdit}">
+    <h2 class="text-center mb-4">Edit Job</h2>
     <input type="hidden" th:field="${jobEdit.id}">
     <div class="form-group">
-      <input type="text" class="form-control" th:field="${jobEdit.title}" aria-describedby="emailHelp" placeholder="Enter title">
+      <label for="title">Title</label>
+      <input type="text" class="form-control" th:field="${jobEdit.title}" id="title" placeholder="Enter title">
     </div>
     <div class="form-group">
-      <label for="exampleFormControlTextarea1" class="form-label">Description</label>
-      <textarea class="form-control" th:field="${jobEdit.description}" id="exampleFormControlTextarea1" rows="3"></textarea>
+      <label for="description">Description</label>
+      <textarea class="form-control" th:field="${jobEdit.description}" id="description" rows="3" placeholder="Enter description"></textarea>
     </div>
     <div class="form-group">
-      <input type="text" class="form-control" th:field="${jobEdit.location}" aria-describedby="emailHelp" placeholder="Enter location">
+      <label for="location">Location</label>
+      <input type="text" class="form-control" th:field="${jobEdit.location}" id="location" placeholder="Enter location">
     </div>
     <div class="form-group">
-      <p>Expiration Date</p>
-      <input type="date" th:field="${jobEdit.expirationDate}" th:value="${formattedDate}" class="form-control" name="dateInput">
+      <label for="expirationDate">Expiration Date</label>
+      <input type="date" th:field="${jobEdit.expirationDate}" class="form-control" id="expirationDate" name="dateInput">
     </div>
-    <button style="margin-top: 10px" type="submit" class="btn btn-primary">Edit</button>
+    <button id="butoni" type="submit" class="btn btn-primary">Edit</button>
   </form>
 </div>
 <th:block th:replace="index::scripts"></th:block>

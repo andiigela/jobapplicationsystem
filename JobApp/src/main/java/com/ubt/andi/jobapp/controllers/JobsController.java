@@ -54,10 +54,10 @@ public class JobsController {
     @PostMapping("/jobs/edit")
     public String editJob(@ModelAttribute("jobEdit") Job job){
         jobService.editJob(job);
-        return "redirect:/jobs/edit/"+job.getId();
+        return "redirect:/jobs";
     }
     @PostMapping("/jobs/delete/{id}")
-    public String editJob(@PathVariable("id") Long id){
+    public String deleteJob(@PathVariable("id") Long id){
         jobService.deleteJobById(id);
         return "redirect:/jobs";
     }
