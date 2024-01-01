@@ -85,6 +85,17 @@ public class HomeController {
         }
         Pageable pageable = PageRequest.of(pageNumber,PAGE_SIZE);
         Page<Post> userPosts= postService.getPostsByUserId(pageable);
+        AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        Map<Long, Boolean> userLikes = new HashMap<>();
+        for (Post post : userPosts) {
+            LikedPosts likedPosts = likedPostsService.isPostLikedByUser(user, post);
+            boolean likedByUser = false;
+            if(likedPosts != null){
+                likedByUser = true;
+            }
+            userLikes.put(post.getId(), likedByUser);
+        }
+        model.addAttribute("userLikes",userLikes);
         model.addAttribute("userPosts",userPosts);
         return "user-posts";
     }
@@ -127,6 +138,9 @@ public class HomeController {
 
         if(referrer != null && referrer.contains("/posts/" + postId + "/comment")){
             return "redirect:/posts/" + postId + "/comment";
+        }
+        if(referrer != null && referrer.contains("/profile/posts")){
+            return "redirect:/profile/posts";
         }
         return "redirect:/";
     }
