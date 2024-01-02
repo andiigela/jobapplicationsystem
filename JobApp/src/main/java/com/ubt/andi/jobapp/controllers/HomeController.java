@@ -71,8 +71,10 @@ public class HomeController {
     public String createPost(@ModelAttribute("post") Post post, @RequestParam("jobId") Long jobId){
         if(jobId != null && jobId != 0){
             Job job = jobService.getJobByIdAndUser(jobId);
-            post.setJob(job);
-            job.setPost(post);
+            if(job.isActive()){
+                post.setJob(job);
+                job.setPost(post);
+            }
         }
         postService.createPost(post);
         return "redirect:/";
@@ -114,8 +116,10 @@ public class HomeController {
     public String editPost(@ModelAttribute("postEdit") Post post,@RequestParam("jobId") Long jobId){
         if(jobId != null && jobId != 0){
             Job job = jobService.getJobByIdAndUser(jobId);
-            post.setJob(job);
-            job.setPost(post);
+            if(job.isActive()){
+                post.setJob(job);
+                job.setPost(post);
+            }
         }
         postService.editPost(post);
         return "redirect:/profile/posts";

@@ -25,6 +25,7 @@
                             <th>Location</th>
                             <th>Created Date</th>
                             <th>Expiration Date</th>
+                            <th>Active</th>
                             <th>Applications</th>
                             <th>Actions</th>
                         </tr>
@@ -35,6 +36,8 @@
                             <td th:text="${job.location}"></td>
                             <td th:text="${job.dateCreated}"></td>
                             <td th:text="${job.expirationDate}"></td>
+                            <td th:if="${job.active == true}">Yes</td>
+                            <td th:if="${job.active != true}">No</td>
                             <td th:text="${job.getApplications().size()}"></td>
                             <td class="btn-actions">
                                 <a th:href="@{/job/{jobId}/applicants(jobId=${job.id})}" class="btn btn-outline-primary btn-sm">Show Applicants</a>

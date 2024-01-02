@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -29,6 +30,12 @@ public class JobServiceImpl implements JobService {
     public void createJob(Job job) {
         AppUser user = userRepository.findAppUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         if(job == null || user == null) return;
+        LocalDate currentDate = LocalDate.now();
+        if(job.getExpirationDate().isAfter(currentDate) || job.getExpirationDate().isEqual(currentDate)){
+            job.setActive(true);
+        } else {
+            job.setActive(false);
+        }
         job.setAppUser(user);
         user.getJobs().add(job);
         jobRepository.save(job);
@@ -44,10 +51,17 @@ public class JobServiceImpl implements JobService {
     @Override
     public void editJob(Job job) {
         if(job == null) return;
+        LocalDate currentDate = LocalDate.now();
+        if(job.getExpirationDate().isAfter(currentDate) || job.getExpirationDate().isEqual(currentDate)){
+            job.setActive(true);
+        } else {
+            job.setActive(false);
+        }
         Job jobDb = jobRepository.findById(job.getId()).get();
         jobDb.setTitle(job.getTitle());
         jobDb.setDescription(job.getDescription());
         jobDb.setLocation(job.getLocation());
+        jobDb.setActive(job.isActive());
         if(job.getExpirationDate() != null){
             jobDb.setExpirationDate(job.getExpirationDate());
         }

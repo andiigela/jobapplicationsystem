@@ -60,7 +60,7 @@
                     <!-- Add more post content here (images, videos, etc.) -->
                     <hr>
                     <!-- Job Details Section -->
-                    <div th:if="${post.job != null}" style="margin-bottom: 8px" class="job-details mt-4 p-4 border rounded-lg">
+                    <div th:if="${post.job != null && post.job.active == true}" style="margin-bottom: 8px" class="job-details mt-4 p-4 border rounded-lg">
                         <h5 class="mb-4 text-uppercase text-primary">Job Details</h5>
                         <div class="row">
                             <div class="col-md-6">

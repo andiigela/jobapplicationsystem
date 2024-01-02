@@ -31,6 +31,7 @@ public class Job {
     private LocalDate dateCreated;
     @DateTimeFormat(pattern = "MM-dd-yyyy") // Specify the date format
     private LocalDate expirationDate;
+    private boolean active;
     @ManyToOne
     private AppUser appUser;
     @OneToMany(mappedBy = "job",cascade = CascadeType.ALL)
