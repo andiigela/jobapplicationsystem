@@ -70,7 +70,7 @@ public class HomeController {
     @PostMapping("/posts/create")
     public String createPost(@ModelAttribute("post") Post post, @RequestParam("jobId") Long jobId){
         if(jobId != null && jobId != 0){
-            Job job = jobService.getJob(jobId);
+            Job job = jobService.getJobByIdAndUser(jobId);
             post.setJob(job);
             job.setPost(post);
         }
@@ -110,7 +110,7 @@ public class HomeController {
     @PostMapping("/profile/posts/edit")
     public String editPost(@ModelAttribute("postEdit") Post post,@RequestParam("jobId") Long jobId){
         if(jobId != null && jobId != 0){
-            Job job = jobService.getJob(jobId);
+            Job job = jobService.getJobByIdAndUser(jobId);
             post.setJob(job);
             job.setPost(post);
         }

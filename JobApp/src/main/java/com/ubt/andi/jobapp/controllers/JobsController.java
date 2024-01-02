@@ -51,7 +51,10 @@ public class JobsController {
     }
     @GetMapping("/jobs/edit/{id}")
     public String getEditJobView(@PathVariable("id") Long id,Model model){
-        Job editJob = jobService.getJob(id);
+        Job editJob = jobService.getJobByIdAndUser(id); // user is inside this method
+        if(editJob == null){
+            return "redirect:/jobs";
+        }
         model.addAttribute("jobEdit",editJob);
         model.addAttribute("formattedDate",editJob.getExpirationDate().toString());
         return "edit-job";
@@ -74,7 +77,10 @@ public class JobsController {
             pageNumber-=1;
         }
         Pageable pageable = PageRequest.of(pageNumber,PAGE_SIZE);
-        Job job = jobService.getJob(jobId);
+        Job job = jobService.getJobByIdAndUser(jobId);
+        if(job == null){
+            return "redirect:/jobs";
+        }
         Page<Application> retrieveApplications = applicationService.findApplicationsByCreationDateDesc(job,pageable);
         model.addAttribute("apps",retrieveApplications);
         model.addAttribute("job",job);
@@ -83,6 +89,10 @@ public class JobsController {
     @PostMapping("/job/{jobId}/applicants/application/{appId}/approve")
     public String approveApplication(@PathVariable("jobId") Long jobId,@PathVariable("appId") Long appId
             ,@RequestParam("approval") String approvalValue){
+        Job job = jobService.getJobByIdAndUser(jobId);
+        if(job == null){
+            return "redirect:/jobs";
+        }
         Application application = applicationService.findApplicationById(appId);
         if(approvalValue.trim().equals("1")){
             application.setApproved(true);

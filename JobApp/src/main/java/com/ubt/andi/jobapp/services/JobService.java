@@ -9,7 +9,7 @@ import java.util.List;
 public interface JobService {
     Page<Job> getJobsByUser(Pageable pageable);
     void createJob(Job job);
-    Job getJob(Long id);
+    Job getJobByIdAndUser(Long id);
     void deleteJobById(Long id);
     void editJob(Job job);
     Page<Job> getAllJobsByTitle(String title, Pageable pageable);

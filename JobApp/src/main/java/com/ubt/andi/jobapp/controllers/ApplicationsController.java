@@ -27,7 +27,7 @@ public class ApplicationsController {
     }
     @GetMapping("/job/{jobId}/apply")
     public String getApplicationForm(@PathVariable("jobId") Long jobId,Model model){
-        Job jobDb = jobService.getJob(jobId);
+        Job jobDb = jobService.getJobByIdAndUser(jobId);
         AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         Application existingApplication = applicationService.findApplicationByUserAndJob(user, jobDb);
         if(existingApplication == null){
@@ -41,7 +41,7 @@ public class ApplicationsController {
     }
     @PostMapping("/job/{jobId}/apply")
     public String sendApplication(@PathVariable("jobId") Long jobId, @RequestParam("cvUpload") MultipartFile cvUpload, @ModelAttribute("application") Application application){
-        Job jobDb = jobService.getJob(jobId);
+        Job jobDb = jobService.getJobByIdAndUser(jobId);
         AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         Application existingApplication = applicationService.findApplicationByUserAndJob(user, jobDb);
         if(existingApplication != null){
@@ -56,7 +56,7 @@ public class ApplicationsController {
     @PostMapping("/job/{jobId}/application/delete")
     public String deleteApplication(@PathVariable("jobId") Long jobId){
         AppUser userDb = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-        Job jobDb = jobService.getJob(jobId);
+        Job jobDb = jobService.getJobByIdAndUser(jobId);
         Application applicationDb = applicationService.findApplicationByUserAndJob(userDb,jobDb);
         fileUploadService.deleteDocument(applicationDb);
         applicationService.deleteApplication(applicationDb);

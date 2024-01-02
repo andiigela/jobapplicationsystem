@@ -27,17 +27,18 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public void createJob(Job job) {
-        if(job == null) return;
         AppUser user = userRepository.findAppUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(job == null || user == null) return;
         job.setAppUser(user);
         user.getJobs().add(job);
         jobRepository.save(job);
     }
 
     @Override
-    public Job getJob(Long id) {
-        if(id == 0 || id == null) return null;
-        return jobRepository.findById(id).get();
+    public Job getJobByIdAndUser(Long id) {
+        AppUser user = userRepository.findAppUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(id == 0 || user == null) return null;
+        return jobRepository.findJobByIdAndAppUser(id,user);
     }
 
     @Override
