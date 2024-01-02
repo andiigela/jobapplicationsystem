@@ -159,7 +159,6 @@ public class HomeController {
         }
         postService.editPost(post);
         String referrer = request.getHeader("referer");
-
         if(referrer != null && referrer.contains("/posts/" + postId + "/comment")){
             return "redirect:/posts/" + postId + "/comment";
         }

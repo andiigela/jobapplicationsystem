@@ -49,6 +49,12 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+    public Job getJobById(Long id) {
+        if(id == 0) return null;
+        return jobRepository.findById(id).get();
+    }
+
+    @Override
     public void editJob(Job job) {
         if(job == null) return;
         LocalDate currentDate = LocalDate.now();

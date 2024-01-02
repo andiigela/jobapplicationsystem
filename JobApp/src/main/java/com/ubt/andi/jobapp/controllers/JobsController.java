@@ -69,6 +69,12 @@ public class JobsController {
         jobService.deleteJobById(id);
         return "redirect:/jobs";
     }
+    @GetMapping("/job/{jobId}/details")
+    public String getJobDetails(@PathVariable("jobId") Long jobId,Model model){
+        Job job = jobService.getJobById(jobId);
+        model.addAttribute("job",job);
+        return "job-details";
+    }
     @GetMapping("/job/{jobId}/applicants")
     public String getApplicantsView(@RequestParam(value = "page",defaultValue = "0") String page,
                                     @PathVariable("jobId") Long jobId,Model model){

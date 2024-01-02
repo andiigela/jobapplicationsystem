@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Job Details</title>
+    <link th:replace="index::linkrel"/>
+    <style>
+        /* Custom CSS can be added here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .job-details {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            padding: 20px;
+            max-width: 800px;
+        }
+
+        .job-details h1 {
+            color: #333;
+            font-size: 32px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .job-details .company {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .job-details hr {
+            border-color: #ddd;
+            margin: 20px 0;
+        }
+
+        .job-details p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .job-details ul {
+            margin-bottom: 20px;
+            padding-left: 20px;
+        }
+
+        .job-details ul li {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .job-details-section {
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .job-details-section h2 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .job-details-section ul {
+            margin-bottom: 15px;
+        }
+
+        .job-details-section ul li {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .apply-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+
+        .apply-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="index::content"></div>
+<div class="job-details">
+    <h1>Job Title</h1>
+    <p class="company">Company Name</p>
+    <hr>
+    <div class="row">
+        <div class="col-md-6">
+            <p><strong>Location:</strong> City, Country</p>
+            <p><strong>Job Type:</strong> Full-time</p>
+            <p><strong>Posted On:</strong> January 1, 2024</p>
+        </div>
+        <div class="col-md-6">
+            <p><strong>Salary:</strong> $60,000 - $80,000 per year</p>
+            <p><strong>Experience:</strong> 3+ years</p>
+            <p><strong>Education:</strong> Bachelor's Degree</p>
+        </div>
+    </div>
+    <hr>
+    <div class="job-details-section">
+        <h2>Description</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor ex non lectus fermentum tincidunt.</p>
+    </div>
+    <div class="job-details-section">
+        <h2>Responsibilities</h2>
+        <ul>
+            <li>Lorem ipsum dolor sit amet</li>
+            <li>Consectetur adipiscing elit</li>
+            <li>Sed do eiusmod tempor incididunt</li>
+        </ul>
+    </div>
+    <div class="job-details-section">
+        <h2>Requirements</h2>
+        <ul>
+            <li>Minimum 3 years of experience</li>
+            <li>Bachelor's Degree in related field</li>
+            <li>Strong communication skills</li>
+        </ul>
+    </div>
+    <div class="text-center">
+        <a href="#" class="apply-button">Apply Now</a>
+    </div>
+</div>
+<div th:replace="index::scripts"></div>
+</body>
+</html>

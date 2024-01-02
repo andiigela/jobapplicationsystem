@@ -27,7 +27,7 @@ public class ApplicationsController {
     }
     @GetMapping("/job/{jobId}/apply")
     public String getApplicationForm(@PathVariable("jobId") Long jobId,Model model){
-        Job jobDb = jobService.getJobByIdAndUser(jobId);
+        Job jobDb = jobService.getJobById(jobId);
         if(!jobDb.isActive()) return "redirect:/";
         AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         Application existingApplication = applicationService.findApplicationByUserAndJob(user, jobDb);
@@ -42,7 +42,7 @@ public class ApplicationsController {
     }
     @PostMapping("/job/{jobId}/apply")
     public String sendApplication(@PathVariable("jobId") Long jobId, @RequestParam("cvUpload") MultipartFile cvUpload, @ModelAttribute("application") Application application){
-        Job jobDb = jobService.getJobByIdAndUser(jobId);
+        Job jobDb = jobService.getJobById(jobId);
         if(!jobDb.isActive()) return "redirect:/";
         AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         Application existingApplication = applicationService.findApplicationByUserAndJob(user, jobDb);
@@ -58,7 +58,7 @@ public class ApplicationsController {
     @PostMapping("/job/{jobId}/application/delete")
     public String deleteApplication(@PathVariable("jobId") Long jobId){
         AppUser userDb = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-        Job jobDb = jobService.getJobByIdAndUser(jobId);
+        Job jobDb = jobService.getJobById(jobId);
         if(!jobDb.isActive()) return "redirect:/";
         Application applicationDb = applicationService.findApplicationByUserAndJob(userDb,jobDb);
         fileUploadService.deleteDocument(applicationDb);

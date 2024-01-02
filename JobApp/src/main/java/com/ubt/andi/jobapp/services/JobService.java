@@ -10,6 +10,7 @@ public interface JobService {
     Page<Job> getJobsByUser(Pageable pageable);
     void createJob(Job job);
     Job getJobByIdAndUser(Long id);
+    Job getJobById(Long id);
     void deleteJobById(Long id);
     void editJob(Job job);
     Page<Job> getAllJobsByTitle(String title, Pageable pageable);
