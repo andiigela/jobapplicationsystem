@@ -9,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 public interface ApplicationService {
     void createApplication(Application application);
     Application findApplicationByUserAndJob(AppUser user, Job job);
+    Application findApplicationById(Long id);
     void deleteApplication(Application application);
+    void editApplication(Application application);
     Page<Application> findApplicationsByCreationDateDesc(Job job,Pageable pageable);
 }

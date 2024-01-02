@@ -15,6 +15,7 @@ public class ApplicationServiceImpl implements ApplicationService{
     @Override
     public void createApplication(Application application) {
         if(application == null) return;
+        application.setApproved(false);
         this.applicationRepository.save(application);
     }
 
@@ -25,9 +26,23 @@ public class ApplicationServiceImpl implements ApplicationService{
     }
 
     @Override
+    public Application findApplicationById(Long id) {
+        if(id == 0) return null;
+        return applicationRepository.findById(id).get();
+    }
+
+    @Override
     public void deleteApplication(Application application) {
         if(application == null) return;
         applicationRepository.delete(application);
+    }
+
+    @Override
+    public void editApplication(Application application) {
+        if(application == null) return;
+        Application appDb = applicationRepository.findById(application.getId()).get();
+        appDb.setApproved(application.isApproved());
+        applicationRepository.save(appDb);
     }
 
     @Override

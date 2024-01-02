@@ -23,8 +23,10 @@ public class Application {
     private LocalDate creationDate;
     private byte[] fileData;
     private String filePath;
+    private boolean approved;
     @ManyToOne
     private AppUser appUser;
     @ManyToOne
     private Job job;
+
 }

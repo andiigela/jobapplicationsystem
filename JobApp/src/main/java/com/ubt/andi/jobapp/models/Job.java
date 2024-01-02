@@ -35,6 +35,6 @@ public class Job {
     private AppUser appUser;
     @OneToMany(mappedBy = "job",cascade = CascadeType.ALL)
     private List<Application> applications = new ArrayList<>();
-    @OneToOne(mappedBy = "job")
+    @OneToOne(mappedBy = "job",cascade = CascadeType.REMOVE)
     private Post post;
 }

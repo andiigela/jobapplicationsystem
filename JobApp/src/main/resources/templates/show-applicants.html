@@ -35,13 +35,21 @@
                 </td>
                 <td>
                     <!-- Approve button -->
-                    <button type="button" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="Approve Applicant">
-                        <i class="fas fa-check"></i>
-                    </button>
-                    <!-- Disapprove button -->
-                    <button type="button" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Disapprove Applicant">
-                        <i class="fas fa-times"></i>
-                    </button>
+                    <form method="post" th:action="@{/job/{jobId}/applicants/application/{appId}/approve(jobId=${job.id},appId=${app.id})}">
+                        <button type="submit" th:if="${app.approved == true}" disabled name="approval" value="1" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="Approve Applicant">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <button type="submit" th:if="${app.approved == false}" name="approval" value="1" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="Approve Applicant">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <!-- Disapprove button -->
+                        <button type="submit" th:if="${app.approved == false}" disabled name="approval" value="0" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Disapprove Applicant">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <button type="submit" th:if="${app.approved == true}" name="approval" value="0" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Disapprove Applicant">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </form>
                 </td>
             </tr>
             </tbody>

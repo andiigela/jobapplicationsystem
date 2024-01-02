@@ -80,4 +80,17 @@ public class JobsController {
         model.addAttribute("job",job);
         return "show-applicants";
     }
+    @PostMapping("/job/{jobId}/applicants/application/{appId}/approve")
+    public String approveApplication(@PathVariable("jobId") Long jobId,@PathVariable("appId") Long appId
+            ,@RequestParam("approval") String approvalValue){
+        Application application = applicationService.findApplicationById(appId);
+        if(approvalValue.trim().equals("1")){
+            application.setApproved(true);
+        }
+        if(approvalValue.trim().equals("0")){
+            application.setApproved(false);
+        }
+        applicationService.editApplication(application);
+        return "redirect:/job/"+jobId+"/applicants";
+    }
 }
