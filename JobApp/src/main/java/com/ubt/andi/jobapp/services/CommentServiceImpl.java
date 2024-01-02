@@ -19,6 +19,14 @@ public class CommentServiceImpl implements CommentService{
         if(id == 0) return null;
         return commentRepository.findById(id).get();
     }
+
+    @Override
+    public Comment findCommentByIdAndUser(Long id) {
+        AppUser user = userRepository.findAppUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(id == null || user == null) return null;
+        return commentRepository.findCommentByIdAndAppUser(id,user);
+    }
+
     @Override
     public void createComment(Comment comment, Post post) {
         AppUser user = userRepository.findAppUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());

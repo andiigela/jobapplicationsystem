@@ -39,8 +39,15 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public Post getPostByIdAndUser(Long id) {
+        AppUser user = userRepository.findAppUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(id == 0 || user == null) return null;
+        return postRepository.findPostByIdAndAppUser(id,user);
+    }
+
+    @Override
     public Post getPostById(Long id) {
-        if(id == 0 || id == null) return null;
+        if(id == 0) return null;
         return postRepository.findById(id).get();
     }
 

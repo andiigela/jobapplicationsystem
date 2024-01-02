@@ -101,7 +101,10 @@ public class HomeController {
     }
     @GetMapping("/profile/posts/edit/{id}")
     public String getEditPostView(@PathVariable("id") Long id, Model model){
-        Post post = postService.getPostById(id);
+        Post post = postService.getPostByIdAndUser(id);
+        if(post == null){
+            return "redirect:/";
+        }
         AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         model.addAttribute("user",user);
         model.addAttribute("postEdit",post);
@@ -119,6 +122,10 @@ public class HomeController {
     }
     @PostMapping("/profile/posts/delete/{id}")
     public String deletePost(@PathVariable("id") Long id){
+        Post post = postService.getPostByIdAndUser(id);
+        if(post == null){
+            return "redirect:/";
+        }
         postService.deletePost(id);
         return "redirect:/";
     }
@@ -179,7 +186,8 @@ public class HomeController {
     @GetMapping("/posts/{postId}/comment/{commentId}")
     public String editCommentView(@PathVariable("postId") Long postId,@PathVariable("commentId") Long commentId,Model model){
         Post post = postService.getPostById(postId);
-        Comment comment = commentService.findCommentById(commentId);
+        Comment comment = commentService.findCommentByIdAndUser(commentId);
+        if(comment == null) return "redirect:/posts/"+postId+"/comment";
         Map<Long, Boolean> userLikes = new HashMap<>();
         boolean likedByUser = false;
         AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -197,15 +205,15 @@ public class HomeController {
     @PostMapping("/posts/{postId}/comment/{commentId}")
     public String editComment(@PathVariable("postId") Long postId,@PathVariable("commentId") Long commentId,
                               @ModelAttribute("comment") Comment comment){
+        Comment commentDb = commentService.findCommentByIdAndUser(commentId);
+        if(commentDb == null) return "redirect:/posts/"+postId+"/comment";
         commentService.editComment(comment);
-//        if(post.getNumberOfComments() != 0){
-//            post.setNumberOfLikes(post.getNumberOfComments()-1);
-//            postService.editPost(post);
-//        }
         return "redirect:/posts/"+postId+"/comment";
     }
     @PostMapping("/posts/delete/{postId}/{commentId}")
     public String deleteComment(@PathVariable("postId") Long postId,@PathVariable("commentId") Long commentId){
+        Comment commentDb = commentService.findCommentByIdAndUser(commentId);
+        if(commentDb == null) return "redirect:/posts/"+postId+"/comment";
         Post post = postService.getPostById(postId);
         commentService.deleteComment(commentId);
         if(post.getNumberOfComments() != 0){
