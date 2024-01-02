@@ -46,6 +46,12 @@ public class HomeController {
         }
         Map<Long, Boolean> userLikes = new HashMap<>();
         for (Post post : posts) {
+            if(post.getJob() != null){
+                if(!post.getJob().isActive()){
+                    post.setJob(null);
+                    postService.editPost(post);
+                }
+            }
             LikedPosts likedPosts = likedPostsService.isPostLikedByUser(user, post);
             boolean likedByUser = false;
             if(likedPosts != null){
