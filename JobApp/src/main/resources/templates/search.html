@@ -68,7 +68,8 @@
                     <a th:href="@{/profile/view/{username}(username=${profile.getAppuser().getUsername()})}" class="btn btn-primary">View Profile</a>
                 </td>
                 <td>
-                    <a style="color:white" class="btn btn-primary">Follow</a>
+                    <a th:if="${profile.isFollowedByLoggedInUser()}" th:href="@{/profile/{id}/follow(id=${profile.id})}">Unfollow</a>
+                    <a th:unless="${profile.isFollowedByLoggedInUser()}" th:href="@{/profile/{id}/follow(id=${profile.id})}">Follow</a>
                 </td>
             </tr>
             </tbody>

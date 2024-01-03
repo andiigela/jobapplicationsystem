@@ -7,6 +7,7 @@ import com.ubt.andi.jobapp.services.ProfileService;
 import com.ubt.andi.jobapp.services.UserService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -20,15 +21,29 @@ public class FollowController {
         this.profileService=profileService;
         this.userService=userService;
     }
-    @PostMapping("/profile/{id}/follow")
+    @GetMapping("/profile/{id}/follow")
     public String followProfile(@PathVariable("id") Long followingProfileId){
         Profile followingProfile = profileService.getProfileById(followingProfileId);
         AppUser loggedInUser = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         Profile followerProfile = loggedInUser.getProfile();
-        Follow follow = new Follow();
-        follow.setFollowing(followingProfile);
-        follow.setFollower(followerProfile);
-
-        return "";
+        Follow existingFollow = followService.existingFollow(followingProfile,followerProfile);
+        if(existingFollow != null){
+            followService.deleteFollow(existingFollow);
+            followingProfile.setFollowedByLoggedInUser(false);
+            if(followerProfile.getFollowingsNumber() != 0){
+                followerProfile.setFollowingsNumber(followerProfile.getFollowingsNumber()-1);
+            }
+            if(followingProfile.getFollowersNumber() != 0){
+                followingProfile.setFollowersNumber(followingProfile.getFollowersNumber()-1);
+            }
+        } else {
+            followService.createFollow(followingProfile,followerProfile);
+            followingProfile.setFollowedByLoggedInUser(true);
+            followerProfile.setFollowingsNumber(followingProfile.getFollowingsNumber()+1);
+            followingProfile.setFollowersNumber(followingProfile.getFollowersNumber()+1);
+        }
+        profileService.updateProfile(followingProfile);
+        profileService.updateProfile(followerProfile);
+        return "redirect:/";
     }
 }

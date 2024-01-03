@@ -33,6 +33,9 @@ public class Profile {
     private Integer totalProjects;
     private String englishLevel;
     private String githubLink;
+    private boolean followedByLoggedInUser=false;
+    private Integer followersNumber=0;
+    private Integer followingsNumber=0;
     @OneToOne
     private AppUser appuser;
     @OneToMany(mappedBy = "follower")
