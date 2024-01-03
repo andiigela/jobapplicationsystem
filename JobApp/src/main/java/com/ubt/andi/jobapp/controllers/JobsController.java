@@ -72,6 +72,7 @@ public class JobsController {
     @GetMapping("/job/{jobId}/details")
     public String getJobDetails(@PathVariable("jobId") Long jobId,Model model){
         Job job = jobService.getJobById(jobId);
+        if(!job.isActive()) return "redirect:/";
         model.addAttribute("job",job);
         return "job-details";
     }

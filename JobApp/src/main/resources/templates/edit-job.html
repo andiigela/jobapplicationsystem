@@ -13,7 +13,7 @@
       color: #333;
     }
     .container {
-      max-width: 500px;
+      max-width: 1200px; /* Increased width to accommodate three equal sections */
       margin-top: 5%;
     }
     .form-group {
@@ -26,11 +26,13 @@
       border-radius: 5px;
     }
     #butoni {
-      width: 100%;
-      padding: 10px;
+      width: 50%; /* Adjusted width */
+      padding: 8px; /* Adjusted padding */
       border-radius: 5px;
       background-color: #2980b9;
       border-color: #2980b9;
+      margin: 0 auto; /* Centered button */
+      display: block; /* Block element for centering */
     }
     #butoni:hover {
       background-color: #2c3e50;
@@ -43,24 +45,86 @@
 <div class="container">
   <form method="post" th:action="@{/jobs/edit}" th:object="${jobEdit}">
     <h2 class="text-center mb-4">Edit Job</h2>
-    <input type="hidden" th:field="${jobEdit.id}">
-    <div class="form-group">
-      <label for="title">Title</label>
-      <input type="text" class="form-control" th:field="${jobEdit.title}" id="title" placeholder="Enter title">
+    <div class="row">
+      <!-- First column -->
+      <input type="hidden" th:field="${jobEdit.id}">
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input type="text" class="form-control" th:field="${jobEdit.title}" id="title" placeholder="Enter title">
+        </div>
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea class="form-control" th:field="${jobEdit.description}" id="description" rows="3" placeholder="Enter description"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="location">Location</label>
+          <input type="text" class="form-control" th:field="${jobEdit.location}" id="location" placeholder="Enter location">
+        </div>
+        <div class="form-group">
+          <label for="expirationDate">Expiration Date</label>
+          <input type="date" th:field="${jobEdit.expirationDate}" class="form-control" id="expirationDate" name="dateInput">
+        </div>
+      </div>
+      <!-- Second column -->
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="companyName">Company Name</label>
+          <input type="text" th:field="${jobEdit.companyName}" class="form-control" id="companyName" name="companyName">
+        </div>
+        <div class="form-group">
+          <label for="salary">Salary</label>
+          <input type="text" class="form-control" th:field="${jobEdit.salary}" id="salary" placeholder="Enter salary">
+        </div>
+        <div class="form-group">
+          <label for="jobType">Job Type</label>
+          <select class="form-control" th:field="${jobEdit.jobType}" id="jobType">
+            <option value="Full Time">Full Time</option>
+            <option value="Part Time">Part Time</option>
+            <option value="Remote">Remote</option>
+            <!-- Add more job types as needed -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="position">Position</label>
+          <input type="text" class="form-control" th:field="${jobEdit.position}" id="position" placeholder="Enter position">
+        </div>
+      </div>
+      <!-- Third column -->
+      <div class="col-md-3">
+        <!-- Job Requirements section on the right -->
+        <div class="form-group">
+          <label for="responsibility1">Responsibility 1</label>
+          <input type="text" class="form-control" th:field="${jobEdit.firstResponsibility}" id="responsibility1" placeholder="Enter Requirement 1">
+        </div>
+        <div class="form-group">
+          <label for="responsibility2">Responsibility 2</label>
+          <input type="text" class="form-control" th:field="${jobEdit.secondResponsibility}" id="responsibility2" placeholder="Enter Requirement 2">
+        </div>
+        <div class="form-group">
+          <label for="responsibility3">Responsibility 3</label>
+          <input type="text" class="form-control" th:field="${jobEdit.thirdResponsibility}" id="responsibility3" placeholder="Enter Requirement 3">
+        </div>
+        <!-- End of Job Requirements section -->
+      </div>
+      <div class="col-md-3">
+        <!-- Job Requirements section on the right -->
+        <div class="form-group">
+          <label for="requirement1">Requirement 1</label>
+          <input type="text" class="form-control" th:field="${jobEdit.firstRequirement}" id="requirement1" placeholder="Enter Requirement 1">
+        </div>
+        <div class="form-group">
+          <label for="requirement2">Requirement 2</label>
+          <input type="text" class="form-control" th:field="${jobEdit.secondRequirement}" id="requirement2" placeholder="Enter Requirement 2">
+        </div>
+        <div class="form-group">
+          <label for="requirement3">Requirement 3</label>
+          <input type="text" class="form-control" th:field="${jobEdit.thirdRequirement}" id="requirement3" placeholder="Enter Requirement 3">
+        </div>
+        <!-- End of Job Requirements section -->
+      </div>
+      <button id="butoni" type="submit" class="btn btn-primary">Edit</button>
     </div>
-    <div class="form-group">
-      <label for="description">Description</label>
-      <textarea class="form-control" th:field="${jobEdit.description}" id="description" rows="3" placeholder="Enter description"></textarea>
-    </div>
-    <div class="form-group">
-      <label for="location">Location</label>
-      <input type="text" class="form-control" th:field="${jobEdit.location}" id="location" placeholder="Enter location">
-    </div>
-    <div class="form-group">
-      <label for="expirationDate">Expiration Date</label>
-      <input type="date" th:field="${jobEdit.expirationDate}" class="form-control" id="expirationDate" name="dateInput">
-    </div>
-    <button id="butoni" type="submit" class="btn btn-primary">Edit</button>
   </form>
 </div>
 <th:block th:replace="index::scripts"></th:block>

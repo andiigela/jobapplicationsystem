@@ -7,7 +7,7 @@
     <style>
         /* Custom CSS can be added here */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f4f4;
             color: #333;
             margin: 0;
@@ -16,17 +16,18 @@
 
         .job-details {
             background-color: #fff;
-            border-radius: 5px;
+            border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin: 20px auto;
-            padding: 20px;
-            max-width: 800px;
+            margin: 30px auto;
+            padding: 30px;
+            max-width: 700px; /* Increased max-width for job details */
+            box-sizing: border-box;
         }
 
         .job-details h1 {
             color: #333;
             font-size: 32px;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             text-align: center;
         }
 
@@ -38,105 +39,116 @@
         }
 
         .job-details hr {
-            border-color: #ddd;
+            border: none;
+            border-top: 1px solid #ddd;
             margin: 20px 0;
         }
 
         .job-details p {
-            font-size: 16px;
+            font-size: 16px; /* Increased font size for job details */
             line-height: 1.6;
-            margin-bottom: 15px;
-        }
-
-        .job-details ul {
-            margin-bottom: 20px;
-            padding-left: 20px;
-        }
-
-        .job-details ul li {
-            font-size: 16px;
-            margin-bottom: 8px;
-        }
-
-        .job-details-section {
-            background-color: #f9f9f9;
-            border-radius: 5px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-
-        .job-details-section h2 {
-            color: #333;
-            font-size: 24px;
             margin-bottom: 10px;
         }
 
-        .job-details-section ul {
-            margin-bottom: 15px;
-        }
-
-        .job-details-section ul li {
-            font-size: 16px;
-            margin-bottom: 5px;
-        }
-
+        /* Updated Apply button styles */
         .apply-button {
             display: inline-block;
-            padding: 10px 20px;
-            background-color: #4caf50;
+            padding: 10px 20px; /* Adjusted padding for the button */
+            background-color: #ff6f61;
             color: white;
             text-decoration: none;
             border-radius: 5px;
-            font-size: 18px;
-            transition: background-color 0.3s ease;
+            font-size: 16px;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
         }
 
         .apply-button:hover {
-            background-color: #45a049;
+            background-color: #e95c4c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-decoration: none;
+            color: white;
+        }
+
+        .apply-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: all 0.6s ease;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+        }
+
+        .apply-button:hover::before {
+            width: 0;
+            height: 0;
+        }
+
+        .apply-button span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        /* Remove underline from anchor links */
+        a {
+            text-decoration: none;
+            color: inherit; /* Inherits the color from parent */
         }
     </style>
 </head>
 <body>
 <div th:replace="index::content"></div>
 <div class="job-details">
-    <h1>Job Title</h1>
-    <p class="company">Company Name</p>
+    <h1 th:text="${job.title}"></h1>
+    <p class="company" th:text="${job.companyName}"></p>
     <hr>
     <div class="row">
         <div class="col-md-6">
-            <p><strong>Location:</strong> City, Country</p>
-            <p><strong>Job Type:</strong> Full-time</p>
-            <p><strong>Posted On:</strong> January 1, 2024</p>
+            <p><strong>Location:</strong> <span th:text="${job.location}"></span></p>
+            <p><strong>Job Type:</strong> <span th:text="${job.jobType}"></span></p>
+            <p><strong>Posted On:</strong> <span th:text="${job.dateCreated}"></span></p>
         </div>
         <div class="col-md-6">
-            <p><strong>Salary:</strong> $60,000 - $80,000 per year</p>
-            <p><strong>Experience:</strong> 3+ years</p>
-            <p><strong>Education:</strong> Bachelor's Degree</p>
+            <p><strong>Salary:</strong> <span th:text="${'$' + job.salary}"></span></p>
+            <p><strong>Expiration Date:</strong> <span th:text="${job.expirationDate}"></span></p>
         </div>
     </div>
     <hr>
     <div class="job-details-section">
         <h2>Description</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor ex non lectus fermentum tincidunt.</p>
+        <p th:text="${job.description}"></p>
     </div>
     <div class="job-details-section">
         <h2>Responsibilities</h2>
         <ul>
-            <li>Lorem ipsum dolor sit amet</li>
-            <li>Consectetur adipiscing elit</li>
-            <li>Sed do eiusmod tempor incididunt</li>
+            <li th:unless="${job.firstResponsibility.equals('')}" th:text="${job.firstResponsibility}"></li>
+            <li th:unless="${job.secondResponsibility.equals('')}" th:text="${job.secondResponsibility}"></li>
+            <li th:unless="${job.thirdResponsibility.equals('')}" th:text="${job.thirdResponsibility}"></li>
         </ul>
     </div>
     <div class="job-details-section">
         <h2>Requirements</h2>
         <ul>
-            <li>Minimum 3 years of experience</li>
-            <li>Bachelor's Degree in related field</li>
-            <li>Strong communication skills</li>
+            <li th:unless="${job.firstRequirement.equals('')}" th:text="${job.firstRequirement}"></li>
+            <li th:unless="${job.secondRequirement.equals('')}" th:text="${job.secondRequirement}"></li>
+            <li th:unless="${job.thirdRequirement.equals('')}" th:text="${job.thirdRequirement}"></li>
         </ul>
     </div>
     <div class="text-center">
-        <a href="#" class="apply-button">Apply Now</a>
+        <a th:href="@{/job/{id}/apply(id=${job.id})}" class="apply-button"><span>Apply Now</span></a>
     </div>
 </div>
 <div th:replace="index::scripts"></div>

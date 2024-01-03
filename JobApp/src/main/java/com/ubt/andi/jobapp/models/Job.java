@@ -26,6 +26,16 @@ public class Job {
     private String title;
     private String description;
     private String Location;
+    private String position;
+    private String jobType;
+    private String salary;
+    private String firstResponsibility;
+    private String secondResponsibility;
+    private String thirdResponsibility;
+    private String firstRequirement;
+    private String secondRequirement;
+    private String thirdRequirement;
+    private String companyName;
     @CreationTimestamp
     @DateTimeFormat(pattern = "MM-dd-yyyy") // Specify the date format
     private LocalDate dateCreated;
