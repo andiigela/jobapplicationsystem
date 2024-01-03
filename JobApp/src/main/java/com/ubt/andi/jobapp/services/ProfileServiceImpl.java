@@ -38,6 +38,12 @@ public class ProfileServiceImpl implements ProfileService{
     }
 
     @Override
+    public Profile getProfileById(Long id) {
+        if(id == 0) return null;
+        return profileRepository.findById(id).get();
+    }
+
+    @Override
     public void updateProfile(Profile profile) {
         if(profile == null) return;
         Profile profileDb = this.profileRepository.findById(profile.getId()).get();
