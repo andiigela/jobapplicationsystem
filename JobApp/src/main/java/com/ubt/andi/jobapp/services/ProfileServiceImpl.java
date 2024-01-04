@@ -39,7 +39,7 @@ public class ProfileServiceImpl implements ProfileService{
 
     @Override
     public Profile getProfileById(Long id) {
-        if(id == 0) return null;
+        if(id <= 0) return null;
         return profileRepository.findById(id).get();
     }
 

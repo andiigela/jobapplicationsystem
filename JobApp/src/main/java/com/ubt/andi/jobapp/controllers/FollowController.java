@@ -9,8 +9,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-
 @Controller
 public class FollowController {
     private final FollowService followService;
@@ -26,6 +24,9 @@ public class FollowController {
         Profile followingProfile = profileService.getProfileById(followingProfileId);
         AppUser loggedInUser = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         Profile followerProfile = loggedInUser.getProfile();
+        if(followingProfile.equals(followerProfile)){
+            return "redirect:/";
+        }
         Follow existingFollow = followService.existingFollow(followingProfile,followerProfile);
         if(existingFollow != null){
             followService.deleteFollow(existingFollow);
@@ -39,7 +40,7 @@ public class FollowController {
         } else {
             followService.createFollow(followingProfile,followerProfile);
             followingProfile.setFollowedByLoggedInUser(true);
-            followerProfile.setFollowingsNumber(followingProfile.getFollowingsNumber()+1);
+            followerProfile.setFollowingsNumber(followerProfile.getFollowingsNumber()+1);
             followingProfile.setFollowersNumber(followingProfile.getFollowersNumber()+1);
         }
         profileService.updateProfile(followingProfile);

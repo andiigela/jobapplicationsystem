@@ -46,6 +46,14 @@ public class SearchController {
             Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE);
             if(searchKeyword.equals("Profile")){
                 Page<Profile> profilePage = profileService.findProfileBySearch(searchValue,pageable);
+                AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+                Profile followerProfile = user.getProfile();
+                for(Profile followingProfile : profilePage){
+                    Follow follow = followService.existingFollow(followingProfile,followerProfile);
+                    if(follow == null){
+                        followingProfile.setFollowedByLoggedInUser(false);
+                    }
+                }
                 model.addAttribute("searchedProfiles",profilePage);
                 model.addAttribute("searchKeyword",searchKeyword);
                 model.addAttribute("searchButton",searchValue);
