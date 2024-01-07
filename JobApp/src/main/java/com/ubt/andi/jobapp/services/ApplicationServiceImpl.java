@@ -2,6 +2,7 @@ package com.ubt.andi.jobapp.services;
 import com.ubt.andi.jobapp.models.AppUser;
 import com.ubt.andi.jobapp.models.Application;
 import com.ubt.andi.jobapp.models.Job;
+import com.ubt.andi.jobapp.models.Notification;
 import com.ubt.andi.jobapp.repositories.ApplicationRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +17,6 @@ public class ApplicationServiceImpl implements ApplicationService{
     public void createApplication(Application application) {
         if(application == null) return;
         application.setApproved(false);
-
         this.applicationRepository.save(application);
     }
 

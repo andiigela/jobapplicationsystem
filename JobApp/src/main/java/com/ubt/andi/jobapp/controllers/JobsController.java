@@ -1,32 +1,26 @@
 package com.ubt.andi.jobapp.controllers;
-
-import com.ubt.andi.jobapp.models.AppUser;
 import com.ubt.andi.jobapp.models.Application;
 import com.ubt.andi.jobapp.models.Job;
 import com.ubt.andi.jobapp.services.ApplicationService;
 import com.ubt.andi.jobapp.services.JobService;
-import com.ubt.andi.jobapp.services.UserService;
+import com.ubt.andi.jobapp.services.NotificationService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-
 @Controller
 public class JobsController {
     private final JobService jobService;
-    private final UserService userService;
     private final ApplicationService applicationService;
+    private final NotificationService notificationService;
     private final static int PAGE_SIZE = 5;
-    public JobsController(JobService jobService,ApplicationService applicationService,UserService userService){
+    public JobsController(JobService jobService,ApplicationService applicationService,
+                          NotificationService notificationService){
         this.jobService=jobService;
         this.applicationService=applicationService;
-        this.userService=userService;
+        this.notificationService=notificationService;
     }
     @GetMapping("/jobs")
     public String getJobsView(@RequestParam(value = "page",defaultValue = "0") String page, Model model){
@@ -108,6 +102,7 @@ public class JobsController {
             application.setApproved(false);
         }
         applicationService.editApplication(application);
+        notificationService.sendJobNotification(application.getAppUser().getProfile(),job);
         return "redirect:/job/"+jobId+"/applicants";
     }
 }

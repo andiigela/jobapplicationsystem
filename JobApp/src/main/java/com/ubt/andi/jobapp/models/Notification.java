@@ -15,6 +15,7 @@ public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private String notificationText;
     @ManyToOne
     private Profile fromProfile;
     @ManyToOne
