@@ -5,10 +5,12 @@ import com.ubt.andi.jobapp.models.Profile;
 import com.ubt.andi.jobapp.services.FollowService;
 import com.ubt.andi.jobapp.services.ProfileService;
 import com.ubt.andi.jobapp.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+
 @Controller
 public class FollowController {
     private final FollowService followService;
@@ -20,12 +22,16 @@ public class FollowController {
         this.userService=userService;
     }
     @GetMapping("/profile/{id}/follow")
-    public String followProfile(@PathVariable("id") Long followingProfileId){
+    public String followProfile(@PathVariable("id") Long followingProfileId, HttpServletRequest request){
         Profile followingProfile = profileService.getProfileById(followingProfileId);
         AppUser loggedInUser = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         Profile followerProfile = loggedInUser.getProfile();
+        String referrer = request.getHeader("referer");
+//        if(referrer != null && referrer.contains("/posts/" + postId + "/comment")){
+//            return "redirect:/posts/" + postId + "/comment";
+//        }
         if(followingProfile.equals(followerProfile)){
-            return "redirect:/";
+            return "redirect:redirect:/search?searchButton="+followingProfile.getFirstName()+"+"+followingProfile.getLastName()+"searchKeyword=Profile";
         }
         Follow existingFollow = followService.existingFollow(followingProfile,followerProfile);
         if(existingFollow != null){
@@ -45,6 +51,6 @@ public class FollowController {
         }
         profileService.updateProfile(followingProfile);
         profileService.updateProfile(followerProfile);
-        return "redirect:/";
+        return "redirect:redirect:/search?searchButton="+followingProfile.getFirstName()+"+"+followingProfile.getLastName()+"searchKeyword=Profile";
     }
 }

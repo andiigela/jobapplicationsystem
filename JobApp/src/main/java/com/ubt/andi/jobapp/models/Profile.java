@@ -40,5 +40,10 @@ public class Profile {
     private List<Follow> followers = new ArrayList<>();
     @OneToMany(mappedBy = "following")
     private List<Follow> followings = new ArrayList<>();
+    @OneToMany(mappedBy = "fromProfile")
+    private List<Notification> fromProfileNotifications = new ArrayList<>();
+    @OneToMany(mappedBy = "toProfile")
+    private List<Notification> toProfileNotifications = new ArrayList<>();
+
 
 }

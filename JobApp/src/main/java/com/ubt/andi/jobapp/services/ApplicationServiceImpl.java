@@ -16,6 +16,7 @@ public class ApplicationServiceImpl implements ApplicationService{
     public void createApplication(Application application) {
         if(application == null) return;
         application.setApproved(false);
+
         this.applicationRepository.save(application);
     }
 

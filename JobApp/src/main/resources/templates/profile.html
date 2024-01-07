@@ -41,6 +41,8 @@
                 </div>
             </div>
             <div class="col-md-2">
+                <a th:if="${(profile.getAppuser().getUsername() != #authentication.name) && profile.isFollowedByLoggedInUser()}" th:href="@{/profile/{id}/follow(id=${profile.id})}" class="profile-edit-btn">Unfollow</a>
+                <a th:if="${(profile.getAppuser().getUsername() != #authentication.name) && !profile.isFollowedByLoggedInUser()}" th:href="@{/profile/{id}/follow(id=${profile.id})}">Follow</a>
                 <a th:if="${profile.getAppuser().getUsername() == #authentication.name}" th:href="@{/profile/edit/{username}(username=${#authentication.name})}"><button type="button" class="profile-edit-btn" name="btnAddMore">Edit Profile</button></a>
                 <a th:if="${profile.getAppuser().getUsername() == #authentication.name}" th:href="@{/profile/settings/{username}(username=${#authentication.name})}"><button type="button" class="profile-edit-btn" style="margin-top: 10px;" name="btnAddMore">Settings</button></a>
             </div>

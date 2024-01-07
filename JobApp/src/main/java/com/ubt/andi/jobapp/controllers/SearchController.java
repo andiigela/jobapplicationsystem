@@ -7,6 +7,7 @@ import com.ubt.andi.jobapp.services.FollowService;
 import com.ubt.andi.jobapp.services.JobService;
 import com.ubt.andi.jobapp.services.ProfileService;
 import com.ubt.andi.jobapp.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
@@ -38,6 +39,7 @@ public class SearchController {
                                 @RequestParam(value = "searchButton") String searchValue,
                                 @RequestParam(value = "searchKeyword") String searchKeyword,
                                 Model model){
+
         if(searchKeyword != null && !searchKeyword.trim().equals("")){
             int pageNumber = Integer.parseInt(page);
             if(pageNumber > 0){
