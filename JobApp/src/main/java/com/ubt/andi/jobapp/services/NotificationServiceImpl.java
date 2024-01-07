@@ -3,11 +3,13 @@ import com.ubt.andi.jobapp.models.AppUser;
 import com.ubt.andi.jobapp.models.Job;
 import com.ubt.andi.jobapp.models.Notification;
 import com.ubt.andi.jobapp.models.Profile;
-import com.ubt.andi.jobapp.repositories.ApplicationRepository;
 import com.ubt.andi.jobapp.repositories.NotificationRepository;
 import com.ubt.andi.jobapp.repositories.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 @Service
 public class NotificationServiceImpl implements NotificationService{
     private final NotificationRepository notificationRepository;
@@ -26,5 +28,12 @@ public class NotificationServiceImpl implements NotificationService{
         notification.setFromProfile(profile);
         notification.setToProfile(toProfile);
         notificationRepository.save(notification);
+    }
+    @Override
+    public List<Notification> findNotifications() {
+        AppUser user = userRepository.findAppUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        Profile profile = user.getProfile();
+        if(profile == null || user == null) return null;
+        return notificationRepository.findNotificationsByToProfile(profile);
     }
 }

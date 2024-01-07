@@ -96,10 +96,10 @@
         <!-- Total number of notifications -->
         <ul class="notification-list">
             <!-- Notification items -->
-            <li class="notification-item">
+            <li class="notification-item" th:each="notification: ${notifications}">
                 <img src="https://via.placeholder.com/50" alt="Profile Image">
                 <div class="notification-info">
-                    <p class="notification-content" style="margin: 0;color: black">John Doe sent you a message</p>
+                    <p class="notification-content" style="margin: 0;color: black" th:text="${notification.notificationText}"></p>
                     <p class="notification-date" style="color:#595454">Jan 1, 2024</p>
                 </div>
             </li>
