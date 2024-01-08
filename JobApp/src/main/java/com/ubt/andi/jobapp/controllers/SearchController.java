@@ -46,10 +46,11 @@ public class SearchController {
                 pageNumber-=1;
             }
             Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE);
+            AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+            Profile followerProfile = user.getProfile();
+            if(followerProfile == null) return "redirect:/profile/view/"+user.getUsername();
             if(searchKeyword.equals("Profile")){
                 Page<Profile> profilePage = profileService.findProfileBySearch(searchValue,pageable);
-                AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-                Profile followerProfile = user.getProfile();
                 for(Profile followingProfile : profilePage){
                     Follow follow = followService.existingFollow(followingProfile,followerProfile);
                     if(follow == null){
@@ -59,14 +60,16 @@ public class SearchController {
                 model.addAttribute("searchedProfiles",profilePage);
                 model.addAttribute("searchKeyword",searchKeyword);
                 model.addAttribute("searchButton",searchValue);
-                return "search";
+                model.addAttribute("profile",followerProfile);
+                return "index_withoutsearch";
             }
             if(searchKeyword.equals("Job")){
                 Page<Job> jobPage = jobService.getAllJobsByTitle(searchValue,pageable);
                 model.addAttribute("searchedJobs",jobPage);
                 model.addAttribute("searchKeyword",searchKeyword);
                 model.addAttribute("searchButton",searchValue);
-                return "search";
+                model.addAttribute("profile",followerProfile);
+                return "index_withoutsearch";
             }
         }
         model.addAttribute("searchedProfiles",new ArrayList<Profile>());

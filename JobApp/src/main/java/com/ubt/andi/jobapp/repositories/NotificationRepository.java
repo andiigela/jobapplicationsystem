@@ -7,5 +7,5 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface NotificationRepository extends JpaRepository<Notification,Long> {
-    Page<Notification> findNotificationsByToProfile(Profile profile, Pageable pageable);
+    Page<Notification> findNotificationsByToProfileOrderByCreatedAtDesc(Profile profile, Pageable pageable);
 }

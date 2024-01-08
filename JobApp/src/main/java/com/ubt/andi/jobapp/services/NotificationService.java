@@ -12,4 +12,5 @@ public interface NotificationService {
     void sendAcceptedApplicantNotification(Profile toProfile, Job job);
     void sendNotAcceptedApplicantNotification(Profile toProfile, Job job);
     Page<Notification> findNotifications(Pageable pageable);
+    void deleteNotification(Long id);
 }

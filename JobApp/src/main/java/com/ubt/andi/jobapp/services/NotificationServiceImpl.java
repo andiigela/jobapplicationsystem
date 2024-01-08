@@ -50,6 +50,12 @@ public class NotificationServiceImpl implements NotificationService{
         AppUser user = userRepository.findAppUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         Profile profile = user.getProfile();
         if(profile == null || user == null || pageable == null) return null;
-        return notificationRepository.findNotificationsByToProfile(profile,pageable);
+        return notificationRepository.findNotificationsByToProfileOrderByCreatedAtDesc(profile,pageable);
+    }
+
+    @Override
+    public void deleteNotification(Long id) {
+        if(id == 0) return;
+        notificationRepository.deleteById(id);
     }
 }

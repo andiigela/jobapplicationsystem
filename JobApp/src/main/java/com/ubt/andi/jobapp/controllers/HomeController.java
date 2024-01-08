@@ -98,6 +98,8 @@ public class HomeController {
         Pageable pageable = PageRequest.of(pageNumber,PAGE_SIZE);
         Page<Post> userPosts= postService.getPostsByUserId(pageable);
         AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        Profile profile = user.getProfile();
+        if(profile == null) return "redirect:/profile/view/"+user.getUsername();
         Map<Long, Boolean> userLikes = new HashMap<>();
         for (Post post : userPosts) {
             LikedPosts likedPosts = likedPostsService.isPostLikedByUser(user, post);
@@ -109,6 +111,7 @@ public class HomeController {
         }
         model.addAttribute("userLikes",userLikes);
         model.addAttribute("userPosts",userPosts);
+        model.addAttribute("profile",profile);
         return "user-posts";
     }
     @GetMapping("/profile/posts/edit/{id}")
@@ -177,6 +180,8 @@ public class HomeController {
         Map<Long, Boolean> userLikes = new HashMap<>();
         boolean likedByUser = false;
         AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        Profile profile = user.getProfile();
+        if(profile == null) return "redirect:/profile/view/"+user.getUsername();
         LikedPosts likedPosts = likedPostsService.isPostLikedByUser(user, post);
         if(likedPosts != null){
             likedByUser = true;
@@ -184,6 +189,7 @@ public class HomeController {
         userLikes.put(post.getId(), likedByUser);
         model.addAttribute("userLikes",userLikes);
         model.addAttribute("post",post);
+        model.addAttribute("profile",profile);
         return "comment-section";
     }
     @PostMapping("/posts/{id}/comment")
@@ -204,6 +210,8 @@ public class HomeController {
         Map<Long, Boolean> userLikes = new HashMap<>();
         boolean likedByUser = false;
         AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        Profile profile = user.getProfile();
+        if(profile == null) return "redirect:/profile/view/"+user.getUsername();
         LikedPosts likedPosts = likedPostsService.isPostLikedByUser(user, post);
         if(likedPosts != null){
             likedByUser = true;
@@ -213,6 +221,7 @@ public class HomeController {
         model.addAttribute("post",post);
         model.addAttribute("comment",comment);
         model.addAttribute("commentId",commentId);
+        model.addAttribute("profile",profile);
         return "editcomment-section";
     }
     @PostMapping("/posts/{postId}/comment/{commentId}")

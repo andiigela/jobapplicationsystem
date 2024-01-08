@@ -36,7 +36,7 @@
                 <li th:unless="${#authorization.expression('isAnonymous()')}" style="margin-right: 10px"><a th:href="@{/profile/posts}">My Posts</a></li>
                 <li th:if="${#authorization.expression('hasRole(''ROLE_Employer'')')}" style="margin-right: 10px"><a th:href="@{/jobs}">Jobs</a></li>
                 <li th:unless="${#authorization.expression('isAnonymous()')}" style="margin-right: 20px;margin-left:5px">
-                    <a th:href="@{/}">
+                    <a th:href="@{/notifications}">
                     <span class="position-relative">
                       <i class="fas fa-bell"></i> <!-- Notification icon from Font Awesome -->
                       <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-black" th:text="${profile?.notificationsNumber}">

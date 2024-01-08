@@ -1,12 +1,16 @@
 package com.ubt.andi.jobapp.controllers;
+import com.ubt.andi.jobapp.models.AppUser;
 import com.ubt.andi.jobapp.models.Application;
 import com.ubt.andi.jobapp.models.Job;
+import com.ubt.andi.jobapp.models.Profile;
 import com.ubt.andi.jobapp.services.ApplicationService;
 import com.ubt.andi.jobapp.services.JobService;
 import com.ubt.andi.jobapp.services.NotificationService;
+import com.ubt.andi.jobapp.services.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,15 +19,20 @@ public class JobsController {
     private final JobService jobService;
     private final ApplicationService applicationService;
     private final NotificationService notificationService;
+    private final UserService userService;
     private final static int PAGE_SIZE = 5;
     public JobsController(JobService jobService,ApplicationService applicationService,
-                          NotificationService notificationService){
+                          NotificationService notificationService,UserService userService){
         this.jobService=jobService;
         this.applicationService=applicationService;
         this.notificationService=notificationService;
+        this.userService=userService;
     }
     @GetMapping("/jobs")
     public String getJobsView(@RequestParam(value = "page",defaultValue = "0") String page, Model model){
+        AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        Profile profile = user.getProfile();
+        if(profile == null) return "redirect:/profile/view/"+user.getUsername();
         int pageNumber = Integer.parseInt(page);
         if(pageNumber > 0){
             pageNumber-=1;
@@ -31,6 +40,7 @@ public class JobsController {
         Pageable pageable = PageRequest.of(pageNumber,PAGE_SIZE);
         Page<Job> retrieveJobs = jobService.getJobsByUser(pageable);
         model.addAttribute("jobs",retrieveJobs);
+        model.addAttribute("profile",profile);
         return "jobs";
     }
     @GetMapping("/jobs/create")
