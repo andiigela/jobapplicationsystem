@@ -41,6 +41,8 @@ public class HomeController {
         Pageable pageable = PageRequest.of(pageNumber,PAGE_SIZE);
         Page<Post> posts = postService.getPostsByPage(pageable);
         AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        Profile profile = user.getProfile();
+        if(profile == null) return "redirect:/profile/view/"+user.getUsername();
         if(user != null){
             model.addAttribute("user",user);
         }
@@ -61,10 +63,12 @@ public class HomeController {
         }
 
 
+
         model.addAttribute("userLikes",userLikes);
         model.addAttribute("posts",posts);
         model.addAttribute("currentPage",page);
-        return "home";
+        model.addAttribute("profile",profile);
+        return "index";
     }
     @GetMapping("/posts/create")
     public String getCreatePostView(Model model){

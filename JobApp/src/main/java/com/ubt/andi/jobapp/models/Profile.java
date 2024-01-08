@@ -34,6 +34,7 @@ public class Profile {
     private boolean followedByLoggedInUser=false;
     private Integer followersNumber=0;
     private Integer followingsNumber=0;
+    private Integer notificationsNumber=0;
     @OneToOne
     private AppUser appuser;
     @OneToMany(mappedBy = "follower")

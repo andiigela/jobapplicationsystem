@@ -97,12 +97,14 @@ public class JobsController {
         Application application = applicationService.findApplicationById(appId);
         if(approvalValue.trim().equals("1")){
             application.setApproved(true);
+            notificationService.sendAcceptedApplicantNotification(application.getAppUser().getProfile(),job);
+
         }
         if(approvalValue.trim().equals("0")){
             application.setApproved(false);
+            notificationService.sendNotAcceptedApplicantNotification(application.getAppUser().getProfile(),job);
         }
         applicationService.editApplication(application);
-        notificationService.sendJobNotification(application.getAppUser().getProfile(),job);
         return "redirect:/job/"+jobId+"/applicants";
     }
 }

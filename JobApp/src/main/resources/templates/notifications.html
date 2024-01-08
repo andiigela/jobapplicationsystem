@@ -105,6 +105,17 @@
             </li>
         </ul>
     </div>
+    <form method="get" th:action="@{/notifications}" th:if="${notifications.totalElements != 0}">
+        <div class="row">
+            <div class="col-md-12 d-flex justify-content-center">
+                <ul class="pagination">
+                    <li th:each="pageNumber: ${#numbers.sequence(0, notifications.totalPages - 1)}">
+                        <input type="submit" class="page-link" name="page" th:value="${pageNumber + 1}" style="height: 40px; width: 40px">
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </form>
 </div>
 <th:block th:replace="index::scripts"></th:block>
 </body>
