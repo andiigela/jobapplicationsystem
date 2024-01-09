@@ -3,6 +3,7 @@ import com.ubt.andi.jobapp.models.AppUser;
 import com.ubt.andi.jobapp.models.Follow;
 import com.ubt.andi.jobapp.models.Profile;
 import com.ubt.andi.jobapp.services.FollowService;
+import com.ubt.andi.jobapp.services.NotificationService;
 import com.ubt.andi.jobapp.services.ProfileService;
 import com.ubt.andi.jobapp.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,10 +17,13 @@ public class FollowController {
     private final FollowService followService;
     private final ProfileService profileService;
     private final UserService userService;
-    public FollowController(FollowService followService,ProfileService profileService,UserService userService){
+    private final NotificationService notificationService;
+    public FollowController(FollowService followService,ProfileService profileService,
+                            UserService userService,NotificationService notificationService){
         this.followService=followService;
         this.profileService=profileService;
         this.userService=userService;
+        this.notificationService=notificationService;
     }
     @GetMapping("/profile/{id}/follow")
     public String followProfile(@PathVariable("id") Long followingProfileId, HttpServletRequest request){
@@ -48,6 +52,7 @@ public class FollowController {
             followingProfile.setFollowedByLoggedInUser(true);
             followerProfile.setFollowingsNumber(followerProfile.getFollowingsNumber()+1);
             followingProfile.setFollowersNumber(followingProfile.getFollowersNumber()+1);
+            notificationService.sendFollowUserNotification(followingProfile);
         }
         profileService.updateProfile(followingProfile);
         profileService.updateProfile(followerProfile);

@@ -99,7 +99,7 @@
             <li class="notification-item" th:each="notification, notificationIdx : ${notifications}">
                 <img th:src="@{${notification.getFromProfile().getImagePath()}}" alt="Profile Image">
                 <div class="notification-info">
-                    <p class="notification-content" style="margin: 0;color: black;font-weight: bold" th:text="${notification.getFromProfile().getFirstName() + ' ' + notification.getFromProfile().getLastName()}"></p>
+                    <p class="notification-content" style="margin: 0;color: black;font-weight: bold" th:text="${'Notification from ' +notification.getFromProfile().getFirstName() + ' ' + notification.getFromProfile().getLastName()}"></p>
                     <p class="notification-content" style="margin: 0;color: black" th:text="${notification.notificationText}"></p>
                     <p class="notification-date" style="color:#595454" th:text="${notification.getFormattedCreatedAt()}"></p>
                 </div>

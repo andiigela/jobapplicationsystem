@@ -76,8 +76,12 @@ public class JobsController {
     @GetMapping("/job/{jobId}/details")
     public String getJobDetails(@PathVariable("jobId") Long jobId,Model model){
         Job job = jobService.getJobById(jobId);
+        AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        Profile profile = user.getProfile();
+        if(profile == null) return "redirect:/profile/view/"+user.getUsername();
         if(!job.isActive()) return "redirect:/";
         model.addAttribute("job",job);
+        model.addAttribute("profile",profile);
         return "job-details";
     }
     @GetMapping("/job/{jobId}/applicants")
@@ -88,6 +92,9 @@ public class JobsController {
             pageNumber-=1;
         }
         Pageable pageable = PageRequest.of(pageNumber,PAGE_SIZE);
+        AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        Profile profile = user.getProfile();
+        if(profile == null) return "redirect:/profile/view/"+user.getUsername();
         Job job = jobService.getJobByIdAndUser(jobId);
         if(job == null){
             return "redirect:/jobs";
@@ -95,6 +102,7 @@ public class JobsController {
         Page<Application> retrieveApplications = applicationService.findApplicationsByCreationDateDesc(job,pageable);
         model.addAttribute("apps",retrieveApplications);
         model.addAttribute("job",job);
+        model.addAttribute("profile",profile);
         return "show-applicants";
     }
     @PostMapping("/job/{jobId}/applicants/application/{appId}/approve")

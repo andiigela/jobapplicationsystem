@@ -2,6 +2,7 @@ package com.ubt.andi.jobapp.controllers;
 import com.ubt.andi.jobapp.models.AppUser;
 import com.ubt.andi.jobapp.models.Application;
 import com.ubt.andi.jobapp.models.Job;
+import com.ubt.andi.jobapp.models.Profile;
 import com.ubt.andi.jobapp.services.ApplicationService;
 import com.ubt.andi.jobapp.services.FileUploadService;
 import com.ubt.andi.jobapp.services.JobService;
@@ -30,6 +31,8 @@ public class ApplicationsController {
         Job jobDb = jobService.getJobById(jobId);
         if(!jobDb.isActive()) return "redirect:/";
         AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        Profile profile = user.getProfile();
+        if(profile == null) return "redirect:/profile/view/"+user.getUsername();
         Application existingApplication = applicationService.findApplicationByUserAndJob(user, jobDb);
         if(existingApplication == null){
             Application application = new Application();
@@ -38,6 +41,7 @@ public class ApplicationsController {
         model.addAttribute("user",user);
         model.addAttribute("existingApplication",existingApplication);
         model.addAttribute("job", jobDb);
+        model.addAttribute("profile", profile);
         return "application-form";
     }
     @PostMapping("/job/{jobId}/apply")

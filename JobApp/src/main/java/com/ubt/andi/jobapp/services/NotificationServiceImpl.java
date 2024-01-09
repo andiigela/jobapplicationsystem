@@ -1,8 +1,5 @@
 package com.ubt.andi.jobapp.services;
-import com.ubt.andi.jobapp.models.AppUser;
-import com.ubt.andi.jobapp.models.Job;
-import com.ubt.andi.jobapp.models.Notification;
-import com.ubt.andi.jobapp.models.Profile;
+import com.ubt.andi.jobapp.models.*;
 import com.ubt.andi.jobapp.repositories.NotificationRepository;
 import com.ubt.andi.jobapp.repositories.UserRepository;
 import org.springframework.data.domain.Page;
@@ -45,6 +42,39 @@ public class NotificationServiceImpl implements NotificationService{
         notificationRepository.save(notification);
         toProfile.setNotificationsNumber(toProfile.getNotificationsNumber()+1);
     }
+    @Override
+    public void sendFollowUserNotification(Profile toProfile) {
+        AppUser user = userRepository.findAppUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        Profile profile = user.getProfile();
+        if(toProfile == null || user == null || profile == null) return;
+        Notification notification = new Notification();
+        notification.setNotificationText(user.getUsername() + " has followed you");
+        notification.setToProfile(toProfile);
+        notification.setFromProfile(profile);
+        notificationRepository.save(notification);
+        toProfile.setNotificationsNumber(toProfile.getNotificationsNumber()+1);
+        profileService.updateProfile(profile);
+    }
+
+    @Override
+    public void sendPostNotification(Profile toProfile,Post post, String action) {
+        AppUser user = userRepository.findAppUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        Profile profile = user.getProfile();
+        if(toProfile == null || user == null || profile == null) return;
+        Notification notification = new Notification();
+        if(action.trim().equals("Like")){
+            notification.setNotificationText(profile.getFirstName() + " " + profile.getLastName() + " has liked your post: " + post.getDescription());
+        }
+        if(action.trim().equals("Comment")){
+            notification.setNotificationText(profile.getFirstName() + " " + profile.getLastName() + " has commented on your post: " + post.getDescription());
+        }
+        notification.setToProfile(toProfile);
+        notification.setFromProfile(profile);
+        notificationRepository.save(notification);
+        toProfile.setNotificationsNumber(toProfile.getNotificationsNumber()+1);
+        profileService.updateProfile(profile);
+    }
+
     @Override
     public Page<Notification> findNotifications(Pageable pageable) {
         AppUser user = userRepository.findAppUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());

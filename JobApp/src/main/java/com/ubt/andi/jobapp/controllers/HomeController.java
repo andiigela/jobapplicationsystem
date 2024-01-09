@@ -23,14 +23,16 @@ public class HomeController {
     private final CommentService commentService;
     private final JobService jobService;
     private final LikedPostsService likedPostsService;
+    private final NotificationService notificationService;
     private static final int PAGE_SIZE = 5;
     public HomeController(PostService postService,UserService userService,LikedPostsService likedPostsService,
-                          CommentService commentService,JobService jobService){
+                          CommentService commentService,JobService jobService,NotificationService notificationService){
         this.postService=postService;
         this.userService=userService;
         this.likedPostsService=likedPostsService;
         this.commentService=commentService;
         this.jobService=jobService;
+        this.notificationService=notificationService;
     }
     @GetMapping("/")
     public String getHomeView(@RequestParam(value = "page",defaultValue = "0") String page, Model model){
@@ -158,6 +160,7 @@ public class HomeController {
             likedPosts.setPost(post);
             likedPostsService.createLikedPost(likedPosts);
             post.setNumberOfLikes(numberOfLikes+1);
+            notificationService.sendPostNotification(post.getAppUser().getProfile(),post,"Like"); // send Like to Post's profile
         } else {
             likedPostsService.deleteLikedPost(existingLikedPosts);
             if(numberOfLikes != 0){
@@ -199,6 +202,7 @@ public class HomeController {
         comment.setDescription(description);
         commentService.createComment(comment,post);
         post.setNumberOfComments(post.getNumberOfComments()+1); // increase number of comments
+        notificationService.sendPostNotification(post.getAppUser().getProfile(),post,"Comment"); // send Like to Post's profile
         postService.editPost(post);
         return "redirect:/posts/"+postId+"/comment";
     }
