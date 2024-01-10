@@ -45,6 +45,7 @@ public class Profile {
     private List<Notification> fromProfileNotifications = new ArrayList<>();
     @OneToMany(mappedBy = "toProfile")
     private List<Notification> toProfileNotifications = new ArrayList<>();
-
+    @OneToOne(mappedBy = "profile",cascade = CascadeType.REMOVE)
+    private Interview interview;
 
 }

@@ -35,7 +35,7 @@
                     <a th:href="@{'/' + ${app.filePath}}" download>Download</a>
                 </td>
                 <td>
-                    <button class="btn btn-primary">Call for Interview</button>
+                    <a th:href="@{/job/{jobId}/applicants/{applicantId}/interview/create(jobId=${job.id},applicantId=${app.getAppUser().getProfile().id})}" class="btn btn-primary" >Call for Interview</a>
                 </td>
                 <td>
                     <!-- Approve button -->

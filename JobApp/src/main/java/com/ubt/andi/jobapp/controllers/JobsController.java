@@ -1,12 +1,6 @@
 package com.ubt.andi.jobapp.controllers;
-import com.ubt.andi.jobapp.models.AppUser;
-import com.ubt.andi.jobapp.models.Application;
-import com.ubt.andi.jobapp.models.Job;
-import com.ubt.andi.jobapp.models.Profile;
-import com.ubt.andi.jobapp.services.ApplicationService;
-import com.ubt.andi.jobapp.services.JobService;
-import com.ubt.andi.jobapp.services.NotificationService;
-import com.ubt.andi.jobapp.services.UserService;
+import com.ubt.andi.jobapp.models.*;
+import com.ubt.andi.jobapp.services.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,14 +13,19 @@ public class JobsController {
     private final JobService jobService;
     private final ApplicationService applicationService;
     private final NotificationService notificationService;
+    private final ProfileService profileService;
     private final UserService userService;
+    private final InterviewService interviewService;
     private final static int PAGE_SIZE = 5;
     public JobsController(JobService jobService,ApplicationService applicationService,
-                          NotificationService notificationService,UserService userService){
+                          NotificationService notificationService,UserService userService,
+                          InterviewService interviewService,ProfileService profileService){
         this.jobService=jobService;
         this.applicationService=applicationService;
         this.notificationService=notificationService;
         this.userService=userService;
+        this.interviewService=interviewService;
+        this.profileService=profileService;
     }
     @GetMapping("/jobs")
     public String getJobsView(@RequestParam(value = "page",defaultValue = "0") String page, Model model){
@@ -123,6 +122,26 @@ public class JobsController {
             notificationService.sendNotAcceptedApplicantNotification(application.getAppUser().getProfile(),job);
         }
         applicationService.editApplication(application);
+        return "redirect:/job/"+jobId+"/applicants";
+    }
+    @GetMapping("/job/{jobId}/applicants/{applicantId}/interview/create")
+    public String getInterviewCreate(@PathVariable("jobId") Long jobId,@PathVariable("applicantId") Long applicantId,Model model){
+        AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        Profile profile = user.getProfile();
+        model.addAttribute("interview", new Interview());
+        model.addAttribute("profile", profile);
+        model.addAttribute("jobId", jobId);
+        model.addAttribute("applicantId", applicantId);
+        return "create-interview";
+    }
+    @PostMapping("/job/{jobId}/applicants/{applicantId}/interview/create")
+    public String createInterview(@PathVariable("jobId") Long jobId,@PathVariable("applicantId") Long applicantId,
+                                  @ModelAttribute("interview") Interview interview){
+        Job job = jobService.getJobById(jobId);
+//        Long applId = Long.parseLong(String.valueOf(applicantId));
+        Profile applicantProfile = profileService.getProfileById(applicantId);
+        interviewService.createInterview(interview,job,applicantProfile);
+        notificationService.sendInterviewNotification(applicantProfile,job,interview);
         return "redirect:/job/"+jobId+"/applicants";
     }
 }

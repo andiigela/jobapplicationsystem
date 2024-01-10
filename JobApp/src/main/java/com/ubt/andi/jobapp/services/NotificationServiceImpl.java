@@ -41,7 +41,24 @@ public class NotificationServiceImpl implements NotificationService{
         notification.setToProfile(toProfile);
         notificationRepository.save(notification);
         toProfile.setNotificationsNumber(toProfile.getNotificationsNumber()+1);
+        profileService.updateProfile(profile);
+
     }
+
+    @Override
+    public void sendInterviewNotification(Profile toProfile, Job job,Interview interview) {
+        AppUser user = userRepository.findAppUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        Profile profile = user.getProfile();
+        if(toProfile == null || job == null || profile == null) return;
+        Notification notification = new Notification();
+        notification.setNotificationText("Dear Applicant "+toProfile.getFirstName() + " " + toProfile.getLastName()+ " we want to notify you about your job: " + job.getTitle() + " click here to see more.");
+        notification.setFromProfile(profile);
+        notification.setToProfile(toProfile);
+        notificationRepository.save(notification);
+        toProfile.setNotificationsNumber(toProfile.getNotificationsNumber()+1);
+        profileService.updateProfile(profile);
+    }
+
     @Override
     public void sendFollowUserNotification(Profile toProfile) {
         AppUser user = userRepository.findAppUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());

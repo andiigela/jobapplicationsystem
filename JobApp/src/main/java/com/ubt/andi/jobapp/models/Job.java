@@ -48,8 +48,6 @@ public class Job {
     private List<Application> applications = new ArrayList<>();
     @OneToOne(mappedBy = "job",cascade = CascadeType.REMOVE)
     private Post post;
-    @OneToOne(mappedBy = "job",cascade = CascadeType.REMOVE)
-    private Interview interview;
-    @OneToOne(mappedBy = "profile",cascade = CascadeType.REMOVE)
-    private Profile profile;
+    @OneToMany(mappedBy = "job",cascade = CascadeType.REMOVE)
+    private List<Interview> interviews = new ArrayList<>();
 }
