@@ -40,7 +40,6 @@ public class JobServiceImpl implements JobService {
         user.getJobs().add(job);
         jobRepository.save(job);
     }
-
     @Override
     public Job getJobByIdAndUser(Long id) {
         AppUser user = userRepository.findAppUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -83,11 +82,10 @@ public class JobServiceImpl implements JobService {
         jobDb.setThirdRequirement(job.getThirdRequirement());
         jobRepository.save(jobDb);
     }
-
     @Override
     public Page<Job> getAllJobsByTitle(String title, Pageable pageable) {
         if(title.trim().equals("") || title == null) return null;
-        return jobRepository.findJobsByTitleContainingIgnoreCase(title,pageable);
+        return jobRepository.findJobsByTitleContainingIgnoreCaseAndActiveIsTrue(title,pageable);
     }
 
     @Override

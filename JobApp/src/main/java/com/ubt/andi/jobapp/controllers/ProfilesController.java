@@ -26,6 +26,8 @@ public class ProfilesController {
     @GetMapping("/profile/view/{username}")
     public String getProfileeView(Model model,@PathVariable("username") String username){
         AppUser user = appUserService.findUserByUsername(username);
+        AppUser loggedInUser = appUserService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        Profile loggedInProfile = loggedInUser.getProfile();
         Profile profile = null;
         if(user.getProfile() == null){
             profile = new Profile();
@@ -33,7 +35,8 @@ public class ProfilesController {
         } else {
             profile = user.getProfile();
         }
-        model.addAttribute("profile",profile);
+        model.addAttribute("otherProfile",profile);
+        model.addAttribute("profile",loggedInProfile);
         return "profile";
     }
     @GetMapping("/profile/edit/{username}")

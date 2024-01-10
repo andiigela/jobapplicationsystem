@@ -26,14 +26,10 @@ public class FollowController {
         this.notificationService=notificationService;
     }
     @GetMapping("/profile/{id}/follow")
-    public String followProfile(@PathVariable("id") Long followingProfileId, HttpServletRequest request){
+    public String followProfile(@PathVariable("id") Long followingProfileId){
         Profile followingProfile = profileService.getProfileById(followingProfileId);
         AppUser loggedInUser = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         Profile followerProfile = loggedInUser.getProfile();
-        String referrer = request.getHeader("referer");
-//        if(referrer != null && referrer.contains("/posts/" + postId + "/comment")){
-//            return "redirect:/posts/" + postId + "/comment";
-//        }
         if(followingProfile.equals(followerProfile)){
             return "redirect:redirect:/search?searchButton="+followingProfile.getFirstName()+"+"+followingProfile.getLastName()+"searchKeyword=Profile";
         }

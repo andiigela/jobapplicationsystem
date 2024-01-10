@@ -51,6 +51,7 @@ public class SearchController {
             if(followerProfile == null) return "redirect:/profile/view/"+user.getUsername();
             if(searchKeyword.equals("Profile")){
                 Page<Profile> profilePage = profileService.findProfileBySearch(searchValue,pageable);
+                if(profilePage == null) return "redirect:/";
                 for(Profile followingProfile : profilePage){
                     Follow follow = followService.existingFollow(followingProfile,followerProfile);
                     if(follow == null){

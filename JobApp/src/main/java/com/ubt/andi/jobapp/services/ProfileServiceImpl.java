@@ -63,10 +63,8 @@ public class ProfileServiceImpl implements ProfileService{
         profileDb.setFollowedByLoggedInUser(profile.isFollowedByLoggedInUser());
         profileDb.setFollowingsNumber(profile.getFollowingsNumber());
         profileDb.setFollowersNumber(profile.getFollowersNumber());
-        if(profile.getImagePath() != null && profileDb.getImagePath() == null){
-            profileDb.setImageData(profile.getImageData());
-            profileDb.setImagePath(profile.getImagePath());
-        }
+        profileDb.setImageData(profile.getImageData());
+        profileDb.setImagePath(profile.getImagePath());
         profileRepository.save(profileDb);
     }
 

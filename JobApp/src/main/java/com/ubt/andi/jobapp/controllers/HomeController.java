@@ -63,9 +63,6 @@ public class HomeController {
             }
             userLikes.put(post.getId(), likedByUser);
         }
-
-
-
         model.addAttribute("userLikes",userLikes);
         model.addAttribute("posts",posts);
         model.addAttribute("currentPage",page);
