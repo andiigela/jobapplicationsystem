@@ -6,4 +6,5 @@ import com.ubt.andi.jobapp.models.Profile;
 
 public interface InterviewService {
     void createInterview(Interview interview, Job job, Profile applicantProfile);
+    Interview findInterviewById(Long id);
 }

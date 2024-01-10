@@ -3,6 +3,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Setter
 @Getter
@@ -21,5 +22,9 @@ public class Interview {
     private Job job;
     @OneToOne
     private Profile profile;
+    public String getFormattedDate(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+        return dateTime.format(formatter);
+    }
 }
 

@@ -17,4 +17,10 @@ public class InterviewServiceImpl implements InterviewService {
         interview.setProfile(applicantProfile);
         interviewRepository.save(interview);
     }
+
+    @Override
+    public Interview findInterviewById(Long id) {
+        if(id == 0) return null;
+        return interviewRepository.findById(id).get();
+    }
 }

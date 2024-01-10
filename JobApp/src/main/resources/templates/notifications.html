@@ -96,12 +96,13 @@
         <!-- Total number of notifications -->
         <ul class="notification-list">
             <!-- Notification items -->
-            <li class="notification-item" th:each="notification, notificationIdx : ${notifications}">
+            <li class="notification-item" th:each="notification : ${notifications}">
                 <img th:src="@{${notification.getFromProfile().getImagePath()}}" alt="Profile Image">
                 <div class="notification-info">
                     <p class="notification-content" style="margin: 0;color: black;font-weight: bold" th:text="${'Notification from ' +notification.getFromProfile().getFirstName() + ' ' + notification.getFromProfile().getLastName()}"></p>
                     <p class="notification-content" style="margin: 0;color: black" th:text="${notification.notificationText}"></p>
                     <p class="notification-date" style="color:#595454" th:text="${notification.getFormattedCreatedAt()}"></p>
+                    <a th:href="@{}" th:if="${notification.notificationText.startsWith('Dear Applicant')}" class="btn btn-primary">Watch Interview</a>
                 </div>
                 <form method="post" th:action="@{/notification/{id}/delete(id=${notification.id})}">
                     <button type="submit" style="background-color: red;border: none;border-radius: 15px">

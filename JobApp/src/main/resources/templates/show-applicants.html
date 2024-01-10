@@ -35,7 +35,12 @@
                     <a th:href="@{'/' + ${app.filePath}}" download>Download</a>
                 </td>
                 <td>
-                    <a th:href="@{/job/{jobId}/applicants/{applicantId}/interview/create(jobId=${job.id},applicantId=${app.getAppUser().getProfile().id})}" class="btn btn-primary" >Call for Interview</a>
+                    <a th:if="${app.appUser.profile.interview == null}" th:href="@{/job/{jobId}/applicants/{applicantId}/interview/create(jobId=${job.id},applicantId=${app.getAppUser().getProfile().id})}" class="btn btn-primary">
+                        Call for Interview
+                    </a>
+                    <a th:unless="${app.appUser.profile.interview == null}" >
+                        <button class="btn btn-primary" disabled>Called for Interview</button>
+                    </a>
                 </td>
                 <td>
                     <!-- Approve button -->

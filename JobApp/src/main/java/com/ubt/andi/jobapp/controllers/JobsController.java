@@ -8,6 +8,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+
 @Controller
 public class JobsController {
     private final JobService jobService;
@@ -137,11 +140,22 @@ public class JobsController {
     @PostMapping("/job/{jobId}/applicants/{applicantId}/interview/create")
     public String createInterview(@PathVariable("jobId") Long jobId,@PathVariable("applicantId") Long applicantId,
                                   @ModelAttribute("interview") Interview interview){
+        if(interview.getDateTime().isBefore(LocalDateTime.now())){
+            return "redirect:/job/" + jobId + "/applicants/" + applicantId + "/interview/create";
+        }
         Job job = jobService.getJobById(jobId);
-//        Long applId = Long.parseLong(String.valueOf(applicantId));
         Profile applicantProfile = profileService.getProfileById(applicantId);
         interviewService.createInterview(interview,job,applicantProfile);
         notificationService.sendInterviewNotification(applicantProfile,job,interview);
         return "redirect:/job/"+jobId+"/applicants";
+    }
+    @GetMapping("/interview/{id}")
+    public String viewInterviewByApplicant(@PathVariable("id") Long id, Model model){
+        AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        Profile profile = user.getProfile();
+        Interview interview = interviewService.findInterviewById(id);
+        model.addAttribute("interview", interview);
+        model.addAttribute("profile", profile);
+        return "view-interview";
     }
 }
