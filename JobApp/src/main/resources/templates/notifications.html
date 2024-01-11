@@ -102,7 +102,7 @@
                     <p class="notification-content" style="margin: 0;color: black;font-weight: bold" th:text="${'Notification from ' +notification.getFromProfile().getFirstName() + ' ' + notification.getFromProfile().getLastName()}"></p>
                     <p class="notification-content" style="margin: 0;color: black" th:text="${notification.notificationText}"></p>
                     <p class="notification-date" style="color:#595454" th:text="${notification.getFormattedCreatedAt()}"></p>
-                    <a th:href="@{}" th:if="${notification.notificationText.startsWith('Dear Applicant')}" class="btn btn-primary">Watch Interview</a>
+                    <a th:each="interview: ${notification.getToProfile().getInterviews()}" th:href="@{/interview/{id}(id=${interview.id})}" th:if="${notification.notificationText.startsWith('Dear Applicant')}" class="btn btn-primary">Watch Interview</a>
                 </div>
                 <form method="post" th:action="@{/notification/{id}/delete(id=${notification.id})}">
                     <button type="submit" style="background-color: red;border: none;border-radius: 15px">

@@ -20,7 +20,7 @@ public class Interview {
     private LocalDateTime dateTime;
     @ManyToOne
     private Job job;
-    @OneToOne
+    @ManyToOne
     private Profile profile;
     public String getFormattedDate(){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");

@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class JobsController {
@@ -102,6 +104,15 @@ public class JobsController {
             return "redirect:/jobs";
         }
         Page<Application> retrieveApplications = applicationService.findApplicationsByCreationDateDesc(job,pageable);
+        Map<Long, Long> existingInterviews = new HashMap<>(); // Applicant Id, Job Id
+        for(Application app: retrieveApplications){
+            Profile applicantProfile = app.getAppUser().getProfile();
+            Interview existingInterview = interviewService.findInterviewByProfileAndJob(applicantProfile,job);
+            if(existingInterview != null){
+                existingInterviews.put(applicantProfile.getId(),jobId);
+            }
+        }
+        model.addAttribute("existingInterviews",existingInterviews);
         model.addAttribute("apps",retrieveApplications);
         model.addAttribute("job",job);
         model.addAttribute("profile",profile);
@@ -154,6 +165,7 @@ public class JobsController {
         AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         Profile profile = user.getProfile();
         Interview interview = interviewService.findInterviewById(id);
+        if(interview.getProfile().getId() != profile.getId()) return "redirect:/";
         model.addAttribute("interview", interview);
         model.addAttribute("profile", profile);
         return "view-interview";

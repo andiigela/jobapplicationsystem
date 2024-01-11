@@ -23,4 +23,10 @@ public class InterviewServiceImpl implements InterviewService {
         if(id == 0) return null;
         return interviewRepository.findById(id).get();
     }
+
+    @Override
+    public Interview findInterviewByProfileAndJob(Profile profile, Job job) {
+        if(profile == null || job == null) return null;
+        return interviewRepository.findByProfileAndJob(profile,job);
+    }
 }
