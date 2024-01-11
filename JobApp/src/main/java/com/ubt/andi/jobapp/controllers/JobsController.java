@@ -1,6 +1,7 @@
 package com.ubt.andi.jobapp.controllers;
 import com.ubt.andi.jobapp.models.*;
 import com.ubt.andi.jobapp.services.*;
+import org.springframework.boot.Banner;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -169,5 +170,20 @@ public class JobsController {
         model.addAttribute("interview", interview);
         model.addAttribute("profile", profile);
         return "view-interview";
+    }
+    @GetMapping("/interviews")
+    public String getInterviewsPage(@RequestParam(value = "page",defaultValue = "0") String page,Model model){
+        AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        Profile profile = user.getProfile();
+        if(profile == null) return "redirect:/profile/view/"+user.getUsername();
+        int pageNumber = Integer.parseInt(page);
+        if(pageNumber > 0){
+            pageNumber-=1;
+        }
+        Pageable pageable = PageRequest.of(pageNumber,PAGE_SIZE);
+        Page<Interview> interviews = interviewService.findInterviewsByUser(pageable);
+        model.addAttribute("profile",profile);
+        model.addAttribute("interviews",interviews);
+        return "my-interviews";
     }
 }
