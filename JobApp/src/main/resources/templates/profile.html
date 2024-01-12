@@ -4,13 +4,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title> Free Dental Medical Hospital Website Template | Smarteyeapps.com</title>
-
+    <title>User Profile</title>
     <link th:replace="index::linkrel"/>
-<!--    <link rel="shortcut icon" href="assets/images/fav.jpg">-->
-<!--    <link rel="stylesheet" href="assets/css/bootstrap.min.css">-->
     <link rel="stylesheet" type="text/css" href="/static/css/profile.css" />
-<!--    <link rel="stylesheet" href="../../../../../../../../../AppData/Local/Temp/style.css">-->
 </head>
 
 <body>
@@ -19,18 +15,14 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="profile-img">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS52y5aInsxSm31CvHOFHWujqUx_wWTS9iM6s7BAm21oEN_RiGoog" alt=""/>
-                    <div class="file btn btn-lg btn-primary">
-                        Change Photo
-                        <input type="file" name="file"/>
-                    </div>
+                    <img th:src="@{${otherProfile.imagePath}}" alt="Profile Image"/>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="profile-head">
-                    <h5 th:text="${profile.firstName + ' ' + profile.lastName}">
+                    <h5 th:text="${otherProfile.firstName + ' ' + otherProfile.lastName}">
                     </h5>
-                    <h6 th:text="${profile.description}">
+                    <h6 th:text="${otherProfile.description}">
                     </h6>
                     <p class="proile-rating"><span></span></p>
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -44,17 +36,17 @@
                 </div>
             </div>
             <div class="col-md-2">
-                <a th:if="${profile.getAppuser().getUsername() == #authentication.name}" th:href="@{/profile/edit/{username}(username=${#authentication.name})}"><button type="button" class="profile-edit-btn" name="btnAddMore">Edit Profile</button></a>
-                <a th:if="${profile.getAppuser().getUsername() == #authentication.name}" th:href="@{/profile/settings/{username}(username=${#authentication.name})}"><button type="button" class="profile-edit-btn" style="margin-top: 10px;" name="btnAddMore">Settings</button></a>
+                <a th:if="${(otherProfile.getAppuser().getUsername() != #authentication.name) && otherProfile.isFollowedByLoggedInUser()}" th:href="@{/profile/{id}/follow(id=${otherProfile.id})}" class="profile-edit-btn">Unfollow</a>
+                <a th:if="${(otherProfile.getAppuser().getUsername() != #authentication.name) && !otherProfile.isFollowedByLoggedInUser()}" th:href="@{/profile/{id}/follow(id=${otherProfile.id})}">Follow</a>
+                <a th:if="${otherProfile.getAppuser().getUsername() == #authentication.name}" th:href="@{/profile/edit/{username}(username=${#authentication.name})}"><button type="button" class="profile-edit-btn" name="btnAddMore">Edit Profile</button></a>
+                <a th:if="${otherProfile.getAppuser().getUsername() == #authentication.name}" th:href="@{/profile/settings/{username}(username=${#authentication.name})}"><button type="button" class="profile-edit-btn" style="margin-top: 10px;" name="btnAddMore">Settings</button></a>
             </div>
         </div>
         <div class="row">
             <div class="col-md-4">
                 <div class="profile-work">
                     <p>Media</p>
-                    <a th:href="@{${profile.githubLink}}"><img src="/static/images/github.png" alt="Github" width="60" height="40"/></a><br>
-                    <p>SKILLS</p>
-                    <a href="" th:href="${profile.skills}"></a><br/>
+                    <a th:href="@{${otherProfile.githubLink}}"><img src="/static/images/github.png" alt="Github" width="60" height="40"/></a><br>
                 </div>
             </div>
             <div class="col-md-8">
@@ -65,7 +57,7 @@
                                     <label>Education</label>
                             </div>
                             <div class="col-md-6">
-                                <p th:text="${profile.education}"></p>
+                                <p th:text="${otherProfile.education}"></p>
                             </div>
                         </div>
                         <div class="row">
@@ -73,7 +65,7 @@
                                 <label>Experience</label>
                             </div>
                             <div class="col-md-6">
-                                <p th:text="${profile.experience}"></p>
+                                <p th:text="${otherProfile.experience}"></p>
                             </div>
                         </div>
                         <div class="row">
@@ -81,7 +73,7 @@
                                 <label>Profession</label>
                             </div>
                             <div class="col-md-6">
-                                <p th:text="${profile.profession}"></p>
+                                <p th:text="${otherProfile.profession}"></p>
                             </div>
                         </div>
                         <div class="row">
@@ -89,7 +81,7 @@
                                 <label>Phone</label>
                             </div>
                             <div class="col-md-6">
-                                <p th:text="${profile.phone}"></p>
+                                <p th:text="${otherProfile.phone}"></p>
                             </div>
                         </div>
                     </div>
@@ -99,7 +91,7 @@
                                 <label>Experience Level</label>
                             </div>
                             <div class="col-md-6">
-                                <p th:text="${profile.experienceLevel}"></p>
+                                <p th:text="${otherProfile.experienceLevel}"></p>
                             </div>
                         </div>
                         <div class="row">
@@ -107,7 +99,7 @@
                                 <label>Hourly Rate</label>
                             </div>
                             <div class="col-md-6">
-                                <p th:text="${profile.hourlyRate + '$/hr'}"></p>
+                                <p th:text="${otherProfile.hourlyRate + '$/hr'}"></p>
                             </div>
                         </div>
                         <div class="row">
@@ -115,7 +107,7 @@
                                 <label>Total Projects</label>
                             </div>
                             <div class="col-md-6">
-                                <p th:text="${profile.totalProjects}"></p>
+                                <p th:text="${otherProfile.totalProjects}"></p>
                             </div>
                         </div>
                         <div class="row">
@@ -123,7 +115,7 @@
                                 <label>English Level</label>
                             </div>
                             <div class="col-md-6">
-                                <p th:text="${profile.englishLevel}"></p>
+                                <p th:text="${otherProfile.englishLevel}"></p>
                             </div>
                         </div>
                     </div>
@@ -133,9 +125,4 @@
 </div>
 <th:block th:replace="index::scripts"></th:block>
 </body>
-
-<!--<script type="application/javascript" src="assets/js/jquery-scrolltofixed-min.js"></script>
-<script src="assets/js/script.js"></script>-->
-
-
 </html>

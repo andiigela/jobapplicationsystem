@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -27,34 +28,64 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public void createJob(Job job) {
-        if(job == null) return;
         AppUser user = userRepository.findAppUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(job == null || user == null) return;
+        LocalDate currentDate = LocalDate.now();
+        if(job.getExpirationDate().isAfter(currentDate) || job.getExpirationDate().isEqual(currentDate)){
+            job.setActive(true);
+        } else {
+            job.setActive(false);
+        }
         job.setAppUser(user);
         user.getJobs().add(job);
         jobRepository.save(job);
     }
+    @Override
+    public Job getJobByIdAndUser(Long id) {
+        AppUser user = userRepository.findAppUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(id == 0 || user == null) return null;
+        return jobRepository.findJobByIdAndAppUser(id,user);
+    }
 
     @Override
-    public Job getJob(Long id) {
-        if(id == 0 || id == null) return null;
+    public Job getJobById(Long id) {
+        if(id == 0) return null;
         return jobRepository.findById(id).get();
     }
 
     @Override
     public void editJob(Job job) {
         if(job == null) return;
+        LocalDate currentDate = LocalDate.now();
+        if(job.getExpirationDate().isAfter(currentDate) || job.getExpirationDate().isEqual(currentDate)){
+            job.setActive(true);
+        } else {
+            job.setActive(false);
+        }
         Job jobDb = jobRepository.findById(job.getId()).get();
         jobDb.setTitle(job.getTitle());
         jobDb.setDescription(job.getDescription());
         jobDb.setLocation(job.getLocation());
-        jobDb.setExpirationDate(job.getExpirationDate());
+        jobDb.setActive(job.isActive());
+        if(job.getExpirationDate() != null){
+            jobDb.setExpirationDate(job.getExpirationDate());
+        }
+        jobDb.setSalary(job.getSalary());
+        jobDb.setJobType(job.getJobType());
+        jobDb.setCompanyName(job.getCompanyName());
+        jobDb.setPosition(job.getPosition());
+        jobDb.setFirstResponsibility(job.getFirstResponsibility());
+        jobDb.setSecondResponsibility(job.getSecondResponsibility());
+        jobDb.setThirdResponsibility(job.getThirdResponsibility());
+        jobDb.setFirstRequirement(job.getFirstRequirement());
+        jobDb.setSecondRequirement(job.getSecondRequirement());
+        jobDb.setThirdRequirement(job.getThirdRequirement());
         jobRepository.save(jobDb);
     }
-
     @Override
     public Page<Job> getAllJobsByTitle(String title, Pageable pageable) {
         if(title.trim().equals("") || title == null) return null;
-        return jobRepository.findJobsByTitleContainingIgnoreCase(title,pageable);
+        return jobRepository.findJobsByTitleContainingIgnoreCaseAndActiveIsTrue(title,pageable);
     }
 
     @Override

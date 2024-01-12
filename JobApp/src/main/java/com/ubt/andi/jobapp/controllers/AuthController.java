@@ -39,7 +39,7 @@ public class AuthController {
     public String getLoginView(Model model){
         Authentication authUser = SecurityContextHolder.getContext().getAuthentication();
         if(!(authUser instanceof AnonymousAuthenticationToken)){
-            return "redirect:/dashboard";
+            return "redirect:/";
         }
         model.addAttribute("user",new AppUser());
         return "login";

@@ -4,48 +4,65 @@
     <meta charset="UTF-8">
     <title>Jobs</title>
     <link th:replace="index::linkrel"/>
+    <link rel="stylesheet" href="/static/css/jobs.css"/>
 </head>
 <body>
     <div th:replace="index::content"></div>
     <div class="container">
-        <a th:href="@{/jobs/create}"><button type="button" class="btn btn-primary" style="margin-top: 20px;margin-bottom: 5px;">Create</button></a>
-        <table class="table table-dark">
-            <thead>
-                <tr>
-                    <th scope="col">Title</th>
-                    <th scope="col">Location</th>
-                    <th scope="col">Created Date</th>
-                    <th scope="col">Expiration Date</th>
-                    <th scope="col">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="job: ${jobs}">
-                    <td th:text="${job.title}"></td>
-                    <td th:text="${job.location}"></td>
-                    <td th:text="${job.dateCreated}"></td>
-                    <td th:text="${job.expirationDate}"></td>
-                    <td>
-                        <a th:href="@{/jobs/edit/{id}(id=${job.id})}"><button type="button" class="btn btn-warning">Edit</button></a>
-                        <form method="post" th:action="@{/jobs/delete/{id}(id=${job.id})}">
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <form method="get" th:action="@{/jobs}">
-            <div class="row">
-                    <div class="col-md-12 d-flex justify-content-center">
-                        <ul class="pagination">
-                            <li th:each="pageNumber: ${#numbers.sequence(0, jobs.totalPages - 1)}">
-                                <input type="submit" class="page-link" name="page" th:value="${pageNumber + 1}" style="height: 40px; width: 40px">
-                            </li>
-                        </ul>
-                    </div>
+        <div class="row">
+            <div class="col-md-12 page-header">
+                <h2>Job Listings</h2>
+                <a th:href="@{/jobs/create}" class="btn btn-primary">Create New Job</a>
             </div>
-        </form>
-
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Location</th>
+                            <th>Created Date</th>
+                            <th>Expiration Date</th>
+                            <th>Active</th>
+                            <th>Applications</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="job: ${jobs}">
+                            <td th:text="${job.title}"></td>
+                            <td th:text="${job.location}"></td>
+                            <td th:text="${job.dateCreated}"></td>
+                            <td th:text="${job.expirationDate}"></td>
+                            <td th:if="${job.active == true}">Yes</td>
+                            <td th:if="${job.active != true}">No</td>
+                            <td th:text="${job.getApplications().size()}"></td>
+                            <td class="btn-actions">
+                                <a th:href="@{/job/{jobId}/applicants(jobId=${job.id})}" class="btn btn-outline-primary btn-sm">Show Applicants</a>
+                                <a th:href="@{/jobs/edit/{id}(id=${job.id})}" class="btn btn-outline-info btn-sm">Edit</a>
+                                <form method="post" th:action="@{/jobs/delete/{id}(id=${job.id})}" class="d-inline">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <form method="get" th:action="@{/jobs}" style="margin-top: 2%">
+                    <div class="row">
+                        <div class="col-md-12 d-flex justify-content-center">
+                            <ul class="pagination" th:if="${jobs != null && jobs.totalPages > 0}">
+                                <li th:each="pageNumber: ${#numbers.sequence(0, jobs.totalPages - 1)}">
+                                    <input type="submit" class="page-link btn btn-link" name="page" th:value="${pageNumber + 1}">
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
     <th:block th:replace="index::scripts"></th:block>
 </body>

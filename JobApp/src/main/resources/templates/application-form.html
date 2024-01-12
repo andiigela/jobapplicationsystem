@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Application Form</title>
+    <link th:replace="index::linkrel">
+    <link rel="stylesheet" href="/static/css/application.css"/>
+</head>
+<body>
+    <div th:replace="index::content"></div>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title text-center mb-4">Apply for this position</h5>
+                        <form th:action="@{/job/{jobId}/apply(jobId=${job.id})}" method="POST" enctype="multipart/form-data" th:object="${application}">
+                            <div class="mb-3">
+                                <label for="fullName" class="form-label">Full Name</label>
+                                <input type="text" th:placeholder="${user.getProfile().firstName + ' ' + user.getProfile().lastName}" disabled class="form-control input" id="fullName" name="fullName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" th:placeholder="${user.email}" disabled class="form-control input" id="email" name="email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="cvUpload" class="form-label">Upload CV (PDF, DOC, DOCX)</label>
+                                <input type="file" class="form-control input" id="cvUpload" name="cvUpload" accept=".pdf,.doc,.docx"  required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="message" class="form-label">Message (optional)</label>
+                                <textarea class="form-control input" id="message" name="message" rows="3"></textarea>
+                            </div>
+                            <div class="d-grid">
+                                <button th:if="${existingApplication == null}" type="submit" class="btn btn-primary btn-block">Submit Application</button>
+                                <button th:unless="${existingApplication == null}" type="button" disabled class="btn btn-primary btn-block">Submitted</button>
+                            </div>
+                        </form>
+                        <div class="d-grid" style="margin-top: 10px">
+                            <form method="post" th:action="@{/job/{jobId}/application/delete(jobId=${job.id})}">
+                                <button th:unless="${existingApplication == null}" type="submit" class="btn btn-danger btn-block">Delete Application</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <th:block th:replace="index::scripts"></th:block>
+</body>
+</html>

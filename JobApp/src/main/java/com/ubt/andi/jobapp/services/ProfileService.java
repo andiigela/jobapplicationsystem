@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface ProfileService {
     void createProfile(Profile profile, AppUser user);
+    Profile getProfileById(Long id);
     void updateProfile(Profile profile);
     Page<Profile> findProfileBySearch(String keyword, Pageable pageable);
 }

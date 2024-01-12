@@ -1,5 +1,5 @@
 body{
-    background-color: aliceblue;
+    background-color: #eaeaea;
 }
 .post {
     margin-top: 30px;
@@ -9,7 +9,7 @@ body{
     margin-bottom: 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-
+/* profile */
 .user-info {
     display: flex;
     align-items: center;
@@ -25,4 +25,309 @@ body{
 
 .btn-action i {
     margin-right: 5px;
+}
+
+.profile-box {
+    background-color: #fff;
+    transition: all 0.3s;
+}
+.profile-box .user-info h6,
+.profile-box .user-info p.text-light,
+.profile-box .user-stats h6,
+.profile-box .user-stats p {
+    color: black !important; /* Change text color to black */
+}
+.profile-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.user-info h3 {
+    margin-bottom: 0.25rem;
+}
+
+.user-info p {
+    margin-bottom: 0.25rem;
+}
+
+
+.user-stats h6,
+.user-stats p {
+    margin-bottom: 0.25rem;
+}
+
+.profile-box {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 400px; /* Set a maximum width for the profile box */
+    margin: 0 auto; /* Center the profile box horizontally */
+}
+
+.profile-box .user-info {
+    margin-bottom: 20px;
+}
+
+.profile-box .user-info img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-right: 20px;
+}
+
+.profile-box .user-info h6 {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: black;
+    font-size: 1.2em;
+}
+
+.profile-box .user-info p {
+    margin-bottom: 0;
+    color: black;
+    font-size: 1em;
+}
+
+.profile-box .user-stats {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+.profile-box .user-stats .col-4 {
+    text-align: center;
+}
+
+.profile-box .user-stats h6 {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: black;
+    font-size: 1em;
+}
+
+.profile-box .user-stats p {
+    margin-bottom: 0;
+    color: black;
+    font-size: 0.9em;
+}
+@media screen and (max-width: 576px) {
+    .profile-box .user-info {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .profile-box .user-info img {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 10px;
+    }
+
+    .profile-box .user-info h6 {
+        font-size: 1.2em;
+    }
+
+    .profile-box .user-info p {
+        font-size: 1em;
+    }
+
+    .profile-box .user-stats {
+        flex-direction: row;
+        justify-content: space-around;
+        margin-top: 20px;
+    }
+
+    .profile-box .user-stats h6,
+    .profile-box .user-stats p {
+        font-size: 0.9em;
+    }
+}
+
+@media screen and (max-width: 776px) {
+    .profile-box .user-info {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .profile-box .user-info img {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 10px;
+    }
+
+    .profile-box .user-info h6 {
+        font-size: 1.2em;
+    }
+
+    .profile-box .user-info p {
+        font-size: 1em;
+    }
+
+    .profile-box .user-stats {
+        flex-direction: row;
+        justify-content: space-around;
+        margin-top: 20px;
+    }
+
+    .profile-box .user-stats h6,
+    .profile-box .user-stats p {
+        font-size: 0.9em;
+    }
+}
+
+@media screen and (max-width: 1076px) {
+    .profile-box .user-info {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .profile-box .user-info img {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 10px;
+    }
+
+    .profile-box .user-info h6 {
+        font-size: 1em;
+    }
+
+    .profile-box .user-info p {
+        font-size: 0.8em;
+    }
+
+    .profile-box .user-stats {
+        flex-direction: row;
+        justify-content: space-around;
+        margin-top: 20px;
+    }
+
+    .profile-box .user-stats h6,
+    .profile-box .user-stats p {
+        font-size: 0.6em;
+    }
+}
+@media screen and (max-width: 1305px) {
+    .profile-box .user-info {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .profile-box .user-info img {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 10px;
+    }
+
+    .profile-box .user-info h6 {
+        font-size: 1em;
+    }
+
+    .profile-box .user-info p {
+        font-size: 0.8em;
+    }
+
+    .profile-box .user-stats {
+        flex-direction: row;
+        justify-content: space-around;
+        margin-top: 20px;
+    }
+
+    .profile-box .user-stats h6,
+    .profile-box .user-stats p {
+        font-size: 0.6em;
+    }
+}
+
+
+/* Custom styles for the comment section */
+
+/* Custom styles for the comment section */
+
+/* Custom styles for the comment section */
+
+.comment-section {
+    padding-top: 20px;
+}
+
+.comment.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+}
+
+.comment.card:hover {
+    transform: translateY(-5px);
+}
+
+.comment.card .card-body {
+    padding: 20px;
+}
+
+.comment.card img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+}
+
+.comment.card h6 {
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.comment.card small {
+    font-size: 0.8em;
+    color: #888;
+}
+
+.comment.card .card-text {
+    color: #333;
+    font-size: 0.9em;
+    line-height: 1.6;
+}
+
+.comment-input h5 {
+    margin-bottom: 20px;
+}
+
+.comment-input .input-group {
+    border: 1px solid #eee;
+    border-radius: 25px;
+}
+
+.comment-input .input-group-append button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+/* Custom CSS for the Job Details section and Explore Details button */
+/* Custom CSS for the Job Details section and Explore button */
+.job-details {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 20px;
+}
+
+.job-details h5 {
+    color: #333;
+}
+
+.explore-button {
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: #fff;
+}
+
+.explore-button:hover {
+    opacity: 0.9;
+}
+
+.explore-button:active {
+    transform: translateY(1px);
 }

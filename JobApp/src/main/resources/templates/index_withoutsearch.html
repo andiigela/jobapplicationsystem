@@ -3,10 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <title>Job Platform</title>
-    <th:block th:fragment="linkrel">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    </th:block>
-
+    <link th:replace="index::linkrel">
+    <style>
+        .container {
+            margin-top: 50px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        .form-control, .form-select {
+            border-radius: 30px;
+            font-size: 16px;
+        }
+        .btn {
+            border-radius: 30px;
+            font-size: 16px;
+        }
+        .result-card {
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #fff;
+        }
+        .card-header {
+            background-color: #343a40;
+            color: white;
+            border-radius: 15px 15px 0 0;
+            padding: 10px 20px;
+        }
+        .carousel-inner .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: -15px;
+            margin-left: -15px;
+        }
+        .carousel-item {
+            padding-top: 20px;
+        }
+        .job-card {
+            flex: 0 0 25%;
+            max-width: 25%;
+            padding: 0 15px;
+            margin-bottom: 30px;
+        }
+        .job-card .card {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .job-card .card-body {
+            padding: 20px;
+        }
+    </style>
 </head>
 <body>
 <div th:fragment="content">
@@ -14,51 +63,107 @@
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand" th:href="@{/dashboard}">Job App Platform</a>
+        <a class="navbar-brand" th:href="@{/}">Job App Platform</a>
 
         <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
             <ul class="navbar-nav ml-auto mr-2">
                 <li th:if="${#authorization.expression('isAnonymous()')}" style="margin-right: 10px"><a th:href="@{/register}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
                 <li th:if="${#authorization.expression('isAnonymous()')}" style="margin-right: 10px"><a th:href="@{/login}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-                <li th:unless="${#authorization.expression('isAnonymous()')}" style="margin-right: 10px"><a th:href="@{/orders}">Orders</a></li>
-                <li th:unless="${#authorization.expression('isAnonymous()')}" style="margin-right: 10px"><a th:href="@{/bookmarks}">Bookmarks</a></li>
+                <li th:unless="${#authorization.expression('isAnonymous()')}" style="margin-right: 10px"><a th:href="@{/profile/posts}">My Posts</a></li>
+                <li th:if="${#authorization.expression('hasRole(''ROLE_Employer'')')}" style="margin-right: 10px"><a th:href="@{/jobs}">Jobs</a></li>
+                <li th:unless="${#authorization.expression('isAnonymous()')}" style="margin-right: 10px"><a th:href="@{/interviews}">Interviews</a></li>
+                <li th:unless="${#authorization.expression('isAnonymous()')}" style="margin-right: 20px;margin-left:5px">
+                    <a th:href="@{/notifications}">
+                    <span class="position-relative">
+                      <i class="fas fa-bell"></i> <!-- Notification icon from Font Awesome -->
+                      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-black" th:text="${profile?.notificationsNumber}">
+
+                      </span>
+                    </span>
+                    </a>
+                </li>
                 <li th:unless="${#authorization.expression('isAnonymous()')}" style="margin-right: 10px"><a th:href="@{/profile/view/{username}(username=${#authentication.name})}">My Profile</a></li>
                 <li th:unless="${#authorization.expression('isAnonymous()')}" style="margin-right: 10px" ><a th:href="@{/logout}"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
             </ul>
-
         </div>
     </nav>
-
-    <!--
-    <nav class="navbar navbar-inverse">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" th:href="@{/dashboard}">Travel Agency</a>
-            </div>
-            <ul th:if="${#authorization.expression('isAnonymous()')}" class="nav navbar-nav navbar-right">
-                <li><a th:href="@{/register}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-                <li><a th:href="@{/login}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-            </ul>
-            <ul th:unless="${#authorization.expression('isAnonymous()')}" class="nav navbar-nav navbar-right">
-                <li><a th:href="@{/logout}"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
-            </ul>
-            <ul th:unless="${#authorization.expression('isAnonymous()')}" class="nav navbar-nav navbar-right">
-                <li><a th:href="@{/profile/{id}(id=${#authentication.name})}">My Profile</a></li>
-            </ul>
-            <ul>
-                <form class="form-inline">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                </form>
-            </ul>
-        </div>
-    </nav>-->
 </div>
-<th:block th:fragment="scripts">
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-</th:block>
+<div class="container">
+    <form method="get" class="form-inline my-2 my-lg-0" th:action="@{/search}">
+        <div class="input-group">
+            <input class="form-control mr-sm-2" th:value="${searchButton}" name="searchButton" type="search" placeholder="Search" aria-label="Search">
+            <select class="form-select" name="searchKeyword" id="selectOptions" aria-label="Default select example">
+                <option selected th:value="${searchKeyword}">Select an option</option>
+                <option value="Profile">Profile</option>
+                <option value="Job">Job</option>
+            </select>
+            <button class="btn btn-outline-success my-2 my-sm-0 ml-2" type="submit">Search</button>
+        </div>
+    </form>
+
+    <div th:if="${searchKeyword != null && searchKeyword == 'Profile'}" class="result-card">
+        <div class="card-header bg-dark text-white">
+            Profiles
+        </div>
+        <div class="card-body">
+            <div th:each="profile : ${searchedProfiles}" class="profile-result mb-3 p-3 rounded shadow">
+                <div class="d-flex align-items-center">
+                    <img th:src="@{${profile.imagePath}}" alt="User Image" class="rounded-circle mr-3" style="width: 65px; height: 65px;">
+                    <div class="profile-details">
+                        <strong th:text="${profile.firstName} + ' ' + ${profile.lastName}" class="d-block mb-1"></strong>
+                        <span>@<span th:text="${profile.getAppuser().getUsername()}"></span></span>
+                    </div>
+                    <div class="ml-auto">
+                        <a th:href="@{/profile/view/{username}(username=${profile.getAppuser().getUsername()})}" class="btn btn-sm btn-primary">View Profile</a>
+                    </div>
+                    <div class="ml-3">
+                        <a th:unless="${profile.isFollowedByLoggedInUser()}" th:href="@{/profile/{id}/follow(id=${profile.id})}" class="btn btn-sm btn-success">Follow</a>
+                        <a th:if="${profile.isFollowedByLoggedInUser()}" th:href="@{/profile/{id}/follow(id=${profile.id})}" class="btn btn-sm btn-success">Unfollow</a>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${searchedProfiles != null && searchedProfiles.totalPages > 0}">
+                <ul class="pagination justify-content-center">
+                    <li th:each="pageNumber: ${#numbers.sequence(0, searchedProfiles.totalPages - 1)}">
+                        <input type="submit" class="page-link btn btn-light mx-1" name="page" th:value="${pageNumber + 1}">
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${searchKeyword != null && searchKeyword == 'Job'}" class="result-card">
+        <div class="card-header">
+            Jobs
+        </div>
+        <div id="jobCarousel" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="row">
+                        <div th:each="job : ${searchedJobs}" class="job-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div><strong th:text="${job.title}"></strong></div>
+                                    <div><span th:text="${job.location}"></span></div>
+                                    <div>
+                                        <span>Created Date: <span th:text="${job.dateCreated}"></span></span>
+                                    </div>
+                                    <div>
+                                        <span>Expiration Date: <span th:text="${job.expirationDate}"></span></span>
+                                    </div>
+                                    <div>
+                                        <a th:href="@{job/{id}/details(id=${job.id})}" class="btn">Apply</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:replace="index::scripts"></th:block>
 
 </body>
 </html>

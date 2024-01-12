@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Interviews</title>
+    <link th:replace="index::linkrel" />
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .interview-card {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .interview-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .interview-card h3 {
+            color: #007bff;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .interview-card p {
+            color: #555;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .interview-card .btn {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .pagination {
+            margin-top: 20px;
+        }
+
+        .pagination .page-link {
+            height: 40px;
+            width: 40px;
+        }
+
+        .pagination .page-link:hover {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .pagination .active .page-link {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 30px;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="index::content"></div>
+
+<div class="container">
+    <h1>My Interviews</h1>
+
+    <!-- Interview Cards -->
+    <div class="interview-card" th:each="interview: ${interviews}">
+        <h3 th:text="${interview.title}"></h3>
+        <p th:text="${'Interview Job Title: ' + interview.job.title}"></p>
+        <p th:text="${'Interview Date: ' + interview.dateTime}"></p>
+        <a th:href="@{/interview/{id}(id=${interview.id})}" class="btn btn-primary">View Details</a>
+    </div>
+
+    <!-- Pagination -->
+    <form method="get" th:action="@{/interviews}" th:if="${interviews.totalElements != 0}">
+        <div class="row">
+            <div class="col-md-12 d-flex justify-content-center">
+                <ul class="pagination">
+                    <li th:each="pageNumber: ${#numbers.sequence(0, interviews.totalPages - 1)}">
+                        <input type="submit" class="page-link" name="page" th:value="${pageNumber + 1}">
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </form>
+</div>
+
+<th:block th:replace="index::scripts"></th:block>
+</body>
+</html>

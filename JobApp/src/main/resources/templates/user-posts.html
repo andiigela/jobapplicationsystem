@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Posts</title>
+    <link th:replace="index::linkrel"/>
+    <link rel="stylesheet" href="/static/css/home.css" />
+</head>
+<body>
+<div th:replace="index::content"></div>
+<div class="container mt-4">
+    <div class="col-md-12 d-flex justify-content-center">
+        <h2>My Posts</h2>
+    </div>
+    <div class="col-md-12 d-flex justify-content-start">
+        <a th:href="@{/posts/create}"><button class="btn btn-info" style="margin-left: 165%">Create Post</button></a>
+    </div>
+    <div class="row" th:each="post: ${userPosts}">
+        <div class="col-md-8 offset-md-2">
+            <div class="post">
+                <div class="user-info">
+                    <img th:src="@{${post.getAppUser().getProfile().imagePath}}" alt="User Profile Picture">
+                    <h5 th:text="${post.getAppUser().getProfile().firstName + ' ' + post.getAppUser().getProfile().lastName}"></h5>
+                    <a th:if="${post.getAppUser().getUsername().equals(#authorization.getAuthentication().getName())}" style="margin-left: 50%" th:href="@{/profile/posts/edit/{id}(id=${post.id})}"><button class="btn btn-warning" style="width: 45px; height:30px;font-weight: bold;font-size: 12px">Edit</button></a>
+                    <form th:if="${post.getAppUser().getUsername().equals(#authorization.getAuthentication().getName())}" method="post" th:action="@{/profile/posts/delete/{id}(id=${post.id})}">
+                        <button type="submit" class="btn btn-danger" style="width: 60px; height:30px;font-weight: bold;font-size: 12px">Delete</button>
+                    </form>
+                </div>
+                <p th:text="${post.description}">
+                </p>
+                <!-- Add more post content here (images, videos, etc.) -->
+                <hr>
+                <!-- Job Details Section -->
+                <div th:if="${post.job != null && post.job.active == true}" style="margin-bottom: 8px" class="job-details mt-4 p-4 border rounded-lg">
+                    <h5 class="mb-4 text-uppercase text-primary">Job Details</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p class="mb-3"><strong>Title:</strong> <span th:text="${post.job.title}"></span></p>
+                            <p class="mb-3"><strong>Location:</strong> <span th:text="${post.job.location}"></span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-3"><strong>Created:</strong> <span th:text="${post.job.dateCreated}"></span></p>
+                            <p class="mb-3"><strong>Expiration:</strong> <span th:text="${post.job.expirationDate}"></span></p>
+                        </div>
+                    </div>
+                    <!-- Add more job details if needed -->
+                    <div class="text-center mt-4">
+                        <a th:href="@{/job/{jobId}/apply(jobId=${post.job.id})}" class="btn btn-primary rounded-pill px-4 py-2 explore-button">View Details</a>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <form method="post" th:action="@{/like/{postId}(postId=${post.id})}">
+                            <div class="mb-2" style="margin-left: 15px">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <label th:text="${post.getNumberOfLikes() + ' Likes'}"></label>
+                                    </div>
+                                    <div>
+                                        <label th:text="${post.getNumberOfComments() + ' Comments'}"></label>
+                                    </div>
+                                    <div style="margin-right: 10px">
+                                        <label>0 Shares</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <!-- Like/Unlike button on the left -->
+                                <div class="col-auto">
+                                    <button th:if="${userLikes.get(post.id) == false}" type="submit" class="btn btn-light btn-action mr-2"><i class="far fa-thumbs-up"></i> Like</button>
+                                    <button th:if="${userLikes.get(post.id) == true}" type="submit" class="btn btn-light btn-action mr-2"><i class="far fa-thumbs-up"></i> Unlike</button>
+                                </div>
+                                <!-- Comment button in the middle -->
+                                <div class="col-auto text-center">
+                                    <a th:href="@{/posts/{id}/comment(id=${post.id})}"><button type="button" class="btn btn-light btn-action mr-2"><i class="far fa-comment"></i> Comment</button></a>
+                                </div>
+                                <!-- Share button on the right -->
+                                <div class="col-auto text-right">
+                                    <button type="button" class="btn btn-light btn-action"><i class="fas fa-share"></i> Share</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <form method="get" th:action="@{/profile/posts}" th:if="${userPosts.totalElements != 0}">
+        <div class="row">
+            <div class="col-md-12 d-flex justify-content-center">
+                <ul class="pagination">
+                    <li th:each="pageNumber: ${#numbers.sequence(0, userPosts.totalPages - 1)}">
+                        <input type="submit" class="page-link" name="page" th:value="${pageNumber + 1}" style="height: 40px; width: 40px">
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </form>
+
+</div>
+<th:block th:replace="index::scripts"></th:block>
+</body>
+</html>

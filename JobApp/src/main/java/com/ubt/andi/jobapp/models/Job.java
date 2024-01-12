@@ -9,7 +9,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -24,11 +26,28 @@ public class Job {
     private String title;
     private String description;
     private String Location;
+    private String position;
+    private String jobType;
+    private String salary;
+    private String firstResponsibility;
+    private String secondResponsibility;
+    private String thirdResponsibility;
+    private String firstRequirement;
+    private String secondRequirement;
+    private String thirdRequirement;
+    private String companyName;
     @CreationTimestamp
     @DateTimeFormat(pattern = "MM-dd-yyyy") // Specify the date format
     private LocalDate dateCreated;
     @DateTimeFormat(pattern = "MM-dd-yyyy") // Specify the date format
     private LocalDate expirationDate;
+    private boolean active;
     @ManyToOne
     private AppUser appUser;
+    @OneToMany(mappedBy = "job",cascade = CascadeType.ALL)
+    private List<Application> applications = new ArrayList<>();
+    @OneToOne(mappedBy = "job",cascade = CascadeType.REMOVE)
+    private Post post;
+    @OneToMany(mappedBy = "job",cascade = CascadeType.REMOVE)
+    private List<Interview> interviews = new ArrayList<>();
 }

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Applicants</title>
+    <link th:replace="index::linkrel"/>
+    <link rel="stylesheet" href="/static/css/applicants.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+</head>
+<body>
+<div th:replace="index::content"></div>
+<div class="container">
+    <h2 class="text-center mb-4" th:text="${job.title} + ' Applicants List'"></h2>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Applicant Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">CV</th>
+                <th scope="col">Interview</th>
+                <th scope="col">Approval</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="app: ${apps}">
+                <td>
+                    <a th:href="@{/profile/view/{username}(username=${app.appUser.username})}" >
+                        <p th:text="${app.appUser.profile.firstName + ' ' + app.appUser.profile.lastName}"></p>
+                    </a>
+                </td>
+                <td th:text="${app.appUser.email}"></td>
+                <td>
+                    <a th:href="@{'/' + ${app.filePath}}" download>Download</a>
+                </td>
+                <td>
+                    <a th:if="${existingInterviews.get(app.appUser.getProfile().id) == null}" th:href="@{/job/{jobId}/applicants/{applicantId}/interview/create(jobId=${job.id},applicantId=${app.getAppUser().getProfile().id})}" class="btn btn-primary">
+                        Call for Interview
+                    </a>
+                    <a th:unless="${existingInterviews.get(app.appUser.getProfile().id) == null}" >
+                        <button class="btn btn-primary" disabled>Called for Interview</button>
+                    </a>
+                </td>
+                <td>
+                    <!-- Approve button -->
+                    <form method="post" th:action="@{/job/{jobId}/applicants/application/{appId}/approve(jobId=${job.id},appId=${app.id})}">
+                        <button type="submit" th:if="${app.approved == true}" disabled name="approval" value="1" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="Approve Applicant">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <button type="submit" th:if="${app.approved == false}" name="approval" value="1" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="Approve Applicant">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <!-- Disapprove button -->
+                        <button type="submit" th:if="${app.approved == false}" disabled name="approval" value="0" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Disapprove Applicant">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <button type="submit" th:if="${app.approved == true}" name="approval" value="0" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Disapprove Applicant">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <form method="get" th:action="@{/job/{jobId}/applicants(jobId=${job.id})}" th:if="${apps.totalElements != 0}">
+            <div class="row">
+                <div class="col-md-12 d-flex justify-content-center">
+                    <ul class="pagination">
+                        <li th:each="pageNumber: ${#numbers.sequence(0, apps.totalPages - 1)}">
+                            <input type="submit" class="page-link" name="page" th:value="${pageNumber + 1}"
+                                   style="height: 40px; width: 40px">
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<th:block th:replace="index::scripts"></th:block>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Notifications</title>
+    <link th:replace="index::linkrel"/>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .notifications-box {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .notification-item {
+            background-color: #7ab8ff;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            align-items: center; /* Align items vertically */
+        }
+
+        .notification-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .notification-item img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .notification-item .notification-info {
+            flex: 1;
+        }
+
+        .notification-item .notification-content {
+            color: #333;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .notification-item .notification-date {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .notification-total {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 30px;
+            color: #2575fc;
+        }
+
+        .notifications-header {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 28px;
+            color: #333;
+            position: relative;
+        }
+
+        .notifications-header::after {
+            content: "";
+            display: block;
+            width: 70px;
+            height: 3px;
+            background-color: #2575fc;
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="index::content"></div>
+<div class="container">
+    <div class="notifications-box" style="margin-top: 50px">
+        <h1 class="notifications-header" th:text="${'Notifications ('+notifications.totalElements+')'}"></h1>
+        <!-- Total number of notifications -->
+        <ul class="notification-list">
+            <!-- Notification items -->
+            <li class="notification-item" th:each="notification : ${notifications}">
+                <img th:src="@{${notification.getFromProfile().getImagePath()}}" alt="Profile Image">
+                <div class="notification-info">
+                    <p class="notification-content" style="margin: 0;color: black;font-weight: bold" th:text="${'Notification from ' +notification.getFromProfile().getFirstName() + ' ' + notification.getFromProfile().getLastName()}"></p>
+                    <p class="notification-content" style="margin: 0;color: black" th:text="${notification.notificationText}"></p>
+                    <p class="notification-date" style="color:#595454" th:text="${notification.getFormattedCreatedAt()}"></p>
+                    <a th:each="interview: ${notification.getToProfile().getInterviews()}" th:href="@{/interview/{id}(id=${interview.id})}" th:if="${notification.notificationText.startsWith('Dear Applicant')}" class="btn btn-primary">Watch Interview</a>
+                </div>
+                <form method="post" th:action="@{/notification/{id}/delete(id=${notification.id})}">
+                    <button type="submit" style="background-color: red;border: none;border-radius: 15px">
+                        <i class="fas fa-trash-alt" style="color: black;font-size: 15px"></i>
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </div>
+    <form method="get" th:action="@{/notifications}" th:if="${notifications.totalElements != 0}">
+        <div class="row">
+            <div class="col-md-12 d-flex justify-content-center">
+                <ul class="pagination">
+                    <li th:each="pageNumber: ${#numbers.sequence(0, notifications.totalPages - 1)}">
+                        <input type="submit" class="page-link" name="page" th:value="${pageNumber + 1}" style="height: 40px; width: 40px">
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </form>
+</div>
+<th:block th:replace="index::scripts"></th:block>
+</body>
+</html>

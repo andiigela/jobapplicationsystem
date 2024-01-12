@@ -33,8 +33,14 @@ public class ProfileServiceImpl implements ProfileService{
         profile.setTotalProjects(0);
         profile.setEnglishLevel("No English Level");
         profile.setGithubLink("No github link");
-        profile.setSkills("No skills");
+        profile.setImagePath("/static/images/anonymous.png");
         this.profileRepository.save(profile);
+    }
+
+    @Override
+    public Profile getProfileById(Long id) {
+        if(id <= 0) return null;
+        return profileRepository.findById(id).get();
     }
 
     @Override
@@ -54,7 +60,11 @@ public class ProfileServiceImpl implements ProfileService{
         profileDb.setTotalProjects(profile.getTotalProjects());
         profileDb.setEnglishLevel(profile.getEnglishLevel());
         profileDb.setGithubLink(profile.getGithubLink());
-        profileDb.setSkills(profile.getSkills());
+        profileDb.setFollowedByLoggedInUser(profile.isFollowedByLoggedInUser());
+        profileDb.setFollowingsNumber(profile.getFollowingsNumber());
+        profileDb.setFollowersNumber(profile.getFollowersNumber());
+        profileDb.setImageData(profile.getImageData());
+        profileDb.setImagePath(profile.getImagePath());
         profileRepository.save(profileDb);
     }
 

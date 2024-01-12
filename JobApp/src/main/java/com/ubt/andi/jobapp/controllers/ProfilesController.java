@@ -3,28 +3,31 @@ package com.ubt.andi.jobapp.controllers;
 import com.ubt.andi.jobapp.dto.UserDto;
 import com.ubt.andi.jobapp.models.AppUser;
 import com.ubt.andi.jobapp.models.Profile;
+import com.ubt.andi.jobapp.services.FileUploadService;
 import com.ubt.andi.jobapp.services.ProfileService;
 import com.ubt.andi.jobapp.services.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 public class ProfilesController {
     private final UserService appUserService;
     private final ProfileService profileService;
-    public ProfilesController(UserService appUserService,ProfileService profileService){
+    private final FileUploadService fileUploadService;
+    public ProfilesController(UserService appUserService,ProfileService profileService,FileUploadService fileUploadService){
         this.appUserService=appUserService;
         this.profileService=profileService;
+        this.fileUploadService=fileUploadService;
     }
     @GetMapping("/profile/view/{username}")
     public String getProfileeView(Model model,@PathVariable("username") String username){
         AppUser user = appUserService.findUserByUsername(username);
+        AppUser loggedInUser = appUserService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        Profile loggedInProfile = loggedInUser.getProfile();
         Profile profile = null;
         if(user.getProfile() == null){
             profile = new Profile();
@@ -32,7 +35,8 @@ public class ProfilesController {
         } else {
             profile = user.getProfile();
         }
-        model.addAttribute("profile",profile);
+        model.addAttribute("otherProfile",profile);
+        model.addAttribute("profile",loggedInProfile);
         return "profile";
     }
     @GetMapping("/profile/edit/{username}")
@@ -47,8 +51,9 @@ public class ProfilesController {
         return "edit-profile";
     }
     @PostMapping("/profile/edit")
-    public String editProfilee(@ModelAttribute("editProfile") Profile profile){
+    public String editProfilee(@ModelAttribute("editProfile") Profile profile, @RequestParam("file") MultipartFile file){
         Authentication authUser = SecurityContextHolder.getContext().getAuthentication();
+        fileUploadService.saveImage(profile,file);
         profileService.updateProfile(profile);
         return "redirect:/profile/view/" + authUser.getName();
     }
@@ -69,5 +74,18 @@ public class ProfilesController {
         if(userDto == null) return "redirect:/";
         appUserService.updateUser(userDto);
         return "redirect:/logout";
+    }
+    @GetMapping("/profile/edit/{username}/delete/picture")
+    public String deleteProfilePicture(@PathVariable("username") String username){
+        AppUser user = appUserService.findUserByUsername(username);
+        AppUser loggedInUser = appUserService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(user != loggedInUser){
+            return "redirect:/profile/edit/"+loggedInUser.getUsername();
+        }
+        Profile userProfile = user.getProfile();
+        this.fileUploadService.deleteImage(userProfile);
+        profileService.updateProfile(userProfile);
+        return "redirect:/profile/edit/"+loggedInUser.getUsername();
+
     }
 }

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Post</title>
+    <link th:replace="index::linkrel"/>
+    <link rel="stylesheet" href="/static/css/post.css" />
+</head>
+<body>
+<div th:replace="index::content"></div>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="form-container">
+                <h2 class="form-title">Create a New Post</h2>
+                <form method="post" th:action="@{/posts/create}" th:object="${post}">
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea class="form-control" th:field="${post.description}" id="description" rows="5" placeholder="Enter description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="job">Jobs</label>
+                        <select class="form-control" id="job" name="jobId">
+                            <option value="0" disabled>Select a job</option>
+                            <option value="0">No</option>
+                            <option th:each="job: ${user.jobs}" th:if="${job.getPost() == null}" th:value="${job.id}" th:text="${job.title}"></option>
+                            <option th:each="job: ${user.jobs}" th:if="${job.getPost() != null}" disabled th:value="${job.id}" th:text="${job.title}"></option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Create</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:replace="index::scripts"></th:block>
+</body>
+</html>

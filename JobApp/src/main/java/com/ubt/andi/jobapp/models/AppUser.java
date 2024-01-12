@@ -41,4 +41,10 @@ public class AppUser {
     private List<Job> jobs = new ArrayList<>();
     @OneToMany(mappedBy = "appUser")
     private List<Post> posts = new ArrayList<>();
+    @OneToMany(mappedBy = "appUser")
+    private List<LikedPosts> likedPosts = new ArrayList<>();
+    @OneToMany(mappedBy = "appUser")
+    private List<Comment> comments = new ArrayList<>();
+    @OneToMany(mappedBy = "appUser")
+    private List<Application> applications = new ArrayList<>();
 }
