@@ -1,4 +1,5 @@
 package com.ubt.andi.jobapp.controllers;
+import com.ubt.andi.jobapp.exception.ShareNotFoundException;
 import com.ubt.andi.jobapp.models.*;
 import com.ubt.andi.jobapp.services.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,15 +25,17 @@ public class HomeController {
     private final JobService jobService;
     private final LikedPostsService likedPostsService;
     private final NotificationService notificationService;
+    private final ShareService shareService;
     private static final int PAGE_SIZE = 5;
     public HomeController(PostService postService,UserService userService,LikedPostsService likedPostsService,
-                          CommentService commentService,JobService jobService,NotificationService notificationService){
+                          CommentService commentService,JobService jobService,NotificationService notificationService,ShareService shareService){
         this.postService=postService;
         this.userService=userService;
         this.likedPostsService=likedPostsService;
         this.commentService=commentService;
         this.jobService=jobService;
         this.notificationService=notificationService;
+        this.shareService=shareService;
     }
     @GetMapping("/")
     public String getHomeView(@RequestParam(value = "page",defaultValue = "0") String page, Model model){
@@ -174,7 +177,72 @@ public class HomeController {
         }
         return "redirect:/";
     }
-    @GetMapping("/posts/{id}/comment")
+    @PostMapping("/share/{postId}")
+
+    public String sharePost(@PathVariable("postId") Long postId, HttpServletRequest request) {
+        AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+
+        // Get the original post
+        Post originalPost = postService.getPostById(postId);
+
+        // Check if the post has already been shared by the user
+        Share existingSharedPost = shareService.isPostSharedByUser(user, originalPost);
+        Long numberOfShares = originalPost.getNumberOfShares();
+
+        if (existingSharedPost == null) {
+            // Create a new post for the user's profile based on the shared post
+            Post sharedPost = new Post();
+            sharedPost.setDescription(originalPost.getDescription());
+            sharedPost.setJob(originalPost.getJob());
+            sharedPost.setAppUser(user);
+
+            // Save the shared post
+            postService.createPost(sharedPost);
+
+            // Create a share for the original post
+            Share share = new Share();
+            share.setAppUser(user);
+            share.setPost(originalPost);
+            shareService.createShare(share, originalPost);
+
+            // Update the original post's share count and notify
+            originalPost.setNumberOfShares(numberOfShares + 1);
+            postService.editPost(originalPost);
+            notificationService.sendPostNotification(originalPost.getAppUser().getProfile(), originalPost, "Share");
+        } else {
+            try {
+                // Delete the share
+                shareService.deleteShare(existingSharedPost);
+
+                // Decrease the share count if not already zero
+                if (numberOfShares != 0) {
+                    originalPost.setNumberOfShares(numberOfShares - 1);
+
+                }
+            } catch (ShareNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            // Remove the user association and decrease the share count
+            originalPost.setAppUser(null);
+            originalPost.setNumberOfShares(numberOfShares - 1);
+
+        }
+
+        System.out.println("Exiting sharePostView method"); // Add this line for debugging
+
+        String referrer = request.getHeader("referer");
+        if (referrer != null && referrer.contains("/posts/" + postId + "/comment")) {
+            return "redirect:/posts/" + postId + "/comment";
+        }
+        if (referrer != null && referrer.contains("/profile/posts")) {
+            return "redirect:/profile/posts";
+        }
+        return "redirect:/";
+    }
+
+
+        @GetMapping("/posts/{id}/comment")
     public String getCommentPostView(@PathVariable("id") Long postId,Model model){
         Post post = postService.getPostById(postId);
         Map<Long, Boolean> userLikes = new HashMap<>();

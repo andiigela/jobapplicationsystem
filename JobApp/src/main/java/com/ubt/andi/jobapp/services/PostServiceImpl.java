@@ -2,6 +2,7 @@ package com.ubt.andi.jobapp.services;
 import com.ubt.andi.jobapp.models.AppUser;
 import com.ubt.andi.jobapp.models.Post;
 import com.ubt.andi.jobapp.repositories.PostRepository;
+import com.ubt.andi.jobapp.repositories.ShareRepository;
 import com.ubt.andi.jobapp.repositories.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,7 +13,8 @@ import org.springframework.stereotype.Service;
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-    public PostServiceImpl(PostRepository postRepository,UserRepository userRepository){
+
+    public PostServiceImpl(PostRepository postRepository,UserRepository userRepository,ShareRepository shareRepository){
         this.postRepository=postRepository;
         this.userRepository=userRepository;
     }
@@ -54,8 +56,13 @@ public class PostServiceImpl implements PostService {
     @Override
     public void editPost(Post post) {
         if(post == null) return;
-        Post postDb = postRepository.findById(post.getId()).get();
-        postDb.setDescription(post.getDescription());
+        Post postDb = postRepository.findById(post.getId()).orElse(null);
+
+        try {
+            postDb.setDescription(post.getDescription());
+        }catch (NullPointerException e){
+            e.getMessage();
+        }
         postDb.setJob(post.getJob());
         postRepository.save(postDb);
     }

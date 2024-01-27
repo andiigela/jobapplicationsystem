@@ -26,6 +26,7 @@ public class Post {
     private String description;
     private Long numberOfLikes=0L;
     private Long numberOfComments=0L;
+    private Long numberOfShares=0L;
     @CreationTimestamp
     private LocalDate createdAt;
     @UpdateTimestamp
@@ -38,4 +39,7 @@ public class Post {
     private List<Comment> comments = new ArrayList<>();
     @OneToOne
     private Job job;
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<Share> shares;
+
 }

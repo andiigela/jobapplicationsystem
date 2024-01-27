@@ -17,14 +17,17 @@ public class Share {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     private String description;
+
     @CreationTimestamp
     private LocalDate createdAt;
-    @ManyToOne
-    private AppUser appUser;
-    @ManyToOne
-    private Post post;
 
+    @ManyToOne(fetch = FetchType.LAZY)  // Consider FetchType.LAZY based on your use case
+    private AppUser appUser;
+
+    @ManyToOne(fetch = FetchType.LAZY)  // Consider FetchType.LAZY based on your use case
+    private Post post;
 }
 
 

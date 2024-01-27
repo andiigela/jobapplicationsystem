@@ -51,7 +51,6 @@
 
                 <div class="row">
                     <div class="col-md-12">
-                        <form method="post" th:action="@{/like/{postId}(postId=${post.id})}">
                             <div class="mb-2" style="margin-left: 15px">
                                 <div class="d-flex justify-content-between">
                                     <div>
@@ -61,26 +60,29 @@
                                         <label th:text="${post.getNumberOfComments() + ' Comments'}"></label>
                                     </div>
                                     <div style="margin-right: 10px">
-                                        <label>0 Shares</label>
+                                        <label th:text="${post.getNumberOfShares() + ' Shares'}"></label>
                                     </div>
                                 </div>
                             </div>
                             <div class="d-flex justify-content-between align-items-center">
                                 <!-- Like/Unlike button on the left -->
+                        <form method="post" th:action="@{/like/{postId}(postId=${post.id})}">
                                 <div class="col-auto">
                                     <button th:if="${userLikes.get(post.id) == false}" type="submit" class="btn btn-light btn-action mr-2"><i class="far fa-thumbs-up"></i> Like</button>
                                     <button th:if="${userLikes.get(post.id) == true}" type="submit" class="btn btn-light btn-action mr-2"><i class="far fa-thumbs-up"></i> Unlike</button>
                                 </div>
+                        </form>
                                 <!-- Comment button in the middle -->
                                 <div class="col-auto text-center">
                                     <a th:href="@{/posts/{id}/comment(id=${post.id})}"><button type="button" class="btn btn-light btn-action mr-2"><i class="far fa-comment"></i> Comment</button></a>
                                 </div>
                                 <!-- Share button on the right -->
-                                <div class="col-auto text-right">
-                                    <button type="button" class="btn btn-light btn-action"><i class="fas fa-share"></i> Share</button>
-                                </div>
+                                <form method="post" th:action="@{/share/{postId}(postId=${post.id})}">
+                                    <div class="col-auto text-right">
+                                        <button type="submit" class="btn btn-light btn-action"><i class="fas fa-share"></i> Share</button>
+                                    </div>
+                                </form>
                             </div>
-                        </form>
                     </div>
                 </div>
             </div>
