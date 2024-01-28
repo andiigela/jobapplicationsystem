@@ -26,8 +26,11 @@ public class Share {
     @ManyToOne(fetch = FetchType.LAZY)  // Consider FetchType.LAZY based on your use case
     private AppUser appUser;
 
-    @ManyToOne(fetch = FetchType.LAZY)  // Consider FetchType.LAZY based on your use case
+    @ManyToOne
     private Post post;
+
+    @ManyToOne
+    private Post sharedPost;
 }
 
 

@@ -27,6 +27,7 @@ public class Post {
     private Long numberOfLikes=0L;
     private Long numberOfComments=0L;
     private Long numberOfShares=0L;
+    private  boolean shared = false;
     @CreationTimestamp
     private LocalDate createdAt;
     @UpdateTimestamp
@@ -39,7 +40,8 @@ public class Post {
     private List<Comment> comments = new ArrayList<>();
     @OneToOne
     private Job job;
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<Share> shares;
-
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Share> originalPostShares;
+    @OneToMany(mappedBy = "sharedPost", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Share> sharedPostShares;
 }

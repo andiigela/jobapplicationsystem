@@ -12,4 +12,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findPostsByAppUser_IdOrderByCreatedAtDesc(@Param("id") Long id, Pageable pageable);
     Post findPostByIdAndAppUser(Long id, AppUser user);
 
+
+
 }

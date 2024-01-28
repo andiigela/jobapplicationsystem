@@ -10,6 +10,8 @@ import com.ubt.andi.jobapp.repositories.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -59,32 +61,15 @@ public class ShareServiceImpl implements ShareService {
 
         if (user != null && share != null && post != null) {
             try {
-                post.setAppUser(user);
                 share.setPost(post);
                 share.setAppUser(user);
-                user.getPosts().add(post);
                 shareRepository.save(share);
-                postRepository.save(post);
             } catch (Exception e) {
-
-
                 e.printStackTrace();
-
             }
         } else {
-
-            if (user == null) {
-
-                throw new IllegalArgumentException("User cannot be null");
-            }
-            if (share == null) {
-
-                throw new IllegalArgumentException("Share cannot be null");
-            }
-            if (post == null) {
-
-                throw new IllegalArgumentException("Post cannot be null");
-            }
+            // Handle the case where user, share, or post is null
+            throw new IllegalArgumentException("User, Share, or Post cannot be null");
         }
     }
 
@@ -115,17 +100,22 @@ public class ShareServiceImpl implements ShareService {
             Optional<Share> optionalShare = shareRepository.findById(share.getId());
             if (optionalShare.isPresent()) {
                 Share existingShare = optionalShare.get();
-                Post existingPost = optionalShare.get().getPost();
+                Post existingPost = existingShare.getPost(); // Use the existing share to get the associated post
                 Long numberOfShares = existingPost.getNumberOfShares();
-                if (numberOfShares >0){
-                    existingPost.setNumberOfShares(numberOfShares-1);
+                if (numberOfShares > 0) {
+                    existingPost.setNumberOfShares(numberOfShares - 1);
                     postRepository.save(existingPost);
                 }
                 shareRepository.delete(existingShare);
-                postRepository.delete(existingPost);
+                if (existingPost.getNumberOfShares() == 0) {
+                    postRepository.delete(existingPost);
+                }
             } else {
                 throw new ShareNotFoundException("Share with ID " + share.getId() + " not found.");
             }
         }
     }
+
+
+
 }

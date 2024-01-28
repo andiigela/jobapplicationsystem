@@ -38,38 +38,55 @@ public class HomeController {
         this.shareService=shareService;
     }
     @GetMapping("/")
-    public String getHomeView(@RequestParam(value = "page",defaultValue = "0") String page, Model model){
+    public String getHomeView(@RequestParam(value = "page", defaultValue = "0") String page, Model model) {
         int pageNumber = Integer.parseInt(page);
-        if(pageNumber > 0){
+        if (pageNumber > 0) {
             pageNumber -= 1;
         }
-        Pageable pageable = PageRequest.of(pageNumber,PAGE_SIZE);
+        Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE);
         Page<Post> posts = postService.getPostsByPage(pageable);
         AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         Profile profile = user.getProfile();
-        if(profile == null) return "redirect:/profile/view/"+user.getUsername();
-        if(user != null){
-            model.addAttribute("user",user);
+        if (profile == null) return "redirect:/profile/view/" + user.getUsername();
+        if (user != null) {
+            model.addAttribute("user", user);
         }
+
         Map<Long, Boolean> userLikes = new HashMap<>();
+        Map<Long, Boolean> userShares = new HashMap<>();
+
         for (Post post : posts) {
-            if(post.getJob() != null){
-                if(!post.getJob().isActive()){
+            if (post.getJob() != null) {
+                if (!post.getJob().isActive()) {
                     post.setJob(null);
                     postService.editPost(post);
                 }
             }
+
+            // Check if the post is liked by the user
             LikedPosts likedPosts = likedPostsService.isPostLikedByUser(user, post);
             boolean likedByUser = false;
-            if(likedPosts != null){
+            if (likedPosts != null) {
                 likedByUser = true;
             }
             userLikes.put(post.getId(), likedByUser);
+
+            // Check if the post is shared by the user
+            Share postIsShared = shareService.isPostSharedByUser(user, post);
+            boolean sharedByUser = false;
+            if (postIsShared != null) {
+                sharedByUser = true;
+            }
+            userShares.put(post.getId(), sharedByUser);
         }
-        model.addAttribute("userLikes",userLikes);
-        model.addAttribute("posts",posts);
-        model.addAttribute("currentPage",page);
-        model.addAttribute("profile",profile);
+
+        model.addAttribute("userLikes", userLikes);
+        model.addAttribute("userShares", userShares);  // Add userShares to the model
+        model.addAttribute("posts", posts);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("profile", profile);
+
+
         return "index";
     }
     @GetMapping("/posts/create")
@@ -103,15 +120,33 @@ public class HomeController {
         Profile profile = user.getProfile();
         if(profile == null) return "redirect:/profile/view/"+user.getUsername();
         Map<Long, Boolean> userLikes = new HashMap<>();
+        Map<Long, Boolean> userShares = new HashMap<>();
         for (Post post : userPosts) {
+            if (post.getJob() != null) {
+                if (!post.getJob().isActive()) {
+                    post.setJob(null);
+                    postService.editPost(post);
+                }
+            }
+
+            // Check if the post is liked by the user
             LikedPosts likedPosts = likedPostsService.isPostLikedByUser(user, post);
             boolean likedByUser = false;
-            if(likedPosts != null){
+            if (likedPosts != null) {
                 likedByUser = true;
             }
             userLikes.put(post.getId(), likedByUser);
+
+            // Check if the post is shared by the user
+            Share postIsShared = shareService.isPostSharedByUser(user, post);
+            boolean sharedByUser = false;
+            if (postIsShared != null) {
+                sharedByUser = true;
+            }
+            userShares.put(post.getId(), sharedByUser);
         }
         model.addAttribute("userLikes",userLikes);
+        model.addAttribute("userShares", userShares);
         model.addAttribute("userPosts",userPosts);
         model.addAttribute("profile",profile);
         return "user-posts";
@@ -178,71 +213,48 @@ public class HomeController {
         return "redirect:/";
     }
     @PostMapping("/share/{postId}")
-
     public String sharePost(@PathVariable("postId") Long postId, HttpServletRequest request) {
-        AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-
-        // Get the original post
-        Post originalPost = postService.getPostById(postId);
-
-        // Check if the post has already been shared by the user
+        AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()); //Dreni
+        Post originalPost = postService.getPostById(postId); // <- id (postId)
         Share existingSharedPost = shareService.isPostSharedByUser(user, originalPost);
         Long numberOfShares = originalPost.getNumberOfShares();
 
         if (existingSharedPost == null) {
-            // Create a new post for the user's profile based on the shared post
-            Post sharedPost = new Post();
+            Post sharedPost = new Post();//223
             sharedPost.setDescription(originalPost.getDescription());
+            sharedPost.setShared(true);
             sharedPost.setJob(originalPost.getJob());
             sharedPost.setAppUser(user);
+            postService.createPost(sharedPost); //223
 
-            // Save the shared post
-            postService.createPost(sharedPost);
-
-            // Create a share for the original post
-            Share share = new Share();
+            Share share = new Share(); //dreni  223
             share.setAppUser(user);
             share.setPost(originalPost);
+            share.setSharedPost(sharedPost);
             shareService.createShare(share, originalPost);
 
-            // Update the original post's share count and notify
             originalPost.setNumberOfShares(numberOfShares + 1);
             postService.editPost(originalPost);
             notificationService.sendPostNotification(originalPost.getAppUser().getProfile(), originalPost, "Share");
         } else {
-            try {
-                // Delete the share
-                shareService.deleteShare(existingSharedPost);
 
-                // Decrease the share count if not already zero
-                if (numberOfShares != 0) {
+
+
+            if (existingSharedPost.getPost() != null) {
+                if (numberOfShares != null && numberOfShares > 0) {
                     originalPost.setNumberOfShares(numberOfShares - 1);
-
+                    postService.editPost(originalPost);
+                    postService.deletePost(existingSharedPost.getSharedPost().getId());
                 }
-            } catch (ShareNotFoundException e) {
-                e.printStackTrace();
             }
 
-            // Remove the user association and decrease the share count
-            originalPost.setAppUser(null);
-            originalPost.setNumberOfShares(numberOfShares - 1);
-
-        }
-
-        System.out.println("Exiting sharePostView method"); // Add this line for debugging
-
-        String referrer = request.getHeader("referer");
-        if (referrer != null && referrer.contains("/posts/" + postId + "/comment")) {
-            return "redirect:/posts/" + postId + "/comment";
-        }
-        if (referrer != null && referrer.contains("/profile/posts")) {
-            return "redirect:/profile/posts";
         }
         return "redirect:/";
     }
 
 
-        @GetMapping("/posts/{id}/comment")
+
+    @GetMapping("/posts/{id}/comment")
     public String getCommentPostView(@PathVariable("id") Long postId,Model model){
         Post post = postService.getPostById(postId);
         Map<Long, Boolean> userLikes = new HashMap<>();
