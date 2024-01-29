@@ -33,6 +33,11 @@ public class InterviewsController {
     private final static int PAGE_SIZE = 5;
     @GetMapping("/job/{jobId}/applicants/{applicantId}/interview/create")
     public String getInterviewCreate(@PathVariable("jobId") Long jobId,@PathVariable("applicantId") Long applicantId,Model model){
+        Profile applicantProfile = profileService.getProfileById(applicantId);
+        Job job = jobService.getJobById(jobId);
+        if(applicantProfile == null || job == null) return "redirect:/job/"+jobId+"/applicants"; // qitu kom met me kqyr
+        Interview interview = interviewService.findInterviewByProfileAndJob(applicantProfile,job);
+        if(interview != null) return "redirect:/job/"+jobId+"/applicants";
         AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         Profile profile = user.getProfile();
         model.addAttribute("interview", new Interview());
