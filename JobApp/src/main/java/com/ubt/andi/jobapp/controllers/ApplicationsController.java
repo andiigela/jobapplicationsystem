@@ -57,7 +57,7 @@ public class ApplicationsController {
         application.setAppUser(user);
         fileUploadService.saveDocument(application,cvUpload);
         applicationService.createApplication(application);
-        return "redirect:/dashboard";
+        return "redirect:/";
     }
     @PostMapping("/job/{jobId}/application/delete")
     public String deleteApplication(@PathVariable("jobId") Long jobId){

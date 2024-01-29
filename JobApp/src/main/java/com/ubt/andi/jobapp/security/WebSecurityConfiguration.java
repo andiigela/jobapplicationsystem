@@ -26,7 +26,7 @@ public class WebSecurityConfiguration {
                 .requestMatchers(new AntPathRequestMatcher("/jobs/**")).hasAnyRole("Employer")
                 .requestMatchers(new AntPathRequestMatcher("/job/{jobId}/applicants")).hasAnyRole("Employer")
                 .requestMatchers(new AntPathRequestMatcher("/*/**")).authenticated()
-                .and().formLogin().loginPage("/login").loginProcessingUrl("/login").defaultSuccessUrl("/")
+                .and().formLogin().loginPage("/login").loginProcessingUrl("/login")
                 .and()
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/login?loggedout")
                 .invalidateHttpSession(true).deleteCookies("JSESSIONID");
