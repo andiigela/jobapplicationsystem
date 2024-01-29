@@ -1,4 +1,5 @@
 package com.ubt.andi.jobapp.controllers;
+import com.ubt.andi.jobapp.exception.ShareNotFoundException;
 import com.ubt.andi.jobapp.models.*;
 import com.ubt.andi.jobapp.services.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,49 +25,68 @@ public class HomeController {
     private final JobService jobService;
     private final LikedPostsService likedPostsService;
     private final NotificationService notificationService;
+    private final ShareService shareService;
     private static final int PAGE_SIZE = 5;
     public HomeController(PostService postService,UserService userService,LikedPostsService likedPostsService,
-                          CommentService commentService,JobService jobService,NotificationService notificationService){
+                          CommentService commentService,JobService jobService,NotificationService notificationService,ShareService shareService){
         this.postService=postService;
         this.userService=userService;
         this.likedPostsService=likedPostsService;
         this.commentService=commentService;
         this.jobService=jobService;
         this.notificationService=notificationService;
+        this.shareService=shareService;
     }
     @GetMapping("/")
-    public String getHomeView(@RequestParam(value = "page",defaultValue = "0") String page, Model model){
+    public String getHomeView(@RequestParam(value = "page", defaultValue = "0") String page, Model model) {
         int pageNumber = Integer.parseInt(page);
-        if(pageNumber > 0){
+        if (pageNumber > 0) {
             pageNumber -= 1;
         }
-        Pageable pageable = PageRequest.of(pageNumber,PAGE_SIZE);
+        Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE);
         Page<Post> posts = postService.getPostsByPage(pageable);
         AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         Profile profile = user.getProfile();
-        if(profile == null) return "redirect:/profile/view/"+user.getUsername();
-        if(user != null){
-            model.addAttribute("user",user);
+        if (profile == null) return "redirect:/profile/view/" + user.getUsername();
+        if (user != null) {
+            model.addAttribute("user", user);
         }
+
         Map<Long, Boolean> userLikes = new HashMap<>();
+        Map<Long, Boolean> userShares = new HashMap<>();
+
         for (Post post : posts) {
-            if(post.getJob() != null){
-                if(!post.getJob().isActive()){
+            if (post.getJob() != null) {
+                if (!post.getJob().isActive()) {
                     post.setJob(null);
                     postService.editPost(post);
                 }
             }
+
+            // Check if the post is liked by the user
             LikedPosts likedPosts = likedPostsService.isPostLikedByUser(user, post);
             boolean likedByUser = false;
-            if(likedPosts != null){
+            if (likedPosts != null) {
                 likedByUser = true;
             }
             userLikes.put(post.getId(), likedByUser);
+
+            // Check if the post is shared by the user
+            Share postIsShared = shareService.isPostSharedByUser(user, post);
+            boolean sharedByUser = false;
+            if (postIsShared != null) {
+                sharedByUser = true;
+            }
+            userShares.put(post.getId(), sharedByUser);
         }
-        model.addAttribute("userLikes",userLikes);
-        model.addAttribute("posts",posts);
-        model.addAttribute("currentPage",page);
-        model.addAttribute("profile",profile);
+
+        model.addAttribute("userLikes", userLikes);
+        model.addAttribute("userShares", userShares);  // Add userShares to the model
+        model.addAttribute("posts", posts);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("profile", profile);
+
+
         return "index";
     }
     @GetMapping("/posts/create")
@@ -100,15 +120,33 @@ public class HomeController {
         Profile profile = user.getProfile();
         if(profile == null) return "redirect:/profile/view/"+user.getUsername();
         Map<Long, Boolean> userLikes = new HashMap<>();
+        Map<Long, Boolean> userShares = new HashMap<>();
         for (Post post : userPosts) {
+            if (post.getJob() != null) {
+                if (!post.getJob().isActive()) {
+                    post.setJob(null);
+                    postService.editPost(post);
+                }
+            }
+
+            // Check if the post is liked by the user
             LikedPosts likedPosts = likedPostsService.isPostLikedByUser(user, post);
             boolean likedByUser = false;
-            if(likedPosts != null){
+            if (likedPosts != null) {
                 likedByUser = true;
             }
             userLikes.put(post.getId(), likedByUser);
+
+            // Check if the post is shared by the user
+            Share postIsShared = shareService.isPostSharedByUser(user, post);
+            boolean sharedByUser = false;
+            if (postIsShared != null) {
+                sharedByUser = true;
+            }
+            userShares.put(post.getId(), sharedByUser);
         }
         model.addAttribute("userLikes",userLikes);
+        model.addAttribute("userShares", userShares);
         model.addAttribute("userPosts",userPosts);
         model.addAttribute("profile",profile);
         return "user-posts";
@@ -174,6 +212,48 @@ public class HomeController {
         }
         return "redirect:/";
     }
+    @PostMapping("/share/{postId}")
+    public String sharePost(@PathVariable("postId") Long postId, HttpServletRequest request) {
+        AppUser user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()); //Dreni
+        Post originalPost = postService.getPostById(postId); // <- id (postId)
+        Share existingSharedPost = shareService.isPostSharedByUser(user, originalPost);
+        Long numberOfShares = originalPost.getNumberOfShares();
+
+        if (existingSharedPost == null) {
+            Post sharedPost = new Post();//223
+            sharedPost.setDescription(originalPost.getDescription());
+            sharedPost.setShared(true);
+            sharedPost.setJob(originalPost.getJob());
+            sharedPost.setAppUser(user);
+            postService.createPost(sharedPost); //223
+
+            Share share = new Share(); //dreni  223
+            share.setAppUser(user);
+            share.setPost(originalPost);
+            share.setSharedPost(sharedPost);
+            shareService.createShare(share, originalPost);
+
+            originalPost.setNumberOfShares(numberOfShares + 1);
+            postService.editPost(originalPost);
+            notificationService.sendPostNotification(originalPost.getAppUser().getProfile(), originalPost, "Share");
+        } else {
+
+
+
+            if (existingSharedPost.getPost() != null) {
+                if (numberOfShares != null && numberOfShares > 0) {
+                    originalPost.setNumberOfShares(numberOfShares - 1);
+                    postService.editPost(originalPost);
+                    postService.deletePost(existingSharedPost.getSharedPost().getId());
+                }
+            }
+
+        }
+        return "redirect:/";
+    }
+
+
+
     @GetMapping("/posts/{id}/comment")
     public String getCommentPostView(@PathVariable("id") Long postId,Model model){
         Post post = postService.getPostById(postId);

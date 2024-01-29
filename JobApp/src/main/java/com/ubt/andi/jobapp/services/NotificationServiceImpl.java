@@ -85,6 +85,9 @@ public class NotificationServiceImpl implements NotificationService{
         if(action.trim().equals("Comment")){
             notification.setNotificationText(profile.getFirstName() + " " + profile.getLastName() + " has commented on your post: " + post.getDescription());
         }
+        if (action.trim().equals("Share")){
+            notification.setNotificationText(profile.getFirstName()+" "+profile.getLastName() + " has shared your post " +post.getDescription());
+        }
         notification.setToProfile(toProfile);
         notification.setFromProfile(profile);
         notificationRepository.save(notification);

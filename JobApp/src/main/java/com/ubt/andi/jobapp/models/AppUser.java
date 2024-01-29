@@ -47,4 +47,6 @@ public class AppUser {
     private List<Comment> comments = new ArrayList<>();
     @OneToMany(mappedBy = "appUser")
     private List<Application> applications = new ArrayList<>();
+    @OneToMany(mappedBy = "appUser")
+    private List<Share>shares = new ArrayList<>();
 }
